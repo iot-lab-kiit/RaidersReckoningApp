@@ -4,6 +4,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import `in`.iotkiit.raidersreckoningapp.data.remote.DashboardApi
 import `in`.iotkiit.raidersreckoningapp.data.remote.LeaderboardApi
 import `in`.iotkiit.raidersreckoningapp.data.remote.TeamApi
 import okhttp3.OkHttpClient
@@ -54,6 +55,11 @@ object AppModule {
     @Singleton
     fun provideLeaderboardApi(retrofit: Retrofit): LeaderboardApi {
         return retrofit.create(LeaderboardApi::class.java)
+    }
+    @Provides
+    @Singleton
+    fun provideDashboardApi(retrofit: Retrofit): DashboardApi {
+        return retrofit.create(DashboardApi::class.java)
     }
 
 
