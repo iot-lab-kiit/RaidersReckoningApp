@@ -2,9 +2,7 @@ package `in`.iotkiit.raidersreckoningapp.data.model
 
 import com.google.gson.annotations.SerializedName
 
-data class DashboardData(
+data class LeaderboardEntry (
     @SerializedName("team")
-    val team: DashBoardTeamResponse,
-    @SerializedName("zone")
-    val zone: Zone
+    val team: Team
 )

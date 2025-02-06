@@ -2,7 +2,7 @@ package `in`.iotkiit.raidersreckoningapp.data.model
 
 import com.google.gson.annotations.SerializedName
 
-data class Stat(
+data class RoundStat(
     @SerializedName("endTime")
     val endTime: String,
     @SerializedName("points")
