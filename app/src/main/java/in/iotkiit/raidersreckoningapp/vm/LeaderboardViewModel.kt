@@ -22,11 +22,11 @@ class LeaderboardViewModel @Inject constructor(
         MutableStateFlow(UiState.Idle)
     val getLeaderboardData = _getLeaderboardDataState.asStateFlow()
 
-    fun getLeaderboardData() {
+    fun getLeaderboardData(accessToken: String) {
         _getLeaderboardDataState.value = UiState.Loading
         viewModelScope.launch {
             try {
-                leaderboardRepo.getLeaderboardData("Bearer token")
+                leaderboardRepo.getLeaderboardData("Bearer $accessToken")
                     .collect { response ->
                         _getLeaderboardDataState.value = response
                         if (response is UiState.Success) {
@@ -38,10 +38,6 @@ class LeaderboardViewModel @Inject constructor(
                 _getLeaderboardDataState.value = UiState.Failed(e.message ?: "Unknown error")
             }
         }
-    }
-
-    fun resetLeaderboardData() {
-        _getLeaderboardDataState.value = UiState.Idle
     }
 
 }

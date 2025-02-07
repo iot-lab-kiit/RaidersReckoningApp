@@ -15,7 +15,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             RaidersReckoningAppTheme {
-                RaidersReckoningNavigation(navController, paddingValues)
+                RaidersReckoningNavigation()
             }
         }
     }

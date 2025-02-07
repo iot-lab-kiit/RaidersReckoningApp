@@ -1,6 +1,5 @@
 package `in`.iotkiit.raidersreckoningapp.view.navigation
 
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
@@ -9,11 +8,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import `in`.iotkiit.raidersreckoningapp.view.screens.LoginScreen
 
 @Composable
-fun RaidersReckoningNavigation(navController: NavHostController, paddingValues: PaddingValues) {
-
-    val navController = rememberNavController()
+fun RaidersReckoningNavigation(
+    navController: NavHostController = rememberNavController()
+) {
 
     //This variable checks if the user is logged in or not
     val isUserLoggedIn = Firebase.auth.currentUser != null
@@ -33,7 +33,16 @@ fun RaidersReckoningNavigation(navController: NavHostController, paddingValues: 
             //TODO
         }
         composable(RaidersReckoningScreens.LoginScreen.route) {
-            //TODO
+            LoginScreen(
+                onLoginSuccess = {
+                    navController.navigate(RaidersReckoningScreens.DashBoardScreen.route) {
+                        popUpTo(RaidersReckoningScreens.LoginScreen.route) {
+                            inclusive = true
+                            saveState = true
+                        }
+                    }
+                }
+            )
         }
         composable(RaidersReckoningScreens.MyTeamScreen.route) {
             //TODO
@@ -47,5 +56,5 @@ fun RaidersReckoningNavigation(navController: NavHostController, paddingValues: 
 @Preview
 @Composable
 private fun RaidersReckoningNavigationPrev() {
-    RaidersReckoningNavigation(navController, paddingValues)
+    RaidersReckoningNavigation()
 }
