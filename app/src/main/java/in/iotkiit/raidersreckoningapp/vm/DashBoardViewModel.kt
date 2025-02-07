@@ -16,21 +16,24 @@ import javax.inject.Inject
 @HiltViewModel
 class DashBoardViewModel @Inject constructor(
     private val dashBoardRepo: DashBoardRepo
-): ViewModel() {
+) : ViewModel() {
 
     private val _getDashBoardState: MutableStateFlow<UiState<CustomResponse<DashboardResponse>>> =
         MutableStateFlow(UiState.Idle)
     val getDashBoardState = _getDashBoardState.asStateFlow()
 
-    fun getDashBoardData() {
+    fun getDashBoardData(accessToken: String) {
         _getDashBoardState.value = UiState.Loading
         viewModelScope.launch {
             try {
-                dashBoardRepo.getDashboardData("Bearer Token")
+                dashBoardRepo.getDashboardData("Bearer $accessToken")
                     .collect { response ->
                         _getDashBoardState.value = response
                         if (response is UiState.Success) {
-                            Log.d("DashBoardViewModel", "LeaderBoard Data fetched: ${response.data}")
+                            Log.d(
+                                "DashBoardViewModel",
+                                "LeaderBoard Data fetched: ${response.data}"
+                            )
                         }
                     }
             } catch (e: Exception) {
@@ -40,7 +43,29 @@ class DashBoardViewModel @Inject constructor(
         }
     }
 
-    fun resetGetDashBoardDataState() {
-        _getDashBoardState.value = UiState.Idle
+    private val _verifyTokenState: MutableStateFlow<UiState<CustomResponse<Unit>>> =
+        MutableStateFlow(UiState.Idle)
+    val verifyTokenState = _verifyTokenState.asStateFlow()
+
+    fun verifyToken(accessToken: String) {
+        _verifyTokenState.value = UiState.Loading
+        viewModelScope.launch {
+            try {
+                dashBoardRepo.verifyToken("Bearer $accessToken")
+                    .collect { response ->
+                        _verifyTokenState.value = response
+                        if (response is UiState.Success) {
+                            Log.d("DashBoardViewModel", "Token verified: ${response.data}")
+                        }
+                    }
+            } catch (e: Exception) {
+                Log.d("DashBoardViewModel", "TokenVerification: ${e.message}")
+                _verifyTokenState.value = UiState.Failed(e.message ?: "Unknown error")
+            }
+        }
+    }
+
+    fun resetVerifyTokenState(){
+        _verifyTokenState.value = UiState.Loading
     }
 }

@@ -1,3 +1,6 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -21,6 +24,8 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "FIREBASE_TOKEN", getToken())
+        buildConfigField("String", "BASE_URL", getBaseUrlInCIEnvironment())
     }
 
     buildTypes {
@@ -100,4 +105,18 @@ dependencies {
 
     //coil
     implementation("io.coil-kt:coil-compose:2.5.0")
+}
+
+fun getToken(): String{
+    val propFile = rootProject.file("local.properties")
+    val properties = Properties()
+    properties.load(FileInputStream(propFile))
+    return properties.getProperty("FIREBASE_TOKEN")
+}
+
+fun getBaseUrlInCIEnvironment(): String {
+    val propFile = rootProject.file("local.properties")
+    val properties = Properties()
+    properties.load(FileInputStream(propFile))
+    return properties.getProperty("BASE_URL")
 }

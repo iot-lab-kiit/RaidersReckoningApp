@@ -3,9 +3,11 @@ package `in`.iotkiit.raidersreckoningapp.data.remote
 import `in`.iotkiit.raidersreckoningapp.data.model.CreateTeamBody
 import `in`.iotkiit.raidersreckoningapp.data.model.CustomResponse
 import `in`.iotkiit.raidersreckoningapp.data.model.JoinTeamBody
+import `in`.iotkiit.raidersreckoningapp.data.model.Question
 import `in`.iotkiit.raidersreckoningapp.data.model.TeamInfo
 import `in`.iotkiit.raidersreckoningapp.data.util.Constants
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
 
@@ -23,4 +25,8 @@ interface TeamApi {
         @Body joinTeamBody: JoinTeamBody
     ): CustomResponse<Unit>
 
+    @GET(Constants.GET_QUESTIONS)
+    suspend fun getQuestions(
+        @Header("Authorization") accessToken: String
+    ): CustomResponse<List<Question>>
 }

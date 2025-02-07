@@ -1,5 +1,6 @@
 package `in`.iotkiit.raidersreckoningapp.di
 
+import com.google.firebase.auth.FirebaseAuth
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -62,5 +63,7 @@ object AppModule {
         return retrofit.create(DashboardApi::class.java)
     }
 
+    @Provides
+    fun providesFirebaseAuth(): FirebaseAuth = FirebaseAuth.getInstance()
 
 }

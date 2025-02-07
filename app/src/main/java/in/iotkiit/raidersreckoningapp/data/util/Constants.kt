@@ -6,4 +6,5 @@ object Constants {
     internal const val JOIN_TEAM_ENDPOINT = "api/team/join"
     internal const val GET_DASHBOARD_ENDPOINT = "dashboard"
     internal const val VERIFY_TOKEN_ENDPOINT = "api/auth/verify"
+    internal const val GET_QUESTIONS = "api/questions"
 }
