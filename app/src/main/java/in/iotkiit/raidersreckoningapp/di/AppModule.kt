@@ -5,6 +5,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import `in`.iotkiit.raidersreckoningapp.BuildConfig
 import `in`.iotkiit.raidersreckoningapp.data.remote.DashboardApi
 import `in`.iotkiit.raidersreckoningapp.data.remote.LeaderboardApi
 import `in`.iotkiit.raidersreckoningapp.data.remote.TeamApi
@@ -41,7 +42,7 @@ object AppModule {
         okHttpClient: OkHttpClient
     ): Retrofit =
         Retrofit.Builder()
-            .baseUrl("")
+            .baseUrl(BuildConfig.BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
