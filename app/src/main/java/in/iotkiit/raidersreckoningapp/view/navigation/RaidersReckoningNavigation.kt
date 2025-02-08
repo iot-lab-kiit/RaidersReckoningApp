@@ -1,5 +1,6 @@
 package `in`.iotkiit.raidersreckoningapp.view.navigation
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
@@ -8,6 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import `in`.iotkiit.raidersreckoningapp.view.screens.DashBoardScreen
 import `in`.iotkiit.raidersreckoningapp.view.screens.LoginScreen
 
 @Composable
@@ -30,7 +32,7 @@ fun RaidersReckoningNavigation(
         startDestination = startDestination
     ) {
         composable(RaidersReckoningScreens.DashBoardScreen.route) {
-            //TODO
+            DashBoardScreen(navController = navController)
         }
         composable(RaidersReckoningScreens.LoginScreen.route) {
             LoginScreen(
