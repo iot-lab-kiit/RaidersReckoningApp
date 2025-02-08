@@ -21,7 +21,8 @@ sealed class BottomNavOptions(
     val onOptionClicked: (NavController) -> Unit,
 ) {
 
-    data object DashBoardOption: BottomNavOptions(route = RaidersReckoningScreens.DashBoardScreen.route,
+    data object DashBoardOption: BottomNavOptions(
+        route = RaidersReckoningScreens.DashBoardScreen.route,
         labelOfIcon = "Dashboard",
         unselectedIcon = Icons.Outlined.Home,
         selectedIcon = Icons.Filled.Home,
@@ -32,7 +33,8 @@ sealed class BottomNavOptions(
             }
         })
 
-    data object LeaderboardOption: BottomNavOptions(route = RaidersReckoningScreens.LeaderboardScreen.route,
+    data object LeaderboardOption: BottomNavOptions(
+        route = RaidersReckoningScreens.LeaderboardScreen.route,
         labelOfIcon = "Leaderboard",
         selectedIcon = Icons.Filled.Menu,
         unselectedIcon = Icons.Outlined.Menu,
@@ -43,7 +45,8 @@ sealed class BottomNavOptions(
             }
         })
 
-    data object MyTeamOption: BottomNavOptions(route = RaidersReckoningScreens.MyTeamScreen.route,
+    data object MyTeamOption: BottomNavOptions(
+        route = RaidersReckoningScreens.MyTeamScreen.route,
         labelOfIcon = "My team",
         selectedIcon = Icons.Filled.Face,
         unselectedIcon = Icons.Outlined.Face,
@@ -56,8 +59,8 @@ sealed class BottomNavOptions(
 
     companion object {
         val bottomNavOptions = listOf(
-            DashBoardOption,
             LeaderboardOption,
+            DashBoardOption,
             MyTeamOption
         )
     }
