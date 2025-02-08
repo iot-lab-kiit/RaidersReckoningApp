@@ -1,6 +1,7 @@
 package `in`.iotkiit.raidersreckoningapp.view.navigation
 
 import android.content.res.Configuration
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
@@ -11,13 +12,16 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import `in`.iotkiit.raidersreckoningapp.ui.theme.GreenCOD
 import `in`.iotkiit.raidersreckoningapp.view.navigation.BottomNavOptions.Companion.bottomNavOptions
 
 /**
@@ -35,7 +39,7 @@ fun BottomNavBar(
     bottomMenu: List<BottomNavOptions>
 ) {
     NavigationBar(
-        containerColor = Color.DarkGray,
+        containerColor = GreenCOD.copy(.1f),
         modifier = Modifier.clip(CircleShape)
     ) {
         val backStackEntry = navController.currentBackStackEntryAsState()
@@ -55,12 +59,12 @@ fun BottomNavBar(
 
                     Icon(
                         imageVector = currentIcon,
-                        modifier = Modifier.size(30.dp),
+                        modifier = Modifier.size(36.dp),
                         contentDescription = menuItem.labelOfIcon
                     )
                 },
                 colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = Color.White,
+                    selectedIconColor = Color.Black,
                     unselectedIconColor = Color.White,
                     indicatorColor = Color.White
                 )
@@ -69,7 +73,7 @@ fun BottomNavBar(
     }
 }
 
-@Preview(showBackground = true)
+@Preview()
 @Composable
 private fun DefaultPreview() {
     BottomNavBar(
