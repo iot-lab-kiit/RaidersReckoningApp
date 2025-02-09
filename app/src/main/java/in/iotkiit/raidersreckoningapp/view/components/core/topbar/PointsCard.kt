@@ -17,6 +17,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import `in`.iotkiit.raidersreckoningapp.R
+import `in`.iotkiit.raidersreckoningapp.ui.theme.GreenCOD
 import `in`.iotkiit.raidersreckoningapp.ui.theme.modernWarfare
 
 @Composable
@@ -29,7 +30,7 @@ fun PointsCard(
         shape = RoundedCornerShape(16.dp),
         colors = CardColors(
             contentColor = Color.Black,
-            containerColor = Color.Green,
+            containerColor = GreenCOD,
             disabledContentColor = Color.Unspecified,
             disabledContainerColor = Color.Unspecified
         )
@@ -43,14 +44,14 @@ fun PointsCard(
                 modifier = Modifier.padding(4.dp),
                 text = points.toString(),
                 fontFamily = modernWarfare,
-                fontSize = 20.sp
+                fontSize = 20.sp,
+                color = Color.Black
             )
             Image(
                 painter = painterResource(R.drawable.points),
                 contentDescription = null,
                 modifier = Modifier.size(16.dp)
             )
-
         }
     }
 }
