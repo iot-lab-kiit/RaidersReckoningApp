@@ -42,7 +42,7 @@ fun MyTeamScreen(
     dashBoardViewModel: DashBoardViewModel = hiltViewModel()
 ) {
 
-    val getDashBoardState = dashBoardViewModel.getDashBoardState.collectAsState().value
+    val dashBoardState = dashBoardViewModel.getDashBoardState.collectAsState().value
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -101,7 +101,7 @@ fun MyTeamScreen(
 //                    verticalArrangement = Arrangement.Center,
 //                    horizontalAlignment = Alignment.CenterHorizontally
 //                ) {
-//                    LinearProgressIndicator()
+//                    LinearProgressIndicator(color = GreenCOD)
 //                }
 //            }
 //
