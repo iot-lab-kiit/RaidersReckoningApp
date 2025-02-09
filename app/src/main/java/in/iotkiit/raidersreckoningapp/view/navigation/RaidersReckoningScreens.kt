@@ -7,4 +7,7 @@ sealed class RaidersReckoningScreens(val route: String) {
     object MyTeamScreen : RaidersReckoningScreens("myTeam_screen")
     object CreateTeamScreen : RaidersReckoningScreens("createTeam_screen")
     object OnBoardingScreen : RaidersReckoningScreens("onBoarding_screen")
+    object QuestionScreenChoice : RaidersReckoningScreens("question_screen_choice")
+    object QuestionScreen: RaidersReckoningScreens("question_screen")
+
 }
