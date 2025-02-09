@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
@@ -12,8 +13,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import `in`.iotkiit.raidersreckoningapp.R
@@ -26,8 +30,7 @@ fun PointsCard(
     points: Int
 ) {
     Card(
-        modifier = modifier,
-        shape = RoundedCornerShape(16.dp),
+        modifier = modifier.clip(RectangleShape),
         colors = CardColors(
             contentColor = Color.Black,
             containerColor = GreenCOD,
@@ -36,15 +39,15 @@ fun PointsCard(
         )
     ) {
         Row(
-            modifier = Modifier.padding(8.dp),
-            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier.padding(6.dp),
+//            horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                modifier = Modifier.padding(4.dp),
+                modifier = Modifier.padding(6.dp),
                 text = points.toString(),
                 fontFamily = modernWarfare,
-                fontSize = 20.sp,
+                fontSize = 12.sp,
                 color = Color.Black
             )
             Image(
@@ -54,4 +57,10 @@ fun PointsCard(
             )
         }
     }
+}
+
+@Preview
+@Composable
+private fun PointsCardprev() {
+    PointsCard(modifier = Modifier ,14)
 }

@@ -5,10 +5,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme
@@ -42,7 +40,7 @@ fun DashBoardScreen(
     val getDashBoardState = viewModel.getDashBoardState.collectAsState().value
 
     Scaffold(
-        modifier = Modifier,
+        containerColor = Color.Black,
         bottomBar = {
             BottomNavBar(navController = navController, bottomMenu = bottomNavOptions)
         },
@@ -53,74 +51,81 @@ fun DashBoardScreen(
                 points = 10
             )
         }
-    ) {
+    ) { paddingValues ->
 
         Surface(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues),
             color = Color.Black
         ) {
             Column(
+                modifier = Modifier.fillMaxSize().padding(20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top
             ) {
-
-                Spacer(modifier = Modifier.height(96.dp))
 
                 MapCard(
                     mapImage = painterResource(R.drawable.map),
                     soldierImage = painterResource(R.drawable.soldier)
                 )
 
-                Column {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth().padding(top = 16.dp),
+                    horizontalArrangement = Arrangement.Start,
+                    verticalAlignment = Alignment.Bottom
+                ) {
+                    Text(
+                        text = "NUKETOWN",
+                        style = MaterialTheme.typography.displayMedium,
+                        color = Color.White
+                    )
+                    Text(
+                        modifier = Modifier.padding(start = 10.dp, bottom = 4.dp),
+                        text = "C001",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = GreenCOD
+                    )
+                }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 50.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "Round 1",
+                        style = MaterialTheme.typography.headlineMedium,
+                        color = GreenCOD
+                    )
 
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "NUKETOWN",
-                            style = MaterialTheme.typography.displayMedium,
-                            color = Color.White
-                        )
-
-                        Text(
-                            text = "C001",
-                            style = MaterialTheme.typography.displayMedium,
-                            color = GreenCOD
-                        )
-                    }
-
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceAround,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            modifier = Modifier.padding(16.dp),
-                            text = "Round 1",
-                            style = MaterialTheme.typography.displayMedium,
-                            color = GreenCOD
-                        )
-
-                        Text(
-                            modifier = Modifier.padding(16.dp),
-                            color = Color.White,
-                            text = "30:00",
-                            style = MaterialTheme.typography.displayMedium
-                        )
-                    }
-
-                    FloatingActionButton(
-                        onClick = { /*TODO*/ },
-                        containerColor = GreenCOD,
-                        contentColor = Color.Black,
-                        modifier = Modifier.align(Alignment.CenterHorizontally)
-                    ) {
-                        Image(
-                            modifier = Modifier.padding(16.dp),
-                            painter = painterResource(R.drawable.scan),
-                            contentDescription = null
-                        )
-                    }
+                    Text(
+                        color = Color.White,
+                        text = "30:00",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+            }
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.Bottom,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                FloatingActionButton(
+                    onClick = { /*TODO*/ },
+                    containerColor = GreenCOD,
+                    contentColor = Color.Black,
+                    modifier = Modifier
+                ) {
+                    Image(
+                        modifier = Modifier.padding(16.dp),
+                        painter = painterResource(R.drawable.scan),
+                        contentDescription = null
+                    )
                 }
             }
         }

@@ -89,7 +89,6 @@ fun LeaderboardScreen(
                         )
                     }
 
-
                     Column(
                         modifier = Modifier.safeDrawingPadding()
                     ) {
@@ -97,17 +96,17 @@ fun LeaderboardScreen(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(vertical = 16.dp),
+                                .padding(16.dp),
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Text(
                                 text = "ROUND",
-                                style = MaterialTheme.typography.titleSmall,
+                                style = MaterialTheme.typography.bodyMedium,
                                 color = Color.White
                             )
                             Text(
                                 text = "30:00",
-                                style = MaterialTheme.typography.displaySmall,
+                                style = MaterialTheme.typography.headlineSmall,
                                 color = Color.White
                             )
 
