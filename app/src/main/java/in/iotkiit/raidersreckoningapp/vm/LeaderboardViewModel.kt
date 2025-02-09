@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import `in`.iotkiit.raidersreckoningapp.data.model.CustomResponse
 import `in`.iotkiit.raidersreckoningapp.data.model.LeaderboardData
+import `in`.iotkiit.raidersreckoningapp.data.repo.DashBoardRepo
 import `in`.iotkiit.raidersreckoningapp.data.repo.LeaderboardRepo
 import `in`.iotkiit.raidersreckoningapp.state.UiState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,7 +16,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LeaderboardViewModel @Inject constructor(
-    private val leaderboardRepo: LeaderboardRepo
+    private val leaderboardRepo: LeaderboardRepo,
+    private val dashboardRepo: DashBoardRepo
 ): ViewModel() {
 
     private val _getLeaderboardDataState: MutableStateFlow<UiState<CustomResponse<LeaderboardData>>> =
@@ -26,7 +28,7 @@ class LeaderboardViewModel @Inject constructor(
         _getLeaderboardDataState.value = UiState.Loading
         viewModelScope.launch {
             try {
-                leaderboardRepo.getLeaderboardData("Bearer $accessToken")
+                leaderboardRepo.getLeaderboardData(dashboardRepo.getIdToken())
                     .collect { response ->
                         _getLeaderboardDataState.value = response
                         if (response is UiState.Success) {

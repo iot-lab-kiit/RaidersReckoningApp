@@ -22,11 +22,11 @@ class DashBoardViewModel @Inject constructor(
         MutableStateFlow(UiState.Idle)
     val getDashBoardState = _getDashBoardState.asStateFlow()
 
-    fun getDashBoardData(accessToken: String) {
+    fun getDashBoardData() {
         _getDashBoardState.value = UiState.Loading
         viewModelScope.launch {
             try {
-                dashBoardRepo.getDashboardData("Bearer $accessToken")
+                dashBoardRepo.getDashboardData(dashBoardRepo.getIdToken())
                     .collect { response ->
                         _getDashBoardState.value = response
                         if (response is UiState.Success) {
