@@ -5,12 +5,11 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -21,12 +20,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import `in`.iotkiit.raidersreckoningapp.R
 import `in`.iotkiit.raidersreckoningapp.ui.theme.GreenCOD
-import `in`.iotkiit.raidersreckoningapp.ui.theme.modernWarfare
 import `in`.iotkiit.raidersreckoningapp.view.components.core.topbar.TopBar
 import `in`.iotkiit.raidersreckoningapp.view.components.dashboard.MapCard
 import `in`.iotkiit.raidersreckoningapp.view.navigation.BottomNavBar
@@ -43,7 +40,7 @@ fun DashBoardScreen(
     val getDashBoardState = viewModel.getDashBoardState.collectAsState().value
 
     Scaffold(
-        modifier = Modifier,
+        containerColor = Color.Black,
         bottomBar = {
             BottomNavBar(navController = navController, bottomMenu = bottomNavOptions)
         },
@@ -54,82 +51,82 @@ fun DashBoardScreen(
                 points = 10
             )
         }
-    ) {
+    ) { paddingValues ->
 
         Surface(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues),
+            color = Color.Black
         ) {
             Column(
+                modifier = Modifier.fillMaxSize().padding(20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top
             ) {
 
-                Spacer(modifier = Modifier.height(96.dp))
-
                 MapCard(
-                    modifier = Modifier.padding(16.dp),
                     mapImage = painterResource(R.drawable.map),
                     soldierImage = painterResource(R.drawable.soldier)
                 )
 
-                Spacer(modifier = Modifier.height(32.dp))
-
                 Row(
-                    horizontalArrangement = Arrangement.SpaceAround,
-                    verticalAlignment = Alignment.CenterVertically
+                    modifier = Modifier
+                        .fillMaxWidth().padding(top = 16.dp),
+                    horizontalArrangement = Arrangement.Start,
+                    verticalAlignment = Alignment.Bottom
                 ) {
                     Text(
-                        modifier = Modifier.padding(16.dp),
                         text = "NUKETOWN",
-                        fontFamily = modernWarfare,
-                        fontSize = 32.sp,
+                        style = MaterialTheme.typography.displayMedium,
                         color = Color.White
                     )
-
                     Text(
-                        modifier = Modifier.padding(16.dp),
+                        modifier = Modifier.padding(start = 10.dp, bottom = 4.dp),
                         text = "C001",
-                        fontFamily = modernWarfare,
-                        fontSize = 20.sp,
+                        style = MaterialTheme.typography.labelSmall,
                         color = GreenCOD
                     )
                 }
-
-                Spacer(modifier = Modifier.height(32.dp))
-
                 Row(
-                    horizontalArrangement = Arrangement.SpaceAround,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 50.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        modifier = Modifier.padding(16.dp),
                         text = "Round 1",
-                        fontFamily = modernWarfare,
-                        fontSize = 32.sp,
+                        style = MaterialTheme.typography.headlineMedium,
                         color = GreenCOD
                     )
 
                     Text(
-                        modifier = Modifier.padding(16.dp),
+                        color = Color.White,
                         text = "30:00",
-                        fontFamily = modernWarfare,
-                        fontSize = 32.sp,
-                        color = Color.White
+                        style = MaterialTheme.typography.bodyMedium
                     )
                 }
-
+            }
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.Bottom,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 FloatingActionButton(
                     onClick = { /*TODO*/ },
                     containerColor = GreenCOD,
                     contentColor = Color.Black,
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                    modifier = Modifier
                 ) {
                     Image(
+                        modifier = Modifier.padding(16.dp),
                         painter = painterResource(R.drawable.scan),
                         contentDescription = null
                     )
                 }
-
             }
         }
     }
