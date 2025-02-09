@@ -1,6 +1,7 @@
 package `in`.iotkiit.raidersreckoningapp.view.components.core.topbar
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -36,21 +37,21 @@ fun TeamNameCard(
         )
     ) {
         Row(
-            modifier = Modifier.padding(8.dp),
+            modifier = Modifier.padding(4.dp),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
                 painter = painterResource(R.drawable.ghost_icon),
                 contentDescription = null,
-                modifier = Modifier.size(24.dp)
+                modifier = Modifier.size(24.dp).background(Color.Transparent)
             )
 
             Text(
-                modifier= Modifier.padding(4.dp),
+                modifier= Modifier.padding(8.dp),
                 fontFamily = modernWarfare,
                 text = teamName,
-                fontSize = 24.sp
+                fontSize = 20.sp
             )
         }
     }
