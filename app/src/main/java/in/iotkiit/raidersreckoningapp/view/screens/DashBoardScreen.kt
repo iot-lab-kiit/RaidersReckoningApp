@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -21,12 +22,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import `in`.iotkiit.raidersreckoningapp.R
 import `in`.iotkiit.raidersreckoningapp.ui.theme.GreenCOD
-import `in`.iotkiit.raidersreckoningapp.ui.theme.modernWarfare
 import `in`.iotkiit.raidersreckoningapp.view.components.core.topbar.TopBar
 import `in`.iotkiit.raidersreckoningapp.view.components.dashboard.MapCard
 import `in`.iotkiit.raidersreckoningapp.view.navigation.BottomNavBar
@@ -58,6 +57,7 @@ fun DashBoardScreen(
 
         Surface(
             modifier = Modifier.fillMaxSize(),
+            color = Color.Black
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -67,69 +67,61 @@ fun DashBoardScreen(
                 Spacer(modifier = Modifier.height(96.dp))
 
                 MapCard(
-                    modifier = Modifier.padding(16.dp),
                     mapImage = painterResource(R.drawable.map),
                     soldierImage = painterResource(R.drawable.soldier)
                 )
 
-                Spacer(modifier = Modifier.height(32.dp))
+                Column {
 
-                Row(
-                    horizontalArrangement = Arrangement.SpaceAround,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        modifier = Modifier.padding(16.dp),
-                        text = "NUKETOWN",
-                        fontFamily = modernWarfare,
-                        fontSize = 32.sp,
-                        color = Color.White
-                    )
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "NUKETOWN",
+                            style = MaterialTheme.typography.displayMedium,
+                            color = Color.White
+                        )
 
-                    Text(
-                        modifier = Modifier.padding(16.dp),
-                        text = "C001",
-                        fontFamily = modernWarfare,
-                        fontSize = 20.sp,
-                        color = GreenCOD
-                    )
+                        Text(
+                            text = "C001",
+                            style = MaterialTheme.typography.displayMedium,
+                            color = GreenCOD
+                        )
+                    }
+
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceAround,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            modifier = Modifier.padding(16.dp),
+                            text = "Round 1",
+                            style = MaterialTheme.typography.displayMedium,
+                            color = GreenCOD
+                        )
+
+                        Text(
+                            modifier = Modifier.padding(16.dp),
+                            color = Color.White,
+                            text = "30:00",
+                            style = MaterialTheme.typography.displayMedium
+                        )
+                    }
+
+                    FloatingActionButton(
+                        onClick = { /*TODO*/ },
+                        containerColor = GreenCOD,
+                        contentColor = Color.Black,
+                        modifier = Modifier.align(Alignment.CenterHorizontally)
+                    ) {
+                        Image(
+                            modifier = Modifier.padding(16.dp),
+                            painter = painterResource(R.drawable.scan),
+                            contentDescription = null
+                        )
+                    }
                 }
-
-                Spacer(modifier = Modifier.height(32.dp))
-
-                Row(
-                    horizontalArrangement = Arrangement.SpaceAround,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        modifier = Modifier.padding(16.dp),
-                        text = "Round 1",
-                        fontFamily = modernWarfare,
-                        fontSize = 32.sp,
-                        color = GreenCOD
-                    )
-
-                    Text(
-                        modifier = Modifier.padding(16.dp),
-                        text = "30:00",
-                        fontFamily = modernWarfare,
-                        fontSize = 32.sp,
-                        color = Color.White
-                    )
-                }
-
-                FloatingActionButton(
-                    onClick = { /*TODO*/ },
-                    containerColor = GreenCOD,
-                    contentColor = Color.Black,
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
-                ) {
-                    Image(
-                        painter = painterResource(R.drawable.scan),
-                        contentDescription = null
-                    )
-                }
-
             }
         }
     }
