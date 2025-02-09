@@ -1,24 +1,12 @@
 package `in`.iotkiit.raidersreckoningapp.view.screens
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeContentPadding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -27,13 +15,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import `in`.iotkiit.raidersreckoningapp.state.UiState
 import `in`.iotkiit.raidersreckoningapp.ui.theme.GreenCOD
+import `in`.iotkiit.raidersreckoningapp.view.components.core.topbar.TopBar
 import `in`.iotkiit.raidersreckoningapp.view.components.myTeam.Fields
 import `in`.iotkiit.raidersreckoningapp.view.navigation.BottomNavBar
 import `in`.iotkiit.raidersreckoningapp.view.navigation.BottomNavOptions.Companion.bottomNavOptions
 import `in`.iotkiit.raidersreckoningapp.vm.DashBoardViewModel
-import `in`.iotkiit.raidersreckoningapp.vm.TeamViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -46,46 +33,44 @@ fun MyTeamScreen(
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
+        topBar = {
+            TopBar(
+                modifier = Modifier.fillMaxWidth(),
+                teamName = "TaskForce141",
+                points = 10
+            )
+        },
         bottomBar = {
             BottomNavBar(navController = navController, bottomMenu = bottomNavOptions)
         }
     ) {
         Surface(
-            modifier = Modifier.safeContentPadding().fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
+            color = Color.Black
         ) {
-            Column (
-                modifier = Modifier.fillMaxWidth(),
+            Column(
+                modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    modifier = Modifier
-                        .fillMaxWidth(0.75f)
-                        .background(
-                            color = GreenCOD.copy(1f),
-                            shape = RoundedCornerShape(15.dp)
-                        )
-                        .border(
-                            width = 1.04.dp,
-                            color = GreenCOD,
-                            shape = RoundedCornerShape(12.dp)
-                        )
-                        .padding(20.dp)
+                Column(
+                    modifier = Modifier,
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(
-                        text = "TaskForce141",
-                        style = MaterialTheme.typography.headlineMedium,
-                        color = Color.Black
+
+                    Fields(
+                        field = "Taskforce",
+                        containerColor = GreenCOD,
+                        contentColor = Color.Black,
                     )
+
+                    Fields("Kunal")
+
+                    Fields("Binayak")
+
+                    Fields("Sarthak")
                 }
-                Spacer(Modifier.height(2.dp))
-                Fields("Kunal", 0.1f)
-                Spacer(Modifier.height(2.dp))
-                Fields("Binayak", 0.1f)
-                Spacer(Modifier.height(2.dp))
-                Fields("Sarthak", 0.1f)
             }
         }
 

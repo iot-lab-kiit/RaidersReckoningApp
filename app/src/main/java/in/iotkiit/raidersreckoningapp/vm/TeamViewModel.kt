@@ -9,6 +9,7 @@ import `in`.iotkiit.raidersreckoningapp.data.model.CustomResponse
 import `in`.iotkiit.raidersreckoningapp.data.model.JoinTeamBody
 import `in`.iotkiit.raidersreckoningapp.data.model.Question
 import `in`.iotkiit.raidersreckoningapp.data.model.TeamInfo
+import `in`.iotkiit.raidersreckoningapp.data.repo.DashBoardRepo
 import `in`.iotkiit.raidersreckoningapp.data.repo.TeamRepo
 import `in`.iotkiit.raidersreckoningapp.state.UiState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,7 +19,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TeamViewModel @Inject constructor(
-    private val teamRepo: TeamRepo
+    private val teamRepo: TeamRepo,
+    private val dashBoardRepo: DashBoardRepo
 ) : ViewModel() {
 
     private val _createTeamState: MutableStateFlow<UiState<CustomResponse<TeamInfo>>> =
@@ -30,12 +32,13 @@ class TeamViewModel @Inject constructor(
         _createTeamState.value = UiState.Loading
         viewModelScope.launch {
             try {
-                teamRepo.createTeam("Bearer $accessToken", createTeamBody).collect { response ->
-                    _createTeamState.value = response
-                    if (response is UiState.Success) {
-                        Log.d("TeamViewModel", "Team Created successfully : ${response.data}")
+                teamRepo.createTeam(dashBoardRepo.getIdToken(), createTeamBody)
+                    .collect { response ->
+                        _createTeamState.value = response
+                        if (response is UiState.Success) {
+                            Log.d("TeamViewModel", "Team Created successfully : ${response.data}")
+                        }
                     }
-                }
             } catch (e: Exception) {
                 Log.d("TeamViewModel", "createTeam: ${e.message}")
                 _createTeamState.value = UiState.Failed(e.message ?: "Unknown error")
@@ -55,7 +58,7 @@ class TeamViewModel @Inject constructor(
         _joinTeamState.value = UiState.Loading
         viewModelScope.launch {
             try {
-                teamRepo.joinTeam("Bearer $accessToken", joinTeamBody)
+                teamRepo.joinTeam(dashBoardRepo.getIdToken(), joinTeamBody)
                     .collect { response ->
                         _joinTeamState.value = response
                         if (response is UiState.Success) {
@@ -81,7 +84,7 @@ class TeamViewModel @Inject constructor(
         _getQuestionsState.value = UiState.Loading
         viewModelScope.launch {
             try {
-                teamRepo.getQuestions("Bearer $accessToken")
+                teamRepo.getQuestions(dashBoardRepo.getIdToken())
                     .collect { response ->
                         _getQuestionsState.value = response
                         if (response is UiState.Success) {
