@@ -1,31 +1,21 @@
 package `in`.iotkiit.raidersreckoningapp.view.navigation
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Face
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.outlined.Face
-import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Menu
-import androidx.compose.material.icons.outlined.PlayArrow
-import androidx.compose.material3.Icon
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavController
+import `in`.iotkiit.raidersreckoningapp.R
 
 sealed class BottomNavOptions(
     val route: String,
     val labelOfIcon: String,
-    val unselectedIcon: ImageVector,
-    val selectedIcon: ImageVector,
+    val unselectedIcon: Int,
+    val selectedIcon: Int,
     val onOptionClicked: (NavController) -> Unit,
 ) {
 
     data object DashBoardOption: BottomNavOptions(
         route = RaidersReckoningScreens.DashBoardScreen.route,
         labelOfIcon = "Dashboard",
-        unselectedIcon = Icons.Outlined.Home,
-        selectedIcon = Icons.Filled.Home,
+        unselectedIcon = R.drawable.nav_home,
+        selectedIcon = R.drawable.nav_home_filled,
         onOptionClicked = {
             it.navigate(RaidersReckoningScreens.DashBoardScreen.route) {
                 popUpTo(it.graph.startDestinationId)
@@ -36,8 +26,8 @@ sealed class BottomNavOptions(
     data object LeaderboardOption: BottomNavOptions(
         route = RaidersReckoningScreens.LeaderboardScreen.route,
         labelOfIcon = "Leaderboard",
-        selectedIcon = Icons.Filled.Menu,
-        unselectedIcon = Icons.Outlined.Menu,
+        selectedIcon = R.drawable.nav_leaderboard_filled,
+        unselectedIcon = R.drawable.nav_leaderboard,
         onOptionClicked = {
             it.navigate(RaidersReckoningScreens.LeaderboardScreen.route) {
                 popUpTo(it.graph.startDestinationId)
@@ -48,8 +38,8 @@ sealed class BottomNavOptions(
     data object MyTeamOption: BottomNavOptions(
         route = RaidersReckoningScreens.MyTeamScreen.route,
         labelOfIcon = "My team",
-        selectedIcon = Icons.Filled.Face,
-        unselectedIcon = Icons.Outlined.Face,
+        selectedIcon = R.drawable.nav_my_team_filled,
+        unselectedIcon = R.drawable.nav_my_team,
         onOptionClicked = {
             it.navigate(RaidersReckoningScreens.MyTeamScreen.route) {
                 popUpTo(it.graph.startDestinationId)

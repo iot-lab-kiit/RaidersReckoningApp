@@ -1,21 +1,17 @@
 package `in`.iotkiit.raidersreckoningapp.view.navigation
 
-import android.content.res.Configuration
-import androidx.compose.foundation.background
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -40,11 +36,13 @@ fun BottomNavBar(
 ) {
     NavigationBar(
         containerColor = GreenCOD.copy(.1f),
-        modifier = Modifier.clip(CircleShape)
+        modifier = Modifier
+            .padding(8.dp)
+            .clip(CircleShape)
     ) {
         val backStackEntry = navController.currentBackStackEntryAsState()
 
-        for (menuItem in bottomMenu) {
+        bottomMenu.forEach { menuItem ->
             val selected =
                 (menuItem.route == backStackEntry.value?.destination?.parent?.route) || (menuItem.route == backStackEntry.value?.destination?.route)
 
@@ -54,24 +52,22 @@ fun BottomNavBar(
                     menuItem.onOptionClicked(navController)
                 },
                 icon = {
-                    val currentIcon = if (selected) menuItem.selectedIcon
-                    else menuItem.unselectedIcon
-
-                    Icon(
-                        imageVector = currentIcon,
-                        modifier = Modifier.size(36.dp),
-                        contentDescription = menuItem.labelOfIcon
+                    Image(
+                        painter = painterResource(
+                            id = if (selected) menuItem.selectedIcon else menuItem.unselectedIcon
+                        ),
+                        contentDescription = menuItem.labelOfIcon,
+                        modifier = Modifier.size(32.dp)
                     )
                 },
                 colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = Color.Black,
-                    unselectedIconColor = Color.White,
-                    indicatorColor = Color.White
+                    indicatorColor = Color.Transparent
                 )
             )
         }
     }
 }
+
 
 @Preview()
 @Composable
