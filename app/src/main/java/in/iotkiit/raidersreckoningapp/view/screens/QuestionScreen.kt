@@ -19,7 +19,6 @@ import `in`.iotkiit.raidersreckoningapp.view.components.myTeam.Fields
 import `in`.iotkiit.raidersreckoningapp.vm.TeamViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun QuestionScreen(
     navController: NavController,
@@ -35,7 +34,7 @@ fun QuestionScreen(
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top,
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(it)
         ) {
 
             Text(
