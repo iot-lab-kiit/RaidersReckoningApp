@@ -10,10 +10,13 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import `in`.iotkiit.raidersreckoningapp.view.screens.CreateTeamScreen
 import `in`.iotkiit.raidersreckoningapp.view.screens.DashBoardScreen
+import `in`.iotkiit.raidersreckoningapp.view.screens.JoinTeamScreen
 import `in`.iotkiit.raidersreckoningapp.view.screens.LeaderboardScreen
 import `in`.iotkiit.raidersreckoningapp.view.screens.LoginScreenControl
 import `in`.iotkiit.raidersreckoningapp.view.screens.MyTeamScreen
 import `in`.iotkiit.raidersreckoningapp.view.screens.OnBoardingScreen
+import `in`.iotkiit.raidersreckoningapp.view.screens.QuestionScreenChoice
+import `in`.iotkiit.raidersreckoningapp.view.screens.QuestionScreen
 
 @Composable
 fun RaidersReckoningNavigation(
@@ -40,6 +43,7 @@ fun RaidersReckoningNavigation(
         composable(RaidersReckoningScreens.OnBoardingScreen.route) {
             OnBoardingScreen(navController = navController)
         }
+
         composable(RaidersReckoningScreens.CreateTeamScreen.route){
             CreateTeamScreen(navController = navController)
         }
@@ -58,9 +62,20 @@ fun RaidersReckoningNavigation(
         composable(RaidersReckoningScreens.MyTeamScreen.route) {
             MyTeamScreen(navController = navController)
         }
+        composable(RaidersReckoningScreens.QuestionScreenChoice.route) {
+           QuestionScreenChoice(navController = navController)
+        }
+        composable(RaidersReckoningScreens.QuestionScreen.route) {
+            QuestionScreen(navController = navController)
+        }
         composable(RaidersReckoningScreens.LeaderboardScreen.route) {
             LeaderboardScreen(navController = navController)
         }
+
+        composable(RaidersReckoningScreens.JoinTeamScreen.route) {
+            JoinTeamScreen()
+        }
+
     }
 }
 
