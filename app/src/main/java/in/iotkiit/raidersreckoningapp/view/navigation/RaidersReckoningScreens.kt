@@ -9,5 +9,5 @@ sealed class RaidersReckoningScreens(val route: String) {
     object OnBoardingScreen : RaidersReckoningScreens("onBoarding_screen")
     object QuestionScreenChoice : RaidersReckoningScreens("question_screen_choice")
     object QuestionScreen: RaidersReckoningScreens("question_screen")
-
+    object JoinTeamScreen: RaidersReckoningScreens("join_team_screen")
 }

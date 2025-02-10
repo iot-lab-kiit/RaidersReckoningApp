@@ -1,6 +1,5 @@
 package `in`.iotkiit.raidersreckoningapp.view.screens
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -30,7 +29,6 @@ import `in`.iotkiit.raidersreckoningapp.view.navigation.BottomNavBar
 import `in`.iotkiit.raidersreckoningapp.view.navigation.BottomNavOptions.Companion.bottomNavOptions
 import `in`.iotkiit.raidersreckoningapp.vm.DashBoardViewModel
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun DashBoardScreen(
     navController: NavController,
@@ -51,16 +49,18 @@ fun DashBoardScreen(
                 points = 10
             )
         }
-    ) { paddingValues ->
+    ) {
 
         Surface(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues),
+                .padding(it),
             color = Color.Black
         ) {
             Column(
-                modifier = Modifier.fillMaxSize().padding(20.dp),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top
             ) {
@@ -72,7 +72,8 @@ fun DashBoardScreen(
 
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth().padding(top = 16.dp),
+                        .fillMaxWidth()
+                        .padding(top = 16.dp),
                     horizontalArrangement = Arrangement.Start,
                     verticalAlignment = Alignment.Bottom
                 ) {
@@ -122,7 +123,7 @@ fun DashBoardScreen(
                     modifier = Modifier
                 ) {
                     Image(
-                        modifier = Modifier.padding(16.dp),
+                        modifier = Modifier.padding(6.dp),
                         painter = painterResource(R.drawable.scan),
                         contentDescription = null
                     )

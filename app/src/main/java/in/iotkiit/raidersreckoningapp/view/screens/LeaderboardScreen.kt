@@ -1,6 +1,5 @@
 package `in`.iotkiit.raidersreckoningapp.view.screens
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -15,7 +14,6 @@ import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -33,7 +31,6 @@ import `in`.iotkiit.raidersreckoningapp.view.navigation.BottomNavBar
 import `in`.iotkiit.raidersreckoningapp.view.navigation.BottomNavOptions.Companion.bottomNavOptions
 import `in`.iotkiit.raidersreckoningapp.vm.LeaderboardViewModel
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun LeaderboardScreen(
     navController: NavController,
@@ -43,6 +40,7 @@ fun LeaderboardScreen(
     val leaderboardDataState = leaderboardViewModel.getLeaderboardData.collectAsState().value
 
     Scaffold(
+        containerColor = Color.Black,
         topBar = {
             TopBar(
                 modifier = Modifier.fillMaxWidth(),
@@ -54,103 +52,96 @@ fun LeaderboardScreen(
             BottomNavBar(navController = navController, bottomMenu = bottomNavOptions)
         }
     ) {
-
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = Color.Black
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(it)
+                .background(Color.Black),
+            verticalArrangement = Arrangement.SpaceAround
         ) {
             Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.SpaceAround
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(32.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
+
+                Column {
+                    Text(
+                        text = "CURRENT LEADERS",
+                        style = MaterialTheme.typography.titleSmall,
+                        color = Color.White,
+                        modifier = Modifier.padding(16.dp)
+
+                    )
+                    CurrentLeaders(
+                        players = listOf(
+                            "imissher",
+                            "noobmaster69",
+                            "zrfghrrh"
+                        )
+                    )
+                }
+
                 Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(32.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    modifier = Modifier.safeDrawingPadding()
                 ) {
-
-                    Column {
-                        Text(
-                            text = "CURRENT LEADERS",
-                            style = MaterialTheme.typography.titleSmall,
-                            color = Color.White,
-                            modifier = Modifier.padding(vertical = 16.dp)
-
-                        )
-
-                        CurrentLeaders(
-                            players = listOf(
-                                "imissher",
-                                "noobmaster69",
-                                "zrfghrrh"
-                            )
-                        )
-                    }
-
-                    Column(
-                        modifier = Modifier.safeDrawingPadding()
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
+                        Text(
+                            text = "ROUND",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = Color.White
+                        )
+                        Text(
+                            text = "30:00",
+                            style = MaterialTheme.typography.headlineSmall,
+                            color = Color.White
+                        )
 
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text(
-                                text = "ROUND",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = Color.White
-                            )
-                            Text(
-                                text = "30:00",
-                                style = MaterialTheme.typography.headlineSmall,
-                                color = Color.White
-                            )
-
-                        }
-
-                        Row(
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .background(
-                                    color = GreenCOD.copy(1f),
-                                    shape = RoundedCornerShape(15.dp)
-                                )
-                                .border(
-                                    width = 1.04.dp,
-                                    color = GreenCOD,
-                                    shape = RoundedCornerShape(12.dp)
-                                )
-                                .padding(16.dp)
-                        ) {
-                            Text(
-                                text = "rank",
-                                style = MaterialTheme.typography.labelMedium,
-                                color = Color.Black
-                            )
-                            Text(
-                                text = "Team",
-                                style = MaterialTheme.typography.labelMedium,
-                                color = Color.Black
-                            )
-                            Text(
-                                text = "score",
-                                style = MaterialTheme.typography.labelMedium,
-                                color = Color.Black
-                            )
-
-                        }
-                        Spacer(Modifier.height(1.dp))
-                        LeaderboardFields("TasForce141", "1", "69")
-                        Spacer(Modifier.height(1.dp))
-                        LeaderboardFields("GuerillaForce", "2", "42")
-                        Spacer(Modifier.height(1.dp))
-                        LeaderboardFields("Shakalaka", "3", "1")
                     }
+
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(
+                                color = GreenCOD.copy(1f),
+                                shape = RoundedCornerShape(15.dp)
+                            )
+                            .border(
+                                width = 1.04.dp,
+                                color = GreenCOD,
+                                shape = RoundedCornerShape(12.dp)
+                            )
+                            .padding(16.dp)
+                    ) {
+                        Text(
+                            text = "rank",
+                            style = MaterialTheme.typography.labelMedium,
+                            color = Color.Black
+                        )
+                        Text(
+                            text = "Team",
+                            style = MaterialTheme.typography.labelMedium,
+                            color = Color.Black
+                        )
+                        Text(
+                            text = "score",
+                            style = MaterialTheme.typography.labelMedium,
+                            color = Color.Black
+                        )
+
+                    }
+                    Spacer(Modifier.height(1.dp))
+                    LeaderboardFields("TasForce141", "1", "69")
+                    Spacer(Modifier.height(1.dp))
+                    LeaderboardFields("GuerillaForce", "2", "42")
+                    Spacer(Modifier.height(1.dp))
+                    LeaderboardFields("Shakalaka", "3", "1")
                 }
             }
         }
@@ -190,8 +181,5 @@ fun LeaderboardScreen(
 //                }
 //            }
 //        }
-
-
     }
-
 }

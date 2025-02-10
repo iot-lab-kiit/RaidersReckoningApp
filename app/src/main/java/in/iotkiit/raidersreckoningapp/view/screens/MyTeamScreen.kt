@@ -1,12 +1,12 @@
 package `in`.iotkiit.raidersreckoningapp.view.screens
 
-import android.annotation.SuppressLint
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -22,7 +22,6 @@ import `in`.iotkiit.raidersreckoningapp.view.navigation.BottomNavBar
 import `in`.iotkiit.raidersreckoningapp.view.navigation.BottomNavOptions.Companion.bottomNavOptions
 import `in`.iotkiit.raidersreckoningapp.vm.DashBoardViewModel
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun MyTeamScreen(
     navController: NavController,
@@ -32,6 +31,7 @@ fun MyTeamScreen(
     val dashBoardState = dashBoardViewModel.getDashBoardState.collectAsState().value
 
     Scaffold(
+        containerColor = Color.Black,
         modifier = Modifier.fillMaxSize(),
         topBar = {
             TopBar(
@@ -44,34 +44,26 @@ fun MyTeamScreen(
             BottomNavBar(navController = navController, bottomMenu = bottomNavOptions)
         }
     ) {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = Color.Black
+        Column(
+            modifier = Modifier.fillMaxSize().padding(it).background(Color.Black),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
+                modifier = Modifier,
+                verticalArrangement = Arrangement.spacedBy(8.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Column(
-                    modifier = Modifier,
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-
-                    Fields(
-                        field = "Taskforce141",
-                        containerColor = GreenCOD,
-                        contentColor = Color.Black,
-                    )
-
-                    Fields("Kunal")
-
-                    Fields("Binayak")
-
-                    Fields("Sarthak")
-                }
+                Fields(
+                    field = "Taskforce141",
+                    containerColor = GreenCOD,
+                    contentColor = Color.Black,
+                )
+                Fields("Kunal")
+                Fields("Binayak")
+                Fields("Sarthak")
             }
+        }
         }
 
 //        when (getDashBoardState) {
@@ -111,6 +103,4 @@ fun MyTeamScreen(
 //                }
 //            }
 //        }
-
-    }
 }

@@ -10,6 +10,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import `in`.iotkiit.raidersreckoningapp.view.screens.CreateTeamScreen
 import `in`.iotkiit.raidersreckoningapp.view.screens.DashBoardScreen
+import `in`.iotkiit.raidersreckoningapp.view.screens.JoinTeamScreen
 import `in`.iotkiit.raidersreckoningapp.view.screens.LeaderboardScreen
 import `in`.iotkiit.raidersreckoningapp.view.screens.LoginScreenControl
 import `in`.iotkiit.raidersreckoningapp.view.screens.MyTeamScreen
@@ -69,6 +70,10 @@ fun RaidersReckoningNavigation(
         }
         composable(RaidersReckoningScreens.LeaderboardScreen.route) {
             LeaderboardScreen(navController = navController)
+        }
+
+        composable(RaidersReckoningScreens.JoinTeamScreen.route) {
+            JoinTeamScreen()
         }
 
     }

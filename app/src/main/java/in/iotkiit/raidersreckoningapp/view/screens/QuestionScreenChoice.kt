@@ -18,7 +18,6 @@ import `in`.iotkiit.raidersreckoningapp.view.components.myTeam.Fields
 import `in`.iotkiit.raidersreckoningapp.vm.TeamViewModel
 
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun QuestionScreenChoice(
     navController: NavController,
@@ -35,7 +34,7 @@ fun QuestionScreenChoice(
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top,
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(it)
         ) {
             Text(
                 text = "Time: ${timer.value} s",
@@ -64,7 +63,6 @@ fun QuestionScreenChoice(
                 options.forEach { option ->
                     Fields(
                         field = option,
-                        copy = if (option == selectedOption) 1f else 0.1f
                     )
                 }
             }

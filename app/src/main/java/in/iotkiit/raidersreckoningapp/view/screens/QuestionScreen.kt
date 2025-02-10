@@ -18,7 +18,7 @@ import `in`.iotkiit.raidersreckoningapp.ui.theme.modernWarfare
 import `in`.iotkiit.raidersreckoningapp.view.components.myTeam.Fields
 import `in`.iotkiit.raidersreckoningapp.vm.TeamViewModel
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun QuestionScreen(
     navController: NavController,
@@ -34,7 +34,7 @@ fun QuestionScreen(
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top,
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(it)
         ) {
 
             Text(
@@ -50,7 +50,6 @@ fun QuestionScreen(
 
             Fields(
                 field = question,
-                copy = 1f
             )
 
             Spacer(modifier = Modifier.height(32.dp))
