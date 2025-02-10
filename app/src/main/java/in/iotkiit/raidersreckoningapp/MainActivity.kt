@@ -12,7 +12,6 @@ import `in`.iotkiit.raidersreckoningapp.view.navigation.RaidersReckoningNavigati
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
             RaidersReckoningAppTheme {
                 RaidersReckoningNavigation()
