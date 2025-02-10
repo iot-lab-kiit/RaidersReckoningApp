@@ -30,7 +30,7 @@ fun PointsCard(
     points: Int
 ) {
     Card(
-        modifier = modifier.clip(RectangleShape),
+        modifier = modifier.clip(RectangleShape).padding(end = 20.dp),
         colors = CardColors(
             contentColor = Color.Black,
             containerColor = GreenCOD,
@@ -40,7 +40,6 @@ fun PointsCard(
     ) {
         Row(
             modifier = Modifier.padding(6.dp),
-//            horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
@@ -53,7 +52,7 @@ fun PointsCard(
             Image(
                 painter = painterResource(R.drawable.points),
                 contentDescription = null,
-                modifier = Modifier.size(16.dp)
+                modifier = Modifier.size(20.dp)
             )
         }
     }
@@ -61,6 +60,6 @@ fun PointsCard(
 
 @Preview
 @Composable
-private fun PointsCardprev() {
+private fun PointsCardPrev() {
     PointsCard(modifier = Modifier ,14)
 }
