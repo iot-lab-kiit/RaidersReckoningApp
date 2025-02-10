@@ -106,6 +106,12 @@ dependencies {
 
     //coil
     implementation("io.coil-kt:coil-compose:2.5.0")
+
+    //ComposeQRGenerator
+    implementation("com.github.AbhranilNXT:ComposeQRGenerator:1.1.0")
+
+    //ZWing
+    implementation("com.journeyapps:zxing-android-embedded:4.3.0")
 }
 
 fun getToken(): String{
