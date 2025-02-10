@@ -64,7 +64,6 @@ fun QuestionScreenChoice(
                 options.forEach { option ->
                     Fields(
                         field = option,
-                        copy = if (option == selectedOption) 1f else 0.1f
                     )
                 }
             }

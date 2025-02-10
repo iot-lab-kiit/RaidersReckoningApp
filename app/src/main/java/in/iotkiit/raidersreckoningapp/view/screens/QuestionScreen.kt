@@ -18,6 +18,7 @@ import `in`.iotkiit.raidersreckoningapp.ui.theme.modernWarfare
 import `in`.iotkiit.raidersreckoningapp.view.components.myTeam.Fields
 import `in`.iotkiit.raidersreckoningapp.vm.TeamViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun QuestionScreen(
@@ -50,7 +51,6 @@ fun QuestionScreen(
 
             Fields(
                 field = question,
-                copy = 1f
             )
 
             Spacer(modifier = Modifier.height(32.dp))
