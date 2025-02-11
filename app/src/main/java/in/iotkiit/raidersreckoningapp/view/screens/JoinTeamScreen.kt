@@ -14,10 +14,17 @@ import androidx.compose.ui.viewinterop.AndroidView
 import com.journeyapps.barcodescanner.CaptureManager
 import com.journeyapps.barcodescanner.CompoundBarcodeView
 import androidx.compose.runtime.*
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import `in`.iotkiit.raidersreckoningapp.view.navigation.RaidersReckoningScreens
+import `in`.iotkiit.raidersreckoningapp.vm.DashBoardViewModel
+import `in`.iotkiit.raidersreckoningapp.vm.LeaderboardViewModel
 
 @Composable
-fun JoinTeamScreen() {
+fun JoinTeamScreen(
+    navController: NavController,
+    dashBoardViewModel: DashBoardViewModel = hiltViewModel()
+) {
     val context = LocalContext.current
 
     val sharedPreferences = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
@@ -76,10 +83,4 @@ fun JoinTeamScreen() {
     } else {
         Toast.makeText(context, "Grant camera permission to scan.", Toast.LENGTH_SHORT).show()
     }
-}
-
-@Preview
-@Composable
-fun JoinTeamScreenPreview() {
-    JoinTeamScreen()
 }

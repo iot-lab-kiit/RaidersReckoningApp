@@ -1,12 +1,20 @@
 package `in`.iotkiit.raidersreckoningapp.view.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import `in`.iotkiit.raidersreckoningapp.view.screens.*
+import `in`.iotkiit.raidersreckoningapp.view.screens.CreateTeamScreen
+import `in`.iotkiit.raidersreckoningapp.view.screens.DashBoardScreen
+import `in`.iotkiit.raidersreckoningapp.view.screens.JoinTeamScreen
+import `in`.iotkiit.raidersreckoningapp.view.screens.LeaderboardScreen
+import `in`.iotkiit.raidersreckoningapp.view.screens.LoginScreen
+import `in`.iotkiit.raidersreckoningapp.view.screens.MyTeamScreen
+import `in`.iotkiit.raidersreckoningapp.view.screens.OnBoardingScreen
+import `in`.iotkiit.raidersreckoningapp.view.screens.QuestionScreen
+import `in`.iotkiit.raidersreckoningapp.view.screens.QuestionScreenChoice
+import `in`.iotkiit.raidersreckoningapp.view.screens.SplashScreen
 
 @Composable
 fun RaidersReckoningNavigation(
@@ -14,7 +22,7 @@ fun RaidersReckoningNavigation(
 ) {
     NavHost(
         navController = navController,
-        startDestination = RaidersReckoningScreens.SplashScreen.route
+        startDestination = RaidersReckoningScreens.OnBoardingScreen.route
     ) {
         composable(RaidersReckoningScreens.SplashScreen.route) {
             SplashScreen(navController = navController)
@@ -53,13 +61,7 @@ fun RaidersReckoningNavigation(
         }
 
         composable(RaidersReckoningScreens.JoinTeamScreen.route) {
-            JoinTeamScreen()
+            JoinTeamScreen(navController = navController)
         }
     }
-}
-
-@Preview
-@Composable
-private fun RaidersReckoningNavigationPrev() {
-    RaidersReckoningNavigation()
 }

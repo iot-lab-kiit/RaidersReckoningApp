@@ -14,11 +14,16 @@ import retrofit2.http.POST
 
 interface TeamApi {
 
+    @GET(Constants.VERIFY_TOKEN_ENDPOINT)
+    suspend fun verifyToken(
+        @Header("Authorization") accessToken: String
+    ): CustomResponse<Unit>
+
     @POST(Constants.CREATE_TEAM_ENDPOINT)
     suspend fun createTeam(
         @Header("Authorization") accessToken: String,
         @Body createTeamBody: CreateTeamBody
-    ): CustomResponse<Unit>
+    ): CustomResponse<TeamInfo>
 
     @POST(Constants.JOIN_TEAM_ENDPOINT)
     suspend fun joinTeam(
