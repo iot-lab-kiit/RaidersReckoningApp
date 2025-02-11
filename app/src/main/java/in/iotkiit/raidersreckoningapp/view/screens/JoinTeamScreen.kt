@@ -2,6 +2,7 @@ package `in`.iotkiit.raidersreckoningapp.view.screens
 
 import android.app.Activity
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -9,22 +10,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
 import com.journeyapps.barcodescanner.CaptureManager
 import com.journeyapps.barcodescanner.CompoundBarcodeView
 import androidx.compose.runtime.*
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import `in`.iotkiit.raidersreckoningapp.view.navigation.RaidersReckoningScreens
+import com.google.firebase.auth.FirebaseAuth
 import `in`.iotkiit.raidersreckoningapp.vm.DashBoardViewModel
-import `in`.iotkiit.raidersreckoningapp.vm.LeaderboardViewModel
 
 @Composable
 fun JoinTeamScreen(
     navController: NavController,
     dashBoardViewModel: DashBoardViewModel = hiltViewModel()
 ) {
+    val auth = FirebaseAuth.getInstance()
+
     val context = LocalContext.current
 
     val sharedPreferences = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
@@ -77,6 +78,14 @@ fun JoinTeamScreen(
 
         DisposableEffect(Unit) {
             onDispose {
+                try {
+                    auth.signOut()
+                    navController.navigate("login_graph") {
+                        popUpTo("main") { inclusive = true }
+                    }
+                } catch (e: Exception) {
+                    Log.e("Logout", "Logout failed: ${e.message}")
+                }
                 compoundBarcodeView.pause()
             }
         }
