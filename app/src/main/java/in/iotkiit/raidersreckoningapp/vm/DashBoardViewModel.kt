@@ -47,6 +47,11 @@ class DashBoardViewModel @Inject constructor(
         MutableStateFlow(UiState.Idle)
     val verifyTokenState = _verifyTokenState.asStateFlow()
 
+    // Update the ViewModel's resetVerifyTokenState function
+    fun resetVerifyTokenState() {
+        _verifyTokenState.value = UiState.Idle
+    }
+
     fun verifyToken(accessToken: String) {
         _verifyTokenState.value = UiState.Loading
         viewModelScope.launch {
@@ -63,9 +68,5 @@ class DashBoardViewModel @Inject constructor(
                 _verifyTokenState.value = UiState.Failed(e.message ?: "Unknown error")
             }
         }
-    }
-
-    fun resetVerifyTokenState(){
-        _verifyTokenState.value = UiState.Loading
     }
 }

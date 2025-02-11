@@ -6,68 +6,48 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.google.firebase.Firebase
-import com.google.firebase.auth.auth
-import `in`.iotkiit.raidersreckoningapp.view.screens.CreateTeamScreen
-import `in`.iotkiit.raidersreckoningapp.view.screens.DashBoardScreen
-import `in`.iotkiit.raidersreckoningapp.view.screens.JoinTeamScreen
-import `in`.iotkiit.raidersreckoningapp.view.screens.LeaderboardScreen
-import `in`.iotkiit.raidersreckoningapp.view.screens.LoginScreenControl
-import `in`.iotkiit.raidersreckoningapp.view.screens.MyTeamScreen
-import `in`.iotkiit.raidersreckoningapp.view.screens.OnBoardingScreen
-import `in`.iotkiit.raidersreckoningapp.view.screens.QuestionScreenChoice
-import `in`.iotkiit.raidersreckoningapp.view.screens.QuestionScreen
+import `in`.iotkiit.raidersreckoningapp.view.screens.*
 
 @Composable
 fun RaidersReckoningNavigation(
     navController: NavHostController = rememberNavController()
 ) {
-
-    //This variable checks if the user is logged in or not
-    val isUserLoggedIn = Firebase.auth.currentUser != null
-
-    //This variable updates the start destination as per the user's login status
-    val startDestination = if (isUserLoggedIn) {
-        RaidersReckoningScreens.DashBoardScreen.route
-    } else {
-        RaidersReckoningScreens.DashBoardScreen.route
-    }
-
     NavHost(
         navController = navController,
-        startDestination = startDestination
+        startDestination = RaidersReckoningScreens.SplashScreen.route
     ) {
+        composable(RaidersReckoningScreens.SplashScreen.route) {
+            SplashScreen(navController = navController)
+        }
+
         composable(RaidersReckoningScreens.DashBoardScreen.route) {
             DashBoardScreen(navController = navController)
         }
+
         composable(RaidersReckoningScreens.OnBoardingScreen.route) {
             OnBoardingScreen(navController = navController)
         }
 
-        composable(RaidersReckoningScreens.CreateTeamScreen.route){
+        composable(RaidersReckoningScreens.CreateTeamScreen.route) {
             CreateTeamScreen(navController = navController)
         }
+
         composable(RaidersReckoningScreens.LoginScreen.route) {
-            LoginScreenControl(
-                onLoginSuccess = {
-                    navController.navigate(RaidersReckoningScreens.DashBoardScreen.route) {
-                        popUpTo(RaidersReckoningScreens.LoginScreen.route) {
-                            inclusive = true
-                            saveState = true
-                        }
-                    }
-                }
-            )
+            LoginScreen(navController = navController)
         }
+
         composable(RaidersReckoningScreens.MyTeamScreen.route) {
             MyTeamScreen(navController = navController)
         }
+
         composable(RaidersReckoningScreens.QuestionScreenChoice.route) {
-           QuestionScreenChoice(navController = navController)
+            QuestionScreenChoice(navController = navController)
         }
+
         composable(RaidersReckoningScreens.QuestionScreen.route) {
             QuestionScreen(navController = navController)
         }
+
         composable(RaidersReckoningScreens.LeaderboardScreen.route) {
             LeaderboardScreen(navController = navController)
         }
@@ -75,7 +55,6 @@ fun RaidersReckoningNavigation(
         composable(RaidersReckoningScreens.JoinTeamScreen.route) {
             JoinTeamScreen()
         }
-
     }
 }
 
