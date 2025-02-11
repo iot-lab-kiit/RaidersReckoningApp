@@ -2,6 +2,7 @@ package `in`.iotkiit.raidersreckoningapp.data.remote
 
 import `in`.iotkiit.raidersreckoningapp.data.model.CreateTeamBody
 import `in`.iotkiit.raidersreckoningapp.data.model.CustomResponse
+import `in`.iotkiit.raidersreckoningapp.data.model.GetTeamResponse
 import `in`.iotkiit.raidersreckoningapp.data.model.JoinTeamBody
 import `in`.iotkiit.raidersreckoningapp.data.model.Question
 import `in`.iotkiit.raidersreckoningapp.data.model.TeamInfo
@@ -17,13 +18,18 @@ interface TeamApi {
     suspend fun createTeam(
         @Header("Authorization") accessToken: String,
         @Body createTeamBody: CreateTeamBody
-    ): CustomResponse<TeamInfo>
+    ): CustomResponse<Unit>
 
     @POST(Constants.JOIN_TEAM_ENDPOINT)
     suspend fun joinTeam(
         @Header("Authorization") accessToken: String,
         @Body joinTeamBody: JoinTeamBody
     ): CustomResponse<Unit>
+
+    @GET(Constants.GET_TEAM_ENDPOINT)
+    suspend fun getTeam(
+        @Header("Authorization") accessToken: String
+    ): CustomResponse<GetTeamResponse>
 
     @GET(Constants.GET_QUESTIONS)
     suspend fun getQuestions(
