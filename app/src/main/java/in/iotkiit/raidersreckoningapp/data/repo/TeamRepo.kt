@@ -2,6 +2,7 @@ package `in`.iotkiit.raidersreckoningapp.data.repo
 
 import `in`.iotkiit.raidersreckoningapp.data.model.CreateTeamBody
 import `in`.iotkiit.raidersreckoningapp.data.model.CustomResponse
+import `in`.iotkiit.raidersreckoningapp.data.model.GetTeamResponse
 import `in`.iotkiit.raidersreckoningapp.data.model.JoinTeamBody
 import `in`.iotkiit.raidersreckoningapp.data.model.Question
 import `in`.iotkiit.raidersreckoningapp.data.model.TeamInfo
@@ -17,12 +18,12 @@ class TeamRepo @Inject constructor(
     suspend fun createTeam(
         accessToken: String,
         createTeamBody: CreateTeamBody
-    ): Flow<UiState<CustomResponse<TeamInfo>>> {
+    ): Flow<UiState<CustomResponse<Unit>>> {
         return flow {
             try {
                 emit(UiState.Loading)
 
-                val response: CustomResponse<TeamInfo> =
+                val response: CustomResponse<Unit> =
                     teamApi.createTeam(accessToken, createTeamBody)
 
                 if (response.success) {
@@ -51,6 +52,24 @@ class TeamRepo @Inject constructor(
                     emit(UiState.Success(response))
                 } else {
                     emit(UiState.Failed(response.message ?: "Failed to join team"))
+                }
+            } catch (e: Exception) {
+                emit(UiState.Failed(e.message.toString()))
+            }
+        }
+    }
+
+    suspend fun getTeam(accessToken: String) : Flow<UiState<CustomResponse<GetTeamResponse>>> {
+        return flow {
+            try {
+                emit(UiState.Loading)
+
+                val response = teamApi.getTeam(accessToken)
+
+                if (response.success) {
+                    emit(UiState.Success(response))
+                } else {
+                    emit(UiState.Failed(response.message ?: "Failed to get team"))
                 }
             } catch (e: Exception) {
                 emit(UiState.Failed(e.message.toString()))
