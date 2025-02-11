@@ -15,7 +15,6 @@ import `in`.iotkiit.raidersreckoningapp.view.screens.OnBoardingScreen
 import `in`.iotkiit.raidersreckoningapp.view.screens.ProceedScreen
 import `in`.iotkiit.raidersreckoningapp.view.screens.QuestionScreen
 import `in`.iotkiit.raidersreckoningapp.view.screens.QuestionScreenChoice
-import `in`.iotkiit.raidersreckoningapp.view.screens.SplashScreen
 
 @Composable
 fun RaidersReckoningNavigation(
@@ -25,10 +24,6 @@ fun RaidersReckoningNavigation(
         navController = navController,
         startDestination = RaidersReckoningScreens.LoginScreen.route
     ) {
-        composable(RaidersReckoningScreens.SplashScreen.route) {
-            SplashScreen(navController = navController)
-        }
-
         composable(RaidersReckoningScreens.DashBoardScreen.route) {
             DashBoardScreen(navController = navController)
         }

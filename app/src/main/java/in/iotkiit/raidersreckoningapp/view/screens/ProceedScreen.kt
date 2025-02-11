@@ -22,6 +22,7 @@ import `in`.iotkiit.raidersreckoningapp.state.UiState
 import `in`.iotkiit.raidersreckoningapp.ui.theme.GreenCOD
 
 import `in`.iotkiit.raidersreckoningapp.view.components.myTeam.Fields
+import `in`.iotkiit.raidersreckoningapp.view.navigation.RaidersReckoningScreens
 import `in`.iotkiit.raidersreckoningapp.vm.TeamViewModel
 
 
@@ -30,7 +31,6 @@ fun ProceedScreen(
     navController: NavHostController,
     teamViewModel: TeamViewModel = hiltViewModel()
 ) {
-    val getTeamState = teamViewModel.getTeamState.collectAsState().value
 
     Scaffold(
         modifier = Modifier.fillMaxSize()
@@ -50,7 +50,7 @@ fun ProceedScreen(
                     .padding(8.dp)
             ) {
                 Button(
-                    onClick = { teamViewModel.getTeam() },
+                    onClick = { navController.navigate(RaidersReckoningScreens.DashBoardScreen.route) },
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent)
                 ) {
@@ -59,29 +59,6 @@ fun ProceedScreen(
             }
 
             Spacer(modifier = Modifier.height(16.dp))
-
-            when (getTeamState) {
-                is UiState.Loading -> {
-                    LinearProgressIndicator(color = GreenCOD)
-                }
-                is UiState.Success -> {
-                    val teamData =
-                       getTeamState.data.data
-                    if (teamData != null) {
-                        Text(
-                            "Team Name: ${teamData.name}",
-                            fontSize = 18.sp
-                        )
-                    }
-                }
-                is UiState.Failed -> {
-                    Text(
-                        text = getTeamState.message,
-                        fontSize = 16.sp
-                    )
-                }
-                else -> {}
-            }
         }
     }
 }
