@@ -155,14 +155,6 @@ fun CreateTeamScreen(
                         },
                         text = "SUBMIT"
                     )
-
-                    when (createTeamState) {
-                        is UiState.Loading -> {
-                            Text("Creating team...", color = Color.White)
-                        }
-                        is UiState.Idle -> {}
-                        else -> {}
-                    }
                 }
             }
         }
