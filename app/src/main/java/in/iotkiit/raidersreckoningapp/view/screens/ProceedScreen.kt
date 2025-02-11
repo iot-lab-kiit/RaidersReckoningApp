@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -13,18 +14,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import `in`.iotkiit.raidersreckoningapp.data.model.CustomResponse
 import `in`.iotkiit.raidersreckoningapp.data.model.GetTeamResponse
 import `in`.iotkiit.raidersreckoningapp.state.UiState
+import `in`.iotkiit.raidersreckoningapp.ui.theme.GreenCOD
 
 import `in`.iotkiit.raidersreckoningapp.view.components.myTeam.Fields
 import `in`.iotkiit.raidersreckoningapp.vm.TeamViewModel
 
 
 @Composable
-fun ProceedScreen(navController: NavHostController, teamViewModel: TeamViewModel) {
-    val getTeamState = teamViewModel.getTeamState.collectAsState()
+fun ProceedScreen(
+    navController: NavHostController,
+    teamViewModel: TeamViewModel = hiltViewModel()
+) {
+    val getTeamState = teamViewModel.getTeamState.collectAsState().value
 
     Scaffold(
         modifier = Modifier.fillMaxSize()
@@ -43,24 +49,24 @@ fun ProceedScreen(navController: NavHostController, teamViewModel: TeamViewModel
                     .fillMaxWidth(0.7f)
                     .padding(8.dp)
             ) {
-//                Button(
-//                    onClick = { teamViewModel.getTeam(accessToken) },
-//                    modifier = Modifier.fillMaxWidth(),
-//                    colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent)
-//                ) {
-//                    Fields("Get Team")
-//                }
+                Button(
+                    onClick = { teamViewModel.getTeam() },
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent)
+                ) {
+                    Fields("Get Team")
+                }
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            when (getTeamState.value) {
+            when (getTeamState) {
                 is UiState.Loading -> {
-                    CircularProgressIndicator()
+                    LinearProgressIndicator(color = GreenCOD)
                 }
                 is UiState.Success -> {
                     val teamData =
-                        (getTeamState.value as UiState.Success<CustomResponse<GetTeamResponse>>).data.data
+                       getTeamState.data.data
                     if (teamData != null) {
                         Text(
                             "Team Name: ${teamData.name}",
@@ -70,7 +76,7 @@ fun ProceedScreen(navController: NavHostController, teamViewModel: TeamViewModel
                 }
                 is UiState.Failed -> {
                     Text(
-                        (getTeamState.value as UiState.Failed).message,
+                        text = getTeamState.message,
                         fontSize = 16.sp
                     )
                 }

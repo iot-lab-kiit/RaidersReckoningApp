@@ -43,7 +43,7 @@ fun LoginScreen(
 @Composable
 private fun LoginScreenControl(
     onLoginSuccess: () -> Unit,
-    dashBoardViewModel: DashBoardViewModel
+    dashBoardViewModel: DashBoardViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
     val verifyTokenState = dashBoardViewModel.verifyTokenState.collectAsState().value
@@ -86,7 +86,7 @@ private fun LoginScreenControl(
 
 @Composable
 private fun LoginScreenIdle(
-    dashBoardViewModel: DashBoardViewModel,
+    dashBoardViewModel: DashBoardViewModel = hiltViewModel(),
     resetTrigger: Int,
     onResetTrigger: () -> Unit
 ) {

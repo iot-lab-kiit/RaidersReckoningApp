@@ -66,7 +66,7 @@ fun SplashScreen(
         when (getTeamState) {
             is UiState.Idle -> {
                 if (currentUser != null) {
-                    teamViewModel.getTeam(currentUser.uid)
+                    teamViewModel.getTeam()
                 }
             }
             is UiState.Success -> {

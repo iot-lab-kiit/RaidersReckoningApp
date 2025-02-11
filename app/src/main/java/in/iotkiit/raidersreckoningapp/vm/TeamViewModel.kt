@@ -10,6 +10,7 @@ import `in`.iotkiit.raidersreckoningapp.data.model.GetTeamResponse
 import `in`.iotkiit.raidersreckoningapp.data.model.JoinTeamBody
 import `in`.iotkiit.raidersreckoningapp.data.model.Question
 import `in`.iotkiit.raidersreckoningapp.data.model.TeamInfo
+import `in`.iotkiit.raidersreckoningapp.data.repo.DashBoardRepo
 import `in`.iotkiit.raidersreckoningapp.data.repo.TeamRepo
 import `in`.iotkiit.raidersreckoningapp.state.UiState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +20,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TeamViewModel @Inject constructor(
-    private val teamRepo: TeamRepo,
+    private val teamRepo: TeamRepo
 ) : ViewModel() {
 
     private val _createTeamState: MutableStateFlow<UiState<CustomResponse<TeamInfo>>> =
@@ -30,7 +31,7 @@ class TeamViewModel @Inject constructor(
         _createTeamState.value = UiState.Loading
         viewModelScope.launch {
             try {
-                teamRepo.createTeam(accessToken, createTeamBody)
+                teamRepo.createTeam(teamRepo.getIdToken(), createTeamBody)
                     .collect { response ->
                         _createTeamState.value = response
                         if (response is UiState.Success) {
@@ -48,7 +49,7 @@ class TeamViewModel @Inject constructor(
         MutableStateFlow(UiState.Idle)
     val getTeamState = _getTeamState.asStateFlow()
 
-    fun getTeam(accessToken: String) {
+    fun getTeam() {
         _getTeamState.value = UiState.Loading
         viewModelScope.launch {
             try {

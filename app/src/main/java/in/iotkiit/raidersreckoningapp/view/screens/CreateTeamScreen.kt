@@ -1,5 +1,6 @@
 package `in`.iotkiit.raidersreckoningapp.view.screens
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -53,27 +54,28 @@ fun CreateTeamScreen(
     teamViewModel: TeamViewModel = hiltViewModel()
 ) {
     val teamName = remember { mutableStateOf("") }
-    val createTeamState by teamViewModel.createTeamState.collectAsState()
+    val createTeamState = teamViewModel.createTeamState.collectAsState().value
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val accessToken = ""
 
     LaunchedEffect(createTeamState) {
         when (createTeamState) {
+
             is UiState.Success -> {
-                Toast.makeText(
-                    context,
-                    "Team created successfully!",
-                    Toast.LENGTH_SHORT
-                ).show()
-                teamViewModel.resetCreateTeamState()
-                navController.navigate(RaidersReckoningScreens.ProceedScreen.route)
+                Toast.makeText(context, "Team created", Toast.LENGTH_SHORT).show()
+                navController.navigate(RaidersReckoningScreens.ProceedScreen.route) {
+                    popUpTo(RaidersReckoningScreens.CreateTeamScreen.route) {
+                        saveState = true
+                        inclusive = true
+                    }
+                }
             }
+
             is UiState.Failed -> {
-                val errorMessage = (createTeamState as UiState.Failed).message
-                Toast.makeText(context, "Failed: $errorMessage", Toast.LENGTH_SHORT).show()
-                teamViewModel.resetCreateTeamState()
+                Toast.makeText(context, createTeamState.message, Toast.LENGTH_SHORT).show()
             }
+
             else -> {}
         }
     }

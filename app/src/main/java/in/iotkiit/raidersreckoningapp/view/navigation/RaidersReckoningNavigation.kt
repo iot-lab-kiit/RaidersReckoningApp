@@ -12,6 +12,7 @@ import `in`.iotkiit.raidersreckoningapp.view.screens.LeaderboardScreen
 import `in`.iotkiit.raidersreckoningapp.view.screens.LoginScreen
 import `in`.iotkiit.raidersreckoningapp.view.screens.MyTeamScreen
 import `in`.iotkiit.raidersreckoningapp.view.screens.OnBoardingScreen
+import `in`.iotkiit.raidersreckoningapp.view.screens.ProceedScreen
 import `in`.iotkiit.raidersreckoningapp.view.screens.QuestionScreen
 import `in`.iotkiit.raidersreckoningapp.view.screens.QuestionScreenChoice
 import `in`.iotkiit.raidersreckoningapp.view.screens.SplashScreen
@@ -22,7 +23,7 @@ fun RaidersReckoningNavigation(
 ) {
     NavHost(
         navController = navController,
-        startDestination = RaidersReckoningScreens.OnBoardingScreen.route
+        startDestination = RaidersReckoningScreens.LoginScreen.route
     ) {
         composable(RaidersReckoningScreens.SplashScreen.route) {
             SplashScreen(navController = navController)
@@ -58,6 +59,10 @@ fun RaidersReckoningNavigation(
 
         composable(RaidersReckoningScreens.LeaderboardScreen.route) {
             LeaderboardScreen(navController = navController)
+        }
+
+        composable(RaidersReckoningScreens.ProceedScreen.route) {
+            ProceedScreen(navController = navController)
         }
 
         composable(RaidersReckoningScreens.JoinTeamScreen.route) {
