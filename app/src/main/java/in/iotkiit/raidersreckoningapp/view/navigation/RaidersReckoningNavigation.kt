@@ -17,6 +17,8 @@ import `in`.iotkiit.raidersreckoningapp.view.screens.OnBoardingScreen
 import `in`.iotkiit.raidersreckoningapp.view.screens.ProceedScreen
 import `in`.iotkiit.raidersreckoningapp.view.screens.QuestionScreen
 import `in`.iotkiit.raidersreckoningapp.view.screens.QuestionScreenChoice
+import `in`.iotkiit.raidersreckoningapp.view.screens.QuestionScreenControl
+import `in`.iotkiit.raidersreckoningapp.view.screens.ResultsScreen
 
 @Composable
 fun RaidersReckoningNavigation(
@@ -55,12 +57,21 @@ fun RaidersReckoningNavigation(
             MyTeamScreen(navController = navController)
         }
 
-        composable(RaidersReckoningScreens.QuestionScreenChoice.route) {
-            QuestionScreenChoice(navController = navController)
+        composable(RaidersReckoningScreens.QuestionScreen.route) {
+            QuestionScreenControl(navController = navController)
         }
 
-        composable(RaidersReckoningScreens.QuestionScreen.route) {
-            QuestionScreen(navController = navController)
+        composable(RaidersReckoningScreens.ResultsScreen.route) {
+            ResultsScreen(
+                navController = navController,
+                onFinish = {
+                    navController.navigate(RaidersReckoningScreens.DashBoardScreen.route) {
+                        popUpTo(RaidersReckoningScreens.QuestionScreen.route) {
+                            inclusive = false
+                        }
+                    }
+                }
+            )
         }
 
         composable(RaidersReckoningScreens.LeaderboardScreen.route) {
