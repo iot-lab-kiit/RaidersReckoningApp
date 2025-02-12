@@ -27,7 +27,7 @@ import `in`.iotkiit.raidersreckoningapp.ui.theme.modernWarfare
 @Composable
 fun PointsCard(
     modifier: Modifier = Modifier,
-    points: Int?
+    points: Int
 ) {
     Card(
         modifier = modifier.clip(RectangleShape).padding(end = 8.dp),
