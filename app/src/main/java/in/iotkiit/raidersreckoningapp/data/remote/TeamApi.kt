@@ -23,7 +23,7 @@ interface TeamApi {
     suspend fun createTeam(
         @Header("Authorization") accessToken: String,
         @Body createTeamBody: CreateTeamBody
-    ): CustomResponse<TeamInfo>
+    ): CustomResponse<Unit>
 
     @POST(Constants.JOIN_TEAM_ENDPOINT)
     suspend fun joinTeam(
