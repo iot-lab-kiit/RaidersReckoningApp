@@ -1,18 +1,27 @@
 package `in`.iotkiit.raidersreckoningapp.view.screens
 
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.ListItemDefaults.contentColor
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -22,6 +31,7 @@ import `in`.iotkiit.raidersreckoningapp.data.model.CustomResponse
 import `in`.iotkiit.raidersreckoningapp.data.model.GetTeamResponse
 import `in`.iotkiit.raidersreckoningapp.state.UiState
 import `in`.iotkiit.raidersreckoningapp.ui.theme.GreenCOD
+import `in`.iotkiit.raidersreckoningapp.view.components.core.PrimaryButton
 import `in`.iotkiit.raidersreckoningapp.view.components.core.TeamCard
 
 import `in`.iotkiit.raidersreckoningapp.view.components.myTeam.Fields
@@ -42,7 +52,15 @@ fun ProceedScreen(
             teamViewModel.getTeam()
         }
         is UiState.Loading -> {
-            CircularProgressIndicator()
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                LinearProgressIndicator(color = GreenCOD)
+            }
         }
         is UiState.Success -> {
             Scaffold(
@@ -51,15 +69,20 @@ fun ProceedScreen(
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(paddingValues),
+                        .background(Color.Black)
+                        .padding(paddingValues)
+                        .verticalScroll(rememberScrollState()),
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
+                    verticalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    Image(painter = qrGenerator(content = teamState.data.data!!.id,
-                        size = 250.dp),
-                        contentDescription = null)
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Image(
+                        painter = qrGenerator(
+                            content = teamState.data.data!!.id,
+                            size = 250.dp
+                        ),
+                        contentDescription = null
+                    )
 
                     TeamCard(
                         teamName = teamState.data.data.name,
@@ -67,21 +90,13 @@ fun ProceedScreen(
                         teamMembers = teamState.data.data.participantsList.map { it.name }
                     )
 
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth(0.7f)
-                            .padding(8.dp)
-                    ) {
-                        Button(
-                            onClick = { navController.navigate(RaidersReckoningScreens.DashBoardScreen.route) },
-                            modifier = Modifier.fillMaxWidth(),
-                            colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent)
-                        ) {
-                            Fields("Get Team")
-                        }
-                    }
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                    PrimaryButton(
+                        onClick = { navController.navigate(RaidersReckoningScreens.DashBoardScreen.route) },
+                        text = "Proceed",
+                        contentColor = GreenCOD,
+                        containerColor = GreenCOD.copy(0.1f)
+                    )
                 }
             }
         }
