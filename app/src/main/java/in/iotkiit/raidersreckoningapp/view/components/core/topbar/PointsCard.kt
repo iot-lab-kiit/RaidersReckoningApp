@@ -30,7 +30,7 @@ fun PointsCard(
     points: Int
 ) {
     Card(
-        modifier = modifier.clip(RectangleShape).padding(end = 20.dp),
+        modifier = modifier.clip(RectangleShape).padding(end = 8.dp),
         colors = CardColors(
             contentColor = Color.Black,
             containerColor = GreenCOD,
@@ -39,11 +39,11 @@ fun PointsCard(
         )
     ) {
         Row(
-            modifier = Modifier.padding(6.dp),
+            modifier = Modifier.padding(4.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                modifier = Modifier.padding(6.dp),
+                modifier = Modifier.padding(4.dp),
                 text = points.toString(),
                 fontFamily = modernWarfare,
                 fontSize = 12.sp,

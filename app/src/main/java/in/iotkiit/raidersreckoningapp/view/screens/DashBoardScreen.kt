@@ -1,6 +1,7 @@
 package `in`.iotkiit.raidersreckoningapp.view.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -31,50 +31,44 @@ import `in`.iotkiit.raidersreckoningapp.vm.DashBoardViewModel
 
 @Composable
 fun DashBoardScreen(
-    navController: NavController,
-    viewModel: DashBoardViewModel = hiltViewModel()
+    navController: NavController, viewModel: DashBoardViewModel = hiltViewModel()
 ) {
 
     val getDashBoardState = viewModel.getDashBoardState.collectAsState().value
 
-    Scaffold(
-        containerColor = Color.Black,
-        bottomBar = {
-            BottomNavBar(navController = navController, bottomMenu = bottomNavOptions)
-        },
-        topBar = {
-            TopBar(
-                modifier = Modifier.fillMaxWidth(),
-                teamName = "TaskForce141",
-                points = 10
-            )
-        }
-    ) {
+    Scaffold(containerColor = Color.Black, bottomBar = {
+        BottomNavBar(navController = navController, bottomMenu = bottomNavOptions)
+    }, topBar = {
+        TopBar(
+            modifier = Modifier.fillMaxWidth(), teamName = "TaskForce141", points = 10
+        )
+    }) {
 
-        Surface(
+        Column(
             modifier = Modifier
+                .padding(it)
+                .padding(16.dp)
                 .fillMaxSize()
-                .padding(it),
-            color = Color.Black
+                .background(Color.Black),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceEvenly
         ) {
+
+            MapCard(
+                mapImage = painterResource(R.drawable.map),
+                soldierImage = painterResource(R.drawable.soldier)
+            )
+
             Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Top
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-
-                MapCard(
-                    mapImage = painterResource(R.drawable.map),
-                    soldierImage = painterResource(R.drawable.soldier)
-                )
-
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 16.dp),
-                    horizontalArrangement = Arrangement.Start,
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(
+                        space = 24.dp, alignment = Alignment.CenterHorizontally
+                    ),
                     verticalAlignment = Alignment.Bottom
                 ) {
                     Text(
@@ -83,22 +77,21 @@ fun DashBoardScreen(
                         color = Color.White
                     )
                     Text(
-                        modifier = Modifier.padding(start = 10.dp, bottom = 4.dp),
+                        modifier = Modifier,
                         text = "C001",
                         style = MaterialTheme.typography.labelSmall,
                         color = GreenCOD
                     )
                 }
+
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 50.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceAround,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
                         text = "Round 1",
-                        style = MaterialTheme.typography.headlineMedium,
+                        style = MaterialTheme.typography.bodyMedium,
                         color = GreenCOD
                     )
 
@@ -109,25 +102,17 @@ fun DashBoardScreen(
                     )
                 }
             }
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.Bottom,
-                horizontalAlignment = Alignment.CenterHorizontally
+
+            FloatingActionButton(
+                onClick = { /*TODO*/ },
+                containerColor = GreenCOD,
+                contentColor = Color.Black,
             ) {
-                FloatingActionButton(
-                    onClick = { /*TODO*/ },
-                    containerColor = GreenCOD,
-                    contentColor = Color.Black,
-                    modifier = Modifier
-                ) {
-                    Image(
-                        modifier = Modifier.padding(6.dp),
-                        painter = painterResource(R.drawable.scan),
-                        contentDescription = null
-                    )
-                }
+                Image(
+                    modifier = Modifier.padding(8.dp),
+                    painter = painterResource(R.drawable.scan),
+                    contentDescription = null
+                )
             }
         }
     }
