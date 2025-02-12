@@ -51,7 +51,7 @@ fun DashBoardScreen(
                 .fillMaxSize()
                 .background(Color.Black),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceEvenly
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
 
             MapCard(

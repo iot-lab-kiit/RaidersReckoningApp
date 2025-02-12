@@ -57,7 +57,7 @@ fun BottomNavBar(
                             id = if (selected) menuItem.selectedIcon else menuItem.unselectedIcon
                         ),
                         contentDescription = menuItem.labelOfIcon,
-                        modifier = Modifier.size(32.dp)
+                        modifier = Modifier.size(24.dp)
                     )
                 },
                 colors = NavigationBarItemDefaults.colors(
