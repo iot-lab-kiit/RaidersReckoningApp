@@ -23,7 +23,7 @@ class TeamViewModel @Inject constructor(
     private val teamRepo: TeamRepo
 ) : ViewModel() {
 
-    private val _createTeamState: MutableStateFlow<UiState<CustomResponse<TeamInfo>>> =
+    private val _createTeamState: MutableStateFlow<UiState<CustomResponse<Unit>>> =
         MutableStateFlow(UiState.Idle)
     val createTeamState = _createTeamState.asStateFlow()
 

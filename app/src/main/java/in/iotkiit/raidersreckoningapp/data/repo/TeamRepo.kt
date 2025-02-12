@@ -77,12 +77,12 @@ class TeamRepo @Inject constructor(
     suspend fun createTeam(
         accessToken: String,
         createTeamBody: CreateTeamBody
-    ): Flow<UiState<CustomResponse<TeamInfo>>> {
+    ): Flow<UiState<CustomResponse<Unit>>> {
         return flow {
             try {
                 emit(UiState.Loading)
 
-                val response: CustomResponse<TeamInfo> =
+                val response: CustomResponse<Unit> =
                     teamApi.createTeam(accessToken, createTeamBody)
 
                 if (response.success) {
