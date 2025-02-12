@@ -25,7 +25,7 @@ import `in`.iotkiit.raidersreckoningapp.R
 @Composable
 fun CurrentLeaders(
     modifier: Modifier = Modifier,
-    players: List<String>
+    players: String
 ) {
     Box(
         modifier = modifier
