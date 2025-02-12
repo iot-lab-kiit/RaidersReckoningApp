@@ -67,6 +67,10 @@ class TeamViewModel @Inject constructor(
         }
     }
 
+    fun resetGetTeamState() {
+        _getTeamState.value = UiState.Idle
+    }
+
     fun resetCreateTeamState() {
         _createTeamState.value = UiState.Idle
     }
