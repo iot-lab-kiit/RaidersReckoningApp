@@ -17,16 +17,40 @@ import androidx.compose.runtime.*
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
+import `in`.iotkiit.raidersreckoningapp.data.model.JoinTeamBody
+import `in`.iotkiit.raidersreckoningapp.state.UiState
+import `in`.iotkiit.raidersreckoningapp.view.navigation.RaidersReckoningScreens
 import `in`.iotkiit.raidersreckoningapp.vm.DashBoardViewModel
+import `in`.iotkiit.raidersreckoningapp.vm.TeamViewModel
 
 @Composable
 fun JoinTeamScreen(
     navController: NavController,
-    dashBoardViewModel: DashBoardViewModel = hiltViewModel()
+    teamViewModel: TeamViewModel = hiltViewModel()
 ) {
-    val auth = FirebaseAuth.getInstance()
+    val joinTeamState = teamViewModel.joinTeamState.collectAsState().value
 
     val context = LocalContext.current
+
+    LaunchedEffect(joinTeamState) {
+        when(joinTeamState){
+            is UiState.Success -> {
+                Toast.makeText(context, "Team joined", Toast.LENGTH_SHORT).show()
+                navController.navigate(RaidersReckoningScreens.DashBoardScreen.route) {
+                    popUpTo(RaidersReckoningScreens.JoinTeamScreen.route) {
+                        saveState = true
+                        inclusive = true
+                    }
+                }
+            }
+            is UiState.Failed -> {
+                Toast.makeText(context, joinTeamState.message, Toast.LENGTH_SHORT).show()
+            }
+            else -> {}
+        }
+    }
+
+    val auth = FirebaseAuth.getInstance()
 
     val sharedPreferences = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
 
@@ -66,8 +90,11 @@ fun JoinTeamScreen(
 
                 this.decodeSingle { result ->
                     if (result.text != null)
-//                        navController.navigate(RaidersReckoningScreens.DashBoardScreen.route + "/${result.text}")
-                        Toast.makeText(context, result.text, Toast.LENGTH_SHORT).show()
+                        teamViewModel.joinTeam(
+                            JoinTeamBody(
+                                result.text
+                            )
+                        )
                     else
                         Toast.makeText(context, "No Result", Toast.LENGTH_SHORT).show()
                 }
@@ -80,7 +107,7 @@ fun JoinTeamScreen(
             onDispose {
                 try {
                     auth.signOut()
-                    navController.navigate("login_graph") {
+                    navController.navigate(RaidersReckoningScreens.LoginScreen.route) {
                         popUpTo("main") { inclusive = true }
                     }
                 } catch (e: Exception) {
