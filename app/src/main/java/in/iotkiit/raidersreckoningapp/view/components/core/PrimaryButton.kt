@@ -25,7 +25,7 @@ fun PrimaryButton(
     text: String,
     shape: Shape = RoundedCornerShape(50),
     borderWidth: Dp = 2.dp,
-    contentColor: Color = Color.White,
+    contentColor: Color = Color.Black,
     containerColor: Color = GreenCOD,
 ) {
     Button(
@@ -43,9 +43,7 @@ fun PrimaryButton(
         Text(
             text = text,
             modifier = Modifier.padding(4.dp),
-            fontSize = 20.sp,
             color = contentColor,
-            fontFamily = modernWarfare,
             style = MaterialTheme.typography.bodyMedium
         )
     }

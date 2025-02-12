@@ -33,6 +33,7 @@ import `in`.iotkiit.raidersreckoningapp.state.UiState
 import `in`.iotkiit.raidersreckoningapp.ui.theme.GreenCOD
 import `in`.iotkiit.raidersreckoningapp.view.components.core.TeamCard
 import `in`.iotkiit.raidersreckoningapp.view.components.core.topbar.TopBar
+import `in`.iotkiit.raidersreckoningapp.view.components.myTeam.ExpandableQRCard
 import `in`.iotkiit.raidersreckoningapp.view.components.myTeam.Fields
 import `in`.iotkiit.raidersreckoningapp.view.navigation.BottomNavBar
 import `in`.iotkiit.raidersreckoningapp.view.navigation.BottomNavOptions.Companion.bottomNavOptions
@@ -47,7 +48,6 @@ fun MyTeamScreen(
     teamViewModel: TeamViewModel = hiltViewModel(),
     leaderboardViewModel: LeaderboardViewModel = hiltViewModel()
 ) {
-
     val teamState = teamViewModel.getTeamState.collectAsState().value
     val leaderboardState = leaderboardViewModel.getLeaderboardData.collectAsState().value
 
@@ -56,46 +56,47 @@ fun MyTeamScreen(
             teamViewModel.getTeam()
         }
         is UiState.Loading -> {
-            CircularProgressIndicator()
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                LinearProgressIndicator(color = GreenCOD)
+            }
         }
         is UiState.Success -> {
+            val data = teamState.data.data
+            val teamName = data?.name ?: "NoTeam"
+            val points = data?.points ?: 0
+
             Scaffold(
-                modifier = Modifier.fillMaxSize()
+                containerColor = Color.Black,
+                bottomBar = {
+                    BottomNavBar(navController = navController, bottomMenu = bottomNavOptions)
+                },
+                topBar = {
+                    TopBar(
+                        teamName = teamName,
+                        points = points
+                    )
+                }
             ) { paddingValues ->
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(paddingValues),
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
+                    verticalArrangement = Arrangement.Top
                 ) {
-                    Image(painter = qrGenerator(content = teamState.data.data!!.id,
-                        size = 250.dp),
-                        contentDescription = null)
-
-                    Spacer(modifier = Modifier.height(16.dp))
+                    ExpandableQRCard(teamId = teamState.data.data!!.id)
 
                     TeamCard(
                         teamName = teamState.data.data.name,
                         leaderName = teamState.data.data.leaderInfo.name,
                         teamMembers = teamState.data.data.participantsList.map { it.name }
                     )
-
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth(0.7f)
-                            .padding(8.dp)
-                    ) {
-                        Button(
-                            onClick = { navController.navigate(RaidersReckoningScreens.DashBoardScreen.route) },
-                            modifier = Modifier.fillMaxWidth(),
-                            colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent)
-                        ) {
-                            Fields("Get Team")
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.height(16.dp))
                 }
             }
         }

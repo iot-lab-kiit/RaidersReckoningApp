@@ -3,6 +3,7 @@ package `in`.iotkiit.raidersreckoningapp.view.components.core.topbar
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -21,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import `in`.iotkiit.raidersreckoningapp.R
@@ -69,10 +71,12 @@ fun TopBar(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(4.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
+                    horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Row (
+                        modifier = Modifier
+                            .weight(1f),
                         verticalAlignment = Alignment.CenterVertically
                     ){
                         Image(
@@ -86,9 +90,13 @@ fun TopBar(
                             color = White,
                             text = teamName,
                             style = MaterialTheme.typography.bodyMedium,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
                         )
                     }
-                    PointsCard(points = points)
+                    PointsCard(
+                        points = points
+                    )
                 }
             }
         )
