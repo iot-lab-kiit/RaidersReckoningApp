@@ -7,7 +7,6 @@ import `in`.iotkiit.raidersreckoningapp.data.model.CustomResponse
 import `in`.iotkiit.raidersreckoningapp.data.model.GetTeamResponse
 import `in`.iotkiit.raidersreckoningapp.data.model.JoinTeamBody
 import `in`.iotkiit.raidersreckoningapp.data.model.Question
-import `in`.iotkiit.raidersreckoningapp.data.model.TeamInfo
 import `in`.iotkiit.raidersreckoningapp.data.remote.TeamApi
 import `in`.iotkiit.raidersreckoningapp.state.UiState
 import kotlinx.coroutines.flow.Flow
@@ -77,12 +76,12 @@ class TeamRepo @Inject constructor(
     suspend fun createTeam(
         accessToken: String,
         createTeamBody: CreateTeamBody
-    ): Flow<UiState<CustomResponse<TeamInfo>>> {
+    ): Flow<UiState<CustomResponse<Unit>>> {
         return flow {
             try {
                 emit(UiState.Loading)
 
-                val response: CustomResponse<TeamInfo> =
+                val response: CustomResponse<Unit> =
                     teamApi.createTeam(accessToken, createTeamBody)
 
                 if (response.success) {
