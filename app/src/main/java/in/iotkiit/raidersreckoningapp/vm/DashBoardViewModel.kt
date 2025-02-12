@@ -7,6 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import `in`.iotkiit.raidersreckoningapp.data.model.CustomResponse
 import `in`.iotkiit.raidersreckoningapp.data.model.DashboardResponse
 import `in`.iotkiit.raidersreckoningapp.data.repo.DashBoardRepo
+import `in`.iotkiit.raidersreckoningapp.data.repo.TeamRepo
 import `in`.iotkiit.raidersreckoningapp.state.UiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -15,7 +16,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DashBoardViewModel @Inject constructor(
-    private val dashBoardRepo: DashBoardRepo
+    private val dashBoardRepo: DashBoardRepo,
+    private val teamRepo: TeamRepo
 ) : ViewModel() {
 
     private val _getDashBoardState: MutableStateFlow<UiState<CustomResponse<DashboardResponse>>> =
@@ -26,7 +28,7 @@ class DashBoardViewModel @Inject constructor(
         _getDashBoardState.value = UiState.Loading
         viewModelScope.launch {
             try {
-                dashBoardRepo.getDashboardData(dashBoardRepo.getIdToken())
+                dashBoardRepo.getDashboardData(teamRepo.getIdToken())
                     .collect { response ->
                         _getDashBoardState.value = response
                         if (response is UiState.Success) {
@@ -47,11 +49,16 @@ class DashBoardViewModel @Inject constructor(
         MutableStateFlow(UiState.Idle)
     val verifyTokenState = _verifyTokenState.asStateFlow()
 
+    // Update the ViewModel's resetVerifyTokenState function
+    fun resetVerifyTokenState() {
+        _verifyTokenState.value = UiState.Idle
+    }
+
     fun verifyToken(accessToken: String) {
         _verifyTokenState.value = UiState.Loading
         viewModelScope.launch {
             try {
-                dashBoardRepo.verifyToken("Bearer $accessToken")
+                teamRepo.verifyToken("Bearer $accessToken")
                     .collect { response ->
                         _verifyTokenState.value = response
                         if (response is UiState.Success) {
@@ -63,9 +70,5 @@ class DashBoardViewModel @Inject constructor(
                 _verifyTokenState.value = UiState.Failed(e.message ?: "Unknown error")
             }
         }
-    }
-
-    fun resetVerifyTokenState(){
-        _verifyTokenState.value = UiState.Loading
     }
 }

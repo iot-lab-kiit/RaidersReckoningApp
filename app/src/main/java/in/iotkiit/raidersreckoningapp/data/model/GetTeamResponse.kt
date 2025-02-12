@@ -14,10 +14,11 @@ data class GetTeamResponse(
     @SerializedName("points")
     val points: Int,
     @SerializedName("stats")
-    val statsList: List<Stats>,
+    val statsList: List<RoundStat>,
     @SerializedName("maxMembers")
     val maxMembers: Int,
-    val participants: List<Participant>,
+    @SerializedName("participants")
+    val participantsList: List<Participant>,
     @SerializedName("tempPoints")
     val tempPoints: List<Int>,
     @SerializedName("is_leader")

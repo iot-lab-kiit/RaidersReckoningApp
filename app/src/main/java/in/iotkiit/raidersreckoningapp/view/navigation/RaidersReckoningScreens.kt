@@ -1,6 +1,7 @@
 package `in`.iotkiit.raidersreckoningapp.view.navigation
 
 sealed class RaidersReckoningScreens(val route: String) {
+    object SplashScreen : RaidersReckoningScreens("splash_screen")
     object LoginScreen : RaidersReckoningScreens("login_screen")
     object DashBoardScreen : RaidersReckoningScreens("dashBoard_screen")
     object LeaderboardScreen : RaidersReckoningScreens("leaderboard_screen")
@@ -10,4 +11,5 @@ sealed class RaidersReckoningScreens(val route: String) {
     object QuestionScreenChoice : RaidersReckoningScreens("question_screen_choice")
     object QuestionScreen: RaidersReckoningScreens("question_screen")
     object JoinTeamScreen: RaidersReckoningScreens("join_team_screen")
+    object ProceedScreen: RaidersReckoningScreens("proceed_screen")
 }
