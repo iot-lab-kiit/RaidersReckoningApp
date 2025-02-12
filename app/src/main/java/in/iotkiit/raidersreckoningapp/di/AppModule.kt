@@ -1,14 +1,17 @@
 package `in`.iotkiit.raidersreckoningapp.di
 
+import android.content.Context
 import com.google.firebase.auth.FirebaseAuth
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import `in`.iotkiit.raidersreckoningapp.BuildConfig
 import `in`.iotkiit.raidersreckoningapp.data.remote.DashboardApi
 import `in`.iotkiit.raidersreckoningapp.data.remote.LeaderboardApi
 import `in`.iotkiit.raidersreckoningapp.data.remote.TeamApi
+import `in`.iotkiit.raidersreckoningapp.state.PreferencesHelper
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -58,6 +61,7 @@ object AppModule {
     fun provideLeaderboardApi(retrofit: Retrofit): LeaderboardApi {
         return retrofit.create(LeaderboardApi::class.java)
     }
+
     @Provides
     @Singleton
     fun provideDashboardApi(retrofit: Retrofit): DashboardApi {
@@ -67,4 +71,9 @@ object AppModule {
     @Provides
     fun providesFirebaseAuth(): FirebaseAuth = FirebaseAuth.getInstance()
 
+    @Provides
+    @Singleton
+    fun providePreferencesHelper(@ApplicationContext context: Context): PreferencesHelper {
+        return PreferencesHelper(context)
+    }
 }
