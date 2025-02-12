@@ -14,6 +14,8 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItemDefaults.contentColor
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,9 +23,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import `in`.iotkiit.raidersreckoningapp.ui.theme.GreenCOD
 
 @Composable
 fun TeamCard(
@@ -36,9 +40,9 @@ fun TeamCard(
         modifier = modifier.padding(16.dp),
         colors = CardDefaults.outlinedCardColors(
             containerColor = Color.Black,
-            contentColor = Color(0xFF00FF00)
+            contentColor = GreenCOD
         ),
-        border = BorderStroke(3.dp, Color(0xFF00FF00))
+        border = BorderStroke(3.dp, GreenCOD)
     ) {
         Column(
             modifier = Modifier.fillMaxWidth()
@@ -47,15 +51,16 @@ fun TeamCard(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color(0xFF00FF00))
+                    .background(GreenCOD)
                     .padding(16.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = teamName.uppercase(),
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Black,
-                    fontSize = 20.sp
+                    modifier = Modifier.fillMaxWidth(),
+                    text = teamName,
+                    maxLines = 1,
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = Color.Black
                 )
             }
 
@@ -72,9 +77,8 @@ fun TeamCard(
                 ) {
                     Text(
                         text = member.uppercase(),
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFF00FF00),
-                        fontSize = 18.sp,
+                        style = MaterialTheme.typography.titleSmall,
+                        color = GreenCOD,
                         modifier = Modifier.weight(1f)
                     )
 
@@ -83,7 +87,7 @@ fun TeamCard(
                         Icon(
                             imageVector = Icons.Default.Star, // You can replace with any Material icon
                             contentDescription = "Team Leader",
-                            tint = Color(0xFF00FF00),
+                            tint = GreenCOD,
                             modifier = Modifier.size(24.dp)
                         )
                     }

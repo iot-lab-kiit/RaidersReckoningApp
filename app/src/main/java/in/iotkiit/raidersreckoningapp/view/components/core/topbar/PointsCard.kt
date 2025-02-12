@@ -1,12 +1,11 @@
 package `in`.iotkiit.raidersreckoningapp.view.components.core.topbar
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.windowInsetsEndWidth
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.Text
@@ -30,7 +29,9 @@ fun PointsCard(
     points: Int?
 ) {
     Card(
-        modifier = modifier.clip(RectangleShape).padding(end = 8.dp),
+        modifier = modifier
+            .clip(RectangleShape)
+            .padding(end = 8.dp),
         colors = CardColors(
             contentColor = Color.Black,
             containerColor = GreenCOD,
@@ -45,10 +46,12 @@ fun PointsCard(
             Text(
                 modifier = Modifier.padding(4.dp),
                 text = points.toString(),
+                maxLines = 1,
                 fontFamily = modernWarfare,
                 fontSize = 12.sp,
                 color = Color.Black
             )
+
             Image(
                 painter = painterResource(R.drawable.points),
                 contentDescription = null,
@@ -61,5 +64,5 @@ fun PointsCard(
 @Preview
 @Composable
 private fun PointsCardPrev() {
-    PointsCard(modifier = Modifier ,14)
+    PointsCard(modifier = Modifier ,100)
 }
