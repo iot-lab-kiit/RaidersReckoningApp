@@ -3,20 +3,24 @@ package `in`.iotkiit.raidersreckoningapp.data.model
 import com.google.gson.annotations.SerializedName
 
 data class Team(
-    @SerializedName("challenger")
-    val challenger: String,
     @SerializedName("id")
     val id: String,
-    @SerializedName("leader")
-    val leader: Participant,
     @SerializedName("name")
     val name: String,
-    @SerializedName("participants")
-    val participants: List<Participant>,
+    @SerializedName("challenger")
+    val isChallenger: Boolean,
+    @SerializedName("leader")
+    val leaderInfo: Participant,
     @SerializedName("points")
-    val points: String,
+    val points: Int,
     @SerializedName("stats")
-    val roundStats: List<RoundStat>
+    val statsList: List<RoundStat>,
+    @SerializedName("maxMembers")
+    val maxMembers: Int,
+    @SerializedName("participants")
+    val participantsList: List<Participant>,
+    @SerializedName("tempPoints")
+    val tempPoints: List<Int>
 )
 
 

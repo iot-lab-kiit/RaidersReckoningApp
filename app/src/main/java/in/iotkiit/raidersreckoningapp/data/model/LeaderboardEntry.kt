@@ -4,5 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class LeaderboardEntry (
     @SerializedName("team")
-    val team: Team
+    val team: Team,
+    @SerializedName("points")
+    val points: Int
 )
