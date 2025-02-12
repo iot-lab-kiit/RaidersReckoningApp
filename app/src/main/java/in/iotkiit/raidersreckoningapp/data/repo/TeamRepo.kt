@@ -6,7 +6,7 @@ import `in`.iotkiit.raidersreckoningapp.data.model.CreateTeamBody
 import `in`.iotkiit.raidersreckoningapp.data.model.CustomResponse
 import `in`.iotkiit.raidersreckoningapp.data.model.GetTeamResponse
 import `in`.iotkiit.raidersreckoningapp.data.model.JoinTeamBody
-import `in`.iotkiit.raidersreckoningapp.data.model.Question
+import `in`.iotkiit.raidersreckoningapp.data.model.QuestionData
 import `in`.iotkiit.raidersreckoningapp.data.remote.TeamApi
 import `in`.iotkiit.raidersreckoningapp.state.UiState
 import kotlinx.coroutines.flow.Flow
@@ -117,12 +117,15 @@ class TeamRepo @Inject constructor(
         }
     }
 
-    suspend fun getQuestions(accessToken: String): Flow<UiState<CustomResponse<List<Question>>>> {
+    suspend fun getQuestions(
+        accessToken: String,
+        zoneId: String
+    ): Flow<UiState<CustomResponse<QuestionData>>> {
         return flow {
             try {
                 emit(UiState.Loading)
 
-                val response = teamApi.getQuestions(accessToken)
+                val response = teamApi.getQuestions(accessToken, zoneId)
 
                 if (response.success) {
                     emit(UiState.Success(response))

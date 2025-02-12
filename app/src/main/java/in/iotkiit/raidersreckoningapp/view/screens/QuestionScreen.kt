@@ -1,87 +1,130 @@
 package `in`.iotkiit.raidersreckoningapp.view.screens
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import `in`.iotkiit.raidersreckoningapp.data.model.Question
 import `in`.iotkiit.raidersreckoningapp.ui.theme.GreenCOD
 import `in`.iotkiit.raidersreckoningapp.ui.theme.modernWarfare
+import `in`.iotkiit.raidersreckoningapp.view.components.questions.CircularTimer
 import `in`.iotkiit.raidersreckoningapp.view.components.myTeam.Fields
-import `in`.iotkiit.raidersreckoningapp.vm.TeamViewModel
+import kotlinx.coroutines.delay
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun QuestionScreen(
+    question: Question,
     navController: NavController,
-    viewModel: TeamViewModel = hiltViewModel()
+    onNext: (Int, String) -> Unit,
 ) {
-    val timer = remember { mutableStateOf(10) }
-    val question = "Describe the best strategy for long-range combat in COD?"
     var userAnswer by remember { mutableStateOf(TextFieldValue()) }
+    var timer by remember { mutableIntStateOf(question.timeAlloted) }
+    var hasSubmitted by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        while (timer > 0 && !hasSubmitted) {
+            delay(1000L)
+            timer--
+        }
+        // Auto-submit when timer reaches 0
+        if (!hasSubmitted) {
+            hasSubmitted = true
+            onNext(0, userAnswer.text)
+        }
+    }
 
     Scaffold(
-        modifier = Modifier.fillMaxSize().background(Color.Black),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black),
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Top,
-            modifier = Modifier.padding(it)
+            verticalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier
+                .padding(it)
+                .fillMaxSize()
+                .padding(16.dp)
         ) {
-
-            Text(
-                text = "Time: ${timer.value} s",
-                fontFamily = modernWarfare,
-                fontSize = 32.sp,
-                color = GreenCOD,
-                modifier = Modifier.padding(16.dp)
-            )
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-
-            Fields(
-                field = question,
-            )
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            TextField(
+            CircularTimer(currentTime = timer, totalTime = question.duration)
+            Fields(field = question.question)
+            OutlinedTextField(
                 value = userAnswer,
-                onValueChange = { userAnswer = it },
-                textStyle = LocalTextStyle.current.copy(fontSize = 18.sp, color = Color.White),
-                modifier = Modifier
-                    .fillMaxWidth(0.8f)
-                    .background(Color.DarkGray, MaterialTheme.shapes.medium),
-                colors = TextFieldDefaults.textFieldColors(
-                    containerColor = Color.DarkGray,
-                    focusedIndicatorColor = GreenCOD,
-                    unfocusedIndicatorColor = Color.Gray
+                onValueChange = {
+                    userAnswer = it
+                },
+                placeholder = {
+                    Text(
+                        "Enter Answer",
+                        fontSize = 16.sp,
+                        color = Color.White,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth(),
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                },
+                textStyle = MaterialTheme.typography.bodyMedium.copy(
+                    color = Color.White,
+                    textAlign = TextAlign.Center
                 ),
-                placeholder = { Text("Type your answer here...", color = Color.Gray) }
+                modifier = Modifier
+                    .border(2.dp, Color.Green, RoundedCornerShape(50))
+                    .fillMaxWidth(0.7f),
+                shape = RoundedCornerShape(50),
+                colors = TextFieldDefaults.colors(
+                    focusedTextColor = Color.White,
+                    unfocusedTextColor = Color.White.copy(0.6f),
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    cursorColor = Color.White
+                )
             )
-            Spacer(modifier = Modifier.height(32.dp))
 
             Button(
-                onClick = { /* Handle answer submission */ },
-                modifier = Modifier.align(Alignment.CenterHorizontally).padding(16.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = GreenCOD)
+                onClick = {
+                    if (!hasSubmitted) {
+                        hasSubmitted = true
+                        onNext(timer, userAnswer.text)
+                    }
+                },
+                enabled = !hasSubmitted,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = GreenCOD,
+                    disabledContainerColor = GreenCOD.copy(alpha = 0.5f)
+                ),
+                modifier = Modifier.fillMaxWidth(0.5f)
             ) {
-                Text(
-                    text = "Next",
-                    fontFamily = modernWarfare,
-                    fontSize = 24.sp,
-                    color = Color.Black
-                )
+                Text("Next", fontFamily = modernWarfare, fontSize = 24.sp, color = Color.Black)
             }
         }
     }
 }
+

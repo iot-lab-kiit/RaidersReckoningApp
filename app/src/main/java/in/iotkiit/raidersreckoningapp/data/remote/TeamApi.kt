@@ -5,12 +5,15 @@ import `in`.iotkiit.raidersreckoningapp.data.model.CustomResponse
 import `in`.iotkiit.raidersreckoningapp.data.model.GetTeamResponse
 import `in`.iotkiit.raidersreckoningapp.data.model.JoinTeamBody
 import `in`.iotkiit.raidersreckoningapp.data.model.Question
+import `in`.iotkiit.raidersreckoningapp.data.model.QuestionData
+import `in`.iotkiit.raidersreckoningapp.data.model.SubmitPointsBody
 import `in`.iotkiit.raidersreckoningapp.data.model.TeamInfo
 import `in`.iotkiit.raidersreckoningapp.data.util.Constants
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface TeamApi {
 
@@ -38,6 +41,13 @@ interface TeamApi {
 
     @GET(Constants.GET_QUESTIONS)
     suspend fun getQuestions(
-        @Header("Authorization") accessToken: String
-    ): CustomResponse<List<Question>>
+        @Header("Authorization") accessToken: String,
+        @Query("zoneId") zoneId: String
+    ): CustomResponse<QuestionData>
+
+    @POST("api/team/set_temp_points")
+    suspend fun submitPoints(
+        @Header("Authorization") accessToken: String,
+        @Body submitPointsBody: SubmitPointsBody
+    ): CustomResponse<Unit>
 }

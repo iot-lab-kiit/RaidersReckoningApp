@@ -9,9 +9,11 @@ import `in`.iotkiit.raidersreckoningapp.data.model.CustomResponse
 import `in`.iotkiit.raidersreckoningapp.data.model.GetTeamResponse
 import `in`.iotkiit.raidersreckoningapp.data.model.JoinTeamBody
 import `in`.iotkiit.raidersreckoningapp.data.model.Question
+import `in`.iotkiit.raidersreckoningapp.data.model.QuestionData
 import `in`.iotkiit.raidersreckoningapp.data.model.TeamInfo
 import `in`.iotkiit.raidersreckoningapp.data.repo.DashBoardRepo
 import `in`.iotkiit.raidersreckoningapp.data.repo.TeamRepo
+import `in`.iotkiit.raidersreckoningapp.state.PreferencesHelper
 import `in`.iotkiit.raidersreckoningapp.state.UiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,7 +22,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TeamViewModel @Inject constructor(
-    private val teamRepo: TeamRepo
+    private val teamRepo: TeamRepo,
+    private val preferencesHelper: PreferencesHelper
 ) : ViewModel() {
 
     private val _createTeamState: MutableStateFlow<UiState<CustomResponse<Unit>>> =
@@ -100,19 +103,19 @@ class TeamViewModel @Inject constructor(
     fun resetJoinTeamState() {
         _joinTeamState.value = UiState.Idle
     }
-
-    private val _getQuestionsState: MutableStateFlow<UiState<CustomResponse<List<Question>>>> =
+    private val _getQuestionsState: MutableStateFlow<UiState<CustomResponse<QuestionData>>> =
         MutableStateFlow(UiState.Idle)
     val getQuestionsState = _getQuestionsState.asStateFlow()
 
-    fun getQuestions(accessToken: String) {
+    fun getQuestions(zoneId: String) {
         _getQuestionsState.value = UiState.Loading
         viewModelScope.launch {
             try {
-                teamRepo.getQuestions(accessToken)
+                teamRepo.getQuestions(teamRepo.getIdToken(), zoneId)
                     .collect { response ->
                         _getQuestionsState.value = response
                         if (response is UiState.Success) {
+                            preferencesHelper.resetPoints()
                             Log.d(
                                 "TeamViewModel",
                                 "Questions fetched successfully: ${response.data}"
@@ -129,4 +132,53 @@ class TeamViewModel @Inject constructor(
     fun resetGetQuestionsState() {
         _getQuestionsState.value = UiState.Idle
     }
+
+    fun submitAnswer(
+        question: Question,
+        remainingTime: Int,
+        userAnswer: String
+    ) {
+        val isCorrect = if (question.oneWord) {
+            userAnswer.trim().equals(question.mcqAnswers.first().toString(), ignoreCase = true)
+        } else {
+            val correctIndex = question.correctAnswer.toInt()
+            correctIndex in question.mcqAnswers.indices &&
+                    userAnswer == question.mcqAnswers[correctIndex]
+        }
+
+        if (isCorrect) {
+            // Calculate points for this question
+            val questionPoints = question.multiplier * remainingTime
+
+            // Log for debugging
+            Log.d("Points", "Multiplier: ${question.multiplier}")
+            Log.d("Points", "Remaining Time: $remainingTime")
+            Log.d("Points", "Question Points: $questionPoints")
+
+            // Save these points which will add to total
+            preferencesHelper.savePoints(questionPoints)
+
+            // Log total points after adding
+            Log.d("Points", "Total Points after adding: ${preferencesHelper.getTotalPoints()}")
+        }
+
+        val questions = (_getQuestionsState.value as? UiState.Success)?.data?.data
+
+        // Check if this was the last question
+        if (!questions?.questions.isNullOrEmpty() && questions?.questions?.last()?.id == question.id) {
+            val finalTotalPoints = preferencesHelper.getTotalPoints()
+            Log.d("Points", "Final Total Points: $finalTotalPoints")
+
+            viewModelScope.launch {
+                try {
+//                     teamRepo.submitFinalScore(dashBoardRepo.getIdToken(), finalTotalPoints)
+                    Log.d("TeamViewModel", "Final Score submitted successfully + $finalTotalPoints")
+                } catch (e: Exception) {
+                    Log.e("TeamViewModel", "submitFinalScore: ${e.message}")
+                }
+            }
+        }
+    }
+
+    fun getTotalPoints(): Int = preferencesHelper.getTotalPoints()
 }
