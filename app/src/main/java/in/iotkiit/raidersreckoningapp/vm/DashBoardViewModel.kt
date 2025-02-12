@@ -34,7 +34,7 @@ class DashBoardViewModel @Inject constructor(
                         if (response is UiState.Success) {
                             Log.d(
                                 "DashBoardViewModel",
-                                "LeaderBoard Data fetched: ${response.data}"
+                                " ${response.data}"
                             )
                         }
                     }

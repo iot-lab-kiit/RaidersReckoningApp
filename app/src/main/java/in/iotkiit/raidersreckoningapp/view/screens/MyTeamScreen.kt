@@ -1,14 +1,21 @@
 package `in`.iotkiit.raidersreckoningapp.view.screens
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -21,12 +28,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.qr_generator_compose.qrGenerator
 import `in`.iotkiit.raidersreckoningapp.state.UiState
 import `in`.iotkiit.raidersreckoningapp.ui.theme.GreenCOD
+import `in`.iotkiit.raidersreckoningapp.view.components.core.TeamCard
 import `in`.iotkiit.raidersreckoningapp.view.components.core.topbar.TopBar
 import `in`.iotkiit.raidersreckoningapp.view.components.myTeam.Fields
 import `in`.iotkiit.raidersreckoningapp.view.navigation.BottomNavBar
 import `in`.iotkiit.raidersreckoningapp.view.navigation.BottomNavOptions.Companion.bottomNavOptions
+import `in`.iotkiit.raidersreckoningapp.view.navigation.RaidersReckoningScreens
 import `in`.iotkiit.raidersreckoningapp.vm.DashBoardViewModel
 import `in`.iotkiit.raidersreckoningapp.vm.LeaderboardViewModel
 import `in`.iotkiit.raidersreckoningapp.vm.TeamViewModel
@@ -45,80 +55,50 @@ fun MyTeamScreen(
         is UiState.Idle -> {
             teamViewModel.getTeam()
         }
-
         is UiState.Loading -> {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.Black),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                LinearProgressIndicator(color = GreenCOD)
-            }
+            CircularProgressIndicator()
         }
-
         is UiState.Success -> {
-            val data = teamState.data.data
-            val teamName = data?.name ?:"NoTeam"
-            val points = data?.points ?: 0
-            val leaderName = data?.leaderInfo?.name ?: ""
-            val participantsList = data?.participantsList ?: emptyList()
-
             Scaffold(
-                containerColor = Color.Black,
-                modifier = Modifier.fillMaxSize(),
-                topBar = {
-                    TopBar(
-                        teamName = teamName,
-                        points = points
-                    )
-                },
-                bottomBar = {
-                    BottomNavBar(navController = navController, bottomMenu = bottomNavOptions)
-                }
-            ) {
+                modifier = Modifier.fillMaxSize()
+            ) { paddingValues ->
                 Column(
-                    modifier = Modifier.fillMaxSize()
-                        .padding(it)
-                        .background(Color.Black),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
                 ) {
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(4.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
+                    Image(painter = qrGenerator(content = teamState.data.data!!.id,
+                        size = 250.dp),
+                        contentDescription = null)
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    TeamCard(
+                        teamName = teamState.data.data.name,
+                        leaderName = teamState.data.data.leaderInfo.name,
+                        teamMembers = teamState.data.data.participantsList.map { it.name }
+                    )
+
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth(0.7f)
+                            .padding(8.dp)
                     ) {
-                        Fields(
-                            field = leaderName,
-                            containerColor = GreenCOD,
-                            contentColor = Color.Black,
-                        )
-                        LazyColumn {
-                            items(participantsList) { participant ->
-                                Fields(participant.name)
-                            }
+                        Button(
+                            onClick = { navController.navigate(RaidersReckoningScreens.DashBoardScreen.route) },
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent)
+                        ) {
+                            Fields("Get Team")
                         }
                     }
+
+                    Spacer(modifier = Modifier.height(16.dp))
                 }
             }
         }
-
-        is UiState.Failed -> {
-            Column(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.background),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = teamState.message,
-                    color = MaterialTheme.colorScheme.error,
-                    style = MaterialTheme.typography.bodyLarge
-                )
-            }
-        }
+        else -> {}
     }
 }

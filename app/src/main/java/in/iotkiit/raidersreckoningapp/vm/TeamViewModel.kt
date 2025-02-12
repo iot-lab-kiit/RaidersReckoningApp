@@ -79,11 +79,11 @@ class TeamViewModel @Inject constructor(
         MutableStateFlow(UiState.Idle)
     val joinTeamState = _joinTeamState.asStateFlow()
 
-    fun joinTeam(joinTeamBody: JoinTeamBody, accessToken: String) {
+    fun joinTeam(joinTeamBody: JoinTeamBody) {
         _joinTeamState.value = UiState.Loading
         viewModelScope.launch {
             try {
-                teamRepo.joinTeam(accessToken, joinTeamBody)
+                teamRepo.joinTeam(teamRepo.getIdToken(), joinTeamBody)
                     .collect { response ->
                         _joinTeamState.value = response
                         if (response is UiState.Success) {
