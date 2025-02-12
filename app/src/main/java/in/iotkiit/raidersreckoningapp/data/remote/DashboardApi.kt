@@ -13,8 +13,4 @@ interface DashboardApi {
         @Header("Authorization") accessToken: String
     ): CustomResponse<DashboardResponse>
 
-    @GET(Constants.VERIFY_TOKEN_ENDPOINT)
-    suspend fun verifyToken(
-        @Header("Authorization") accessToken: String
-    ): CustomResponse<Unit>
 }

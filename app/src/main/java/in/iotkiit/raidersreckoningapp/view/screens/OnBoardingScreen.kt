@@ -27,6 +27,7 @@ import androidx.navigation.NavController
 import androidx.wear.compose.material.Button
 import androidx.wear.compose.material.ButtonDefaults
 import `in`.iotkiit.raidersreckoningapp.R
+import `in`.iotkiit.raidersreckoningapp.view.components.core.PrimaryButton
 import `in`.iotkiit.raidersreckoningapp.view.navigation.RaidersReckoningScreens
 import `in`.iotkiit.raidersreckoningapp.vm.DashBoardViewModel
 
@@ -63,44 +64,32 @@ fun OnBoardingScreen(
                     modifier = Modifier.fillMaxWidth(0.75f)
                 )
 
-                Column {
-                    Button(
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(20.dp)
+                ) {
+
+                    PrimaryButton(
                         onClick = {
                             navController.navigate(RaidersReckoningScreens.CreateTeamScreen.route)
                         },
-                        modifier = Modifier
-                            .fillMaxWidth(0.7f)
-                            .border(2.dp, Color.Green, RoundedCornerShape(50)),
-                        colors = ButtonDefaults.primaryButtonColors(
-                            backgroundColor = Color.Transparent
-                        )
-                    ) {
-                        Text(
-                            text = "CREATE TEAM",
-                            fontSize = 24.sp,
-                            color = Color.White,
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                    }
-                    Spacer(Modifier.height(16.dp))
-                    Button(
+                        text = "CREATE TEAM",
+                        shape = RoundedCornerShape(50),
+                        borderWidth = 2.dp,
+                        contentColor = Color.White,
+                        containerColor = Color.Transparent
+                    )
+
+
+                    PrimaryButton(
                         onClick = {
-                            //Join Team Screen
+                            navController.navigate(RaidersReckoningScreens.JoinTeamScreen.route)
                         },
-                        modifier = Modifier
-                            .fillMaxWidth(0.7f)
-                            .border(2.dp, Color.Green, RoundedCornerShape(50)),
-                        colors = ButtonDefaults.primaryButtonColors(
-                            backgroundColor = Color.Transparent
-                        )
-                    ) {
-                        Text(
-                            "JOIN TEAM",
-                            fontSize = 24.sp,
-                            color = Color.White,
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                    }
+                        text = "JOIN TEAM",
+                        shape = RoundedCornerShape(50),
+                        borderWidth = 2.dp,
+                        contentColor = Color.White,
+                        containerColor = Color.Transparent
+                    )
                 }
 
             }
