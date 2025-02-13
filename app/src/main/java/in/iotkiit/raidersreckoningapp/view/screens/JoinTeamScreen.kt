@@ -108,7 +108,7 @@ fun JoinTeamScreen(
                 try {
                     auth.signOut()
                     navController.navigate(RaidersReckoningScreens.LoginScreen.route) {
-                        popUpTo("main") { inclusive = true }
+                        popUpTo(RaidersReckoningScreens.JoinTeamScreen.route) { inclusive = true }
                     }
                 } catch (e: Exception) {
                     Log.e("Logout", "Logout failed: ${e.message}")
