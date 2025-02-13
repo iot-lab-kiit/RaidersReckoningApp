@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
@@ -75,6 +77,7 @@ fun MyTeamScreen(
             val data = teamState.data.data
             val teamName = data?.name ?: "NoTeam"
             val points = data?.points ?: 0
+            val totalPoints = data?.points ?: 0
 
             Scaffold(
                 containerColor = Color.Black,
@@ -91,6 +94,7 @@ fun MyTeamScreen(
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
                         .padding(paddingValues),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Top
@@ -115,9 +119,9 @@ fun MyTeamScreen(
                             .padding(8.dp),
                         colors = CardDefaults.outlinedCardColors(
                             containerColor = Color.Black,
-                            contentColor = Color(0xFF00FF00)
+                            contentColor = GreenCOD
                         ),
-                        border = BorderStroke(3.dp, Color(0xFF00FF00))
+                        border = BorderStroke(3.dp, GreenCOD)
                     ) {
                         Column(
                             modifier = Modifier
@@ -126,17 +130,15 @@ fun MyTeamScreen(
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Text(
-                                text = "Round: ${latestRound?.round ?: "N/A"}",
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 18.sp,
+                                text = "Round: ${latestRound?.round ?: "0"}",
                                 style = MaterialTheme.typography.headlineMedium,
-                                color = Color(0xFF00FF00)
+                                color = GreenCOD
                             )
 
                             Spacer(modifier = Modifier.height(8.dp))
 
                             Text(
-                                text = "Total Points: ${teamState.data.data.points}",
+                                text = "Total Points: $totalPoints",
                                 fontWeight = FontWeight.ExtraBold,
                                 fontSize = 18.sp,
                                 style = MaterialTheme.typography.headlineMedium,
@@ -147,27 +149,9 @@ fun MyTeamScreen(
 
                             Text(
                                 text = "Winner: ${latestRound?.winner ?: "N/A"}",
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 20.sp,
                                 style = MaterialTheme.typography.headlineMedium,
                                 color = Color.White
                             )
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth(0.7f)
-                            .padding(8.dp)
-                    ) {
-                        Button(
-                            onClick = { navController.navigate(RaidersReckoningScreens.DashBoardScreen.route) },
-                            modifier = Modifier.fillMaxWidth(),
-                            colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent)
-                        ) {
-                            Fields("Get Team")
                         }
                     }
                 }
