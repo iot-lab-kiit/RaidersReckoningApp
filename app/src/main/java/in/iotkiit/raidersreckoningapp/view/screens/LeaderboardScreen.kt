@@ -26,6 +26,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import `in`.iotkiit.raidersreckoningapp.state.UiState
 import `in`.iotkiit.raidersreckoningapp.ui.theme.GreenCOD
+import `in`.iotkiit.raidersreckoningapp.view.components.anims.FailureAnimationDialog
 import `in`.iotkiit.raidersreckoningapp.view.components.core.topbar.TopBar
 import `in`.iotkiit.raidersreckoningapp.view.components.leaderboard.CurrentLeaders
 import `in`.iotkiit.raidersreckoningapp.view.components.leaderboard.LeaderboardFields
@@ -174,8 +175,20 @@ fun LeaderboardScreen(
             }
         }
 
-        else -> {
-
+        is UiState.Failed -> {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black)
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                FailureAnimationDialog(
+                    message = leaderboardDataState.message,
+                    onTryAgainClick = { leaderboardViewModel.getLeaderboardData() }
+                )
+            }
         }
     }
 }

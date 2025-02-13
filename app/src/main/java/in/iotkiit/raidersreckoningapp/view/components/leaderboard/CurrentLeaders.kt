@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -17,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -40,14 +40,14 @@ fun CurrentLeaders(
             modifier = Modifier.fillMaxSize()
         )
 
-        val rank = listOf( 1 , 0 , 2)
+        val rank = listOf(1, 0, 2)
 
         Row(
             modifier = Modifier.fillMaxSize(),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
 
-            rank.forEach{ position ->
+            rank.forEach { position ->
                 Box(
                     modifier = Modifier
                         .weight(1f)
@@ -55,13 +55,18 @@ fun CurrentLeaders(
                         .padding(horizontal = 16.dp),
                     contentAlignment = Alignment.BottomCenter
                 ) {
+                    val playerName = players.getOrElse(position) { "Player $position" }
+                    val shortName =
+                        if (playerName.length > 16) playerName.take(12) + "..." else playerName
                     Text(
-                        text = players.getOrElse(position) { "Player 1" },
+                        text = shortName,
                         style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.padding(bottom = 16.dp),
+                        modifier = Modifier
+                            .padding(bottom = 16.dp)
+                            .offset(y = if (position == 0) (-50).dp else 0.dp),
                         textAlign = TextAlign.Center,
                         color = Color.White,
-                        fontSize = 12.sp
+                        fontSize = 12.sp,
                     )
                 }
             }

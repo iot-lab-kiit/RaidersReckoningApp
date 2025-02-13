@@ -2,12 +2,10 @@ package `in`.iotkiit.raidersreckoningapp.view.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -24,25 +22,24 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import `in`.iotkiit.raidersreckoningapp.R
 import `in`.iotkiit.raidersreckoningapp.state.UiState
 import `in`.iotkiit.raidersreckoningapp.ui.theme.GreenCOD
+import `in`.iotkiit.raidersreckoningapp.ui.theme.modernWarfare
+import `in`.iotkiit.raidersreckoningapp.view.components.anims.FailureAnimationDialog
 import `in`.iotkiit.raidersreckoningapp.view.components.core.topbar.TopBar
+import `in`.iotkiit.raidersreckoningapp.view.components.core.useGlobalTimer
 import `in`.iotkiit.raidersreckoningapp.view.components.dashboard.MapCard
 import `in`.iotkiit.raidersreckoningapp.view.navigation.BottomNavBar
 import `in`.iotkiit.raidersreckoningapp.view.navigation.BottomNavOptions.Companion.bottomNavOptions
@@ -57,7 +54,7 @@ fun DashBoardScreen(
     val dashBoardState = dashBoardViewModel.getDashBoardState.collectAsState().value
     var remainingTime by remember { mutableLongStateOf(0L) }
 
-    when(dashBoardState) {
+    when (dashBoardState) {
         is UiState.Idle -> {
             dashBoardViewModel.getDashBoardData()
         }
@@ -77,10 +74,10 @@ fun DashBoardScreen(
         is UiState.Success -> {
 
             val data = dashBoardState.data.data
-            val teamName = data?.teamName?:"NoTeam"
+            val teamName = data?.teamName ?: "NoTeam"
             val points = data?.points ?: 0
-            val zoneName = data?.zone?.name?:"No zone assigned"
-            val zoneVenue = data?.zone?.venue?:""
+            val zoneName = data?.zone?.name ?: "No zone assigned"
+            val zoneVenue = data?.zone?.venue ?: ""
             val round = data?.round ?: 0
             val startTime = data?.zone?.startTime ?: 0L
             val duration = data?.zone?.duration ?: 0L
@@ -127,7 +124,9 @@ fun DashBoardScreen(
                     Spacer(Modifier.height(6.dp))
 
                     Row(
-                        modifier = Modifier.fillMaxWidth().padding(6.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(6.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -154,17 +153,16 @@ fun DashBoardScreen(
                             color = GreenCOD
                         )
 
-                        val minutes = (remainingTime / 1000 / 60).toInt()
-                        val seconds = ((remainingTime / 1000) % 60).toInt()
+                        val (minutes, seconds, _) = useGlobalTimer(
+                            zoneStartTime = dashBoardState.data.data?.zone?.startTime,
+                            zoneDuration = dashBoardState.data.data?.zone?.duration ?: 0L
+                        )
 
                         Text(
                             text = String.format("%02d:%02d", minutes, seconds),
-                            color = when {
-                                remainingTime <= 300000 -> Color.Red  // Less than 5 minutes
-                                remainingTime <= 600000 -> Color.Yellow // Less than 10 minutes
-                                else -> Color.White
-                            },
-                            style = MaterialTheme.typography.bodyMedium
+                            color = Color.White,
+                            fontSize = 24.sp,
+                            fontFamily = modernWarfare
                         )
                     }
                     Spacer(Modifier.height(100.dp))
@@ -174,7 +172,7 @@ fun DashBoardScreen(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
 
-                        if (challenger){
+                        if (challenger) {
                             Text(
                                 modifier = Modifier.fillMaxWidth(),
                                 text = "You are a challenger!",
@@ -221,16 +219,15 @@ fun DashBoardScreen(
         is UiState.Failed -> {
             Column(
                 modifier = Modifier
-                    .fillMaxHeight()
-                    .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.background),
+                    .fillMaxSize()
+                    .background(Color.Black)
+                    .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                Text(
-                    text = dashBoardState.message,
-                    color = MaterialTheme.colorScheme.error,
-                    style = MaterialTheme.typography.bodyLarge
+                FailureAnimationDialog(
+                    message = dashBoardState.message,
+                    onTryAgainClick = { dashBoardViewModel.getDashBoardData() }
                 )
             }
         }

@@ -1,12 +1,26 @@
 package `in`.iotkiit.raidersreckoningapp.view.screens
+
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -30,67 +44,9 @@ fun LoginScreen(
     navController: NavController,
     viewModel: DashBoardViewModel = hiltViewModel()
 ) {
-    LoginScreenControl(
-        onLoginSuccess = {
-            navController.navigate(RaidersReckoningScreens.OnBoardingScreen.route) {
-                popUpTo(RaidersReckoningScreens.LoginScreen.route) { inclusive = true }
-            }
-        },
-        dashBoardViewModel = viewModel
-    )
-}
-
-@Composable
-private fun LoginScreenControl(
-    onLoginSuccess: () -> Unit,
-    dashBoardViewModel: DashBoardViewModel = hiltViewModel()
-) {
     val context = LocalContext.current
-    val verifyTokenState = dashBoardViewModel.verifyTokenState.collectAsState().value
+    val verifyTokenState = viewModel.verifyTokenState.collectAsState().value
     var resetTrigger by remember { mutableIntStateOf(0) }
-
-    when (verifyTokenState) {
-        is UiState.Idle -> {
-            LoginScreenIdle(
-                dashBoardViewModel = dashBoardViewModel,
-                resetTrigger = resetTrigger,
-                onResetTrigger = { resetTrigger++ }
-            )
-        }
-
-        is UiState.Loading -> {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator()
-            }
-        }
-
-        is UiState.Success -> {
-            LaunchedEffect(Unit) {
-                onLoginSuccess()
-                dashBoardViewModel.resetVerifyTokenState()
-            }
-        }
-
-        is UiState.Failed -> {
-            LaunchedEffect(Unit) {
-                Firebase.auth.signOut()
-                Toast.makeText(context, "Login Failed! Please try again.", Toast.LENGTH_LONG).show()
-                dashBoardViewModel.resetVerifyTokenState()
-            }
-        }
-    }
-}
-
-@Composable
-private fun LoginScreenIdle(
-    dashBoardViewModel: DashBoardViewModel = hiltViewModel(),
-    resetTrigger: Int,
-    onResetTrigger: () -> Unit
-) {
-    val context = LocalContext.current
     val token = BuildConfig.FIREBASE_TOKEN
 
     val launcher = rememberFirebaseAuthLauncher(
@@ -99,32 +55,32 @@ private fun LoginScreenIdle(
                 val idToken = tokenResult.token
                 if (idToken != null) {
                     Log.d("Google Auth", "Token: $idToken")
-                    dashBoardViewModel.verifyToken(idToken)
+                    viewModel.verifyToken(idToken)
                 } else {
                     Toast.makeText(context, "Login Failed!", Toast.LENGTH_LONG).show()
-                    onResetTrigger()
+                    resetTrigger++
                 }
             }?.addOnFailureListener {
                 Toast.makeText(context, "Failed to fetch ID token!", Toast.LENGTH_LONG).show()
-                onResetTrigger()
+                resetTrigger++
             }
         },
         onAuthError = { exception ->
             Log.e("Google Auth", "Authentication failed", exception)
             Toast.makeText(context, "Login Failed! Please try again.", Toast.LENGTH_LONG).show()
-            onResetTrigger()
+            resetTrigger++
         }
     )
 
-    Box(
-        modifier = Modifier.fillMaxSize()
-    ) {
+    Box(modifier = Modifier.fillMaxSize()) {
+        // Background and main content
         Image(
             painter = painterResource(R.drawable.background),
             contentDescription = "Background",
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
         )
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -153,6 +109,38 @@ private fun LoginScreenIdle(
                     }
                 }
             }
+        }
+
+        // Loading overlay
+        if (verifyTokenState is UiState.Loading) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = 0.5f)),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(color = Color.White)
+            }
+        }
+    }
+
+    // Handle success and failure states
+    LaunchedEffect(verifyTokenState) {
+        when (verifyTokenState) {
+            is UiState.Success -> {
+                navController.navigate(RaidersReckoningScreens.OnBoardingScreen.route) {
+                    popUpTo(RaidersReckoningScreens.LoginScreen.route) { inclusive = true }
+                }
+                viewModel.resetVerifyTokenState()
+            }
+
+            is UiState.Failed -> {
+                Firebase.auth.signOut()
+                Toast.makeText(context, "Login Failed! Please try again.", Toast.LENGTH_LONG).show()
+                viewModel.resetVerifyTokenState()
+            }
+
+            else -> {}
         }
     }
 }

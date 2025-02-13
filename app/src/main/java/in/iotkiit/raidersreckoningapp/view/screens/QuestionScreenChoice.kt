@@ -24,16 +24,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import `in`.iotkiit.raidersreckoningapp.data.model.Question
+import `in`.iotkiit.raidersreckoningapp.data.model.QuestionData
 import `in`.iotkiit.raidersreckoningapp.ui.theme.GreenCOD
 import `in`.iotkiit.raidersreckoningapp.ui.theme.modernWarfare
+import `in`.iotkiit.raidersreckoningapp.view.components.core.useGlobalTimer
+import `in`.iotkiit.raidersreckoningapp.view.components.myTeam.Fields
 import `in`.iotkiit.raidersreckoningapp.view.components.questions.CircularTimer
 import `in`.iotkiit.raidersreckoningapp.view.components.questions.ClickableFields
-import `in`.iotkiit.raidersreckoningapp.view.components.myTeam.Fields
 import kotlinx.coroutines.delay
 
 @Composable
 fun QuestionScreenChoice(
     question: Question,
+    questionData: QuestionData,
     navController: NavController,
     onNext: (Int, String) -> Unit,
 ) {
@@ -41,9 +44,13 @@ fun QuestionScreenChoice(
     var timer by remember(question.id) { mutableIntStateOf(question.timeAlloted) }
     var hasSubmitted by remember(question.id) { mutableStateOf(false) }
 
+    val (minutes, seconds, _) = useGlobalTimer(
+        zoneStartTime = questionData.zoneStartTime, zoneDuration = questionData.zoneDuration
+    )
+
     LaunchedEffect(question.id) {
         // Reset states for new question
-        timer = question.duration.toInt()
+        timer = question.duration
         hasSubmitted = false
 
         while (timer > 0 && !hasSubmitted) {
@@ -71,15 +78,20 @@ fun QuestionScreenChoice(
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            CircularTimer(currentTime = timer, totalTime = question.duration.toInt())
+            Text(
+                text = String.format("%02d:%02d", minutes, seconds),
+                color = Color.White,
+                fontSize = 24.sp,
+                fontFamily = modernWarfare
+            )
+            CircularTimer(currentTime = timer, totalTime = question.duration)
             Fields(field = question.question)
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 question.mcqAnswers.forEach { option ->
-                    ClickableFields(
-                        field = option,
+                    ClickableFields(field = option,
                         containerColor = if (selectedOption == option) GreenCOD else GreenCOD.copy(
                             alpha = 0.1f
                         ),
@@ -90,8 +102,7 @@ fun QuestionScreenChoice(
                             if (!hasSubmitted) {
                                 selectedOption = option
                             }
-                        }
-                    )
+                        })
                 }
             }
             Button(
@@ -100,13 +111,9 @@ fun QuestionScreenChoice(
                         hasSubmitted = true
                         onNext(timer, selectedOption ?: "")
                     }
-                },
-                enabled = !hasSubmitted,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = GreenCOD,
-                    disabledContainerColor = GreenCOD.copy(alpha = 0.5f)
-                ),
-                modifier = Modifier.fillMaxWidth(0.5f)
+                }, enabled = !hasSubmitted, colors = ButtonDefaults.buttonColors(
+                    containerColor = GreenCOD, disabledContainerColor = GreenCOD.copy(alpha = 0.5f)
+                ), modifier = Modifier.fillMaxWidth(0.5f)
             ) {
                 Text("Next", fontFamily = modernWarfare, fontSize = 24.sp, color = Color.Black)
             }

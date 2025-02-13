@@ -115,6 +115,9 @@ dependencies {
 
     implementation ("androidx.media3:media3-exoplayer:1.2.0")
     implementation ("androidx.media3:media3-ui:1.2.0")
+
+    //lottie
+    implementation(libs.lottie.compose)
 }
 
 fun getToken(): String{

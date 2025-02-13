@@ -1,17 +1,20 @@
 package `in`.iotkiit.raidersreckoningapp.data.repo
 
 import android.util.Log
+import coil.network.HttpException
 import com.google.firebase.auth.FirebaseAuth
 import `in`.iotkiit.raidersreckoningapp.data.model.CreateTeamBody
 import `in`.iotkiit.raidersreckoningapp.data.model.CustomResponse
 import `in`.iotkiit.raidersreckoningapp.data.model.GetTeamResponse
 import `in`.iotkiit.raidersreckoningapp.data.model.JoinTeamBody
 import `in`.iotkiit.raidersreckoningapp.data.model.QuestionData
+import `in`.iotkiit.raidersreckoningapp.data.model.SubmitPointsBody
 import `in`.iotkiit.raidersreckoningapp.data.remote.TeamApi
 import `in`.iotkiit.raidersreckoningapp.state.UiState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
+import java.net.UnknownHostException
 import javax.inject.Inject
 
 class TeamRepo @Inject constructor(
@@ -131,6 +134,31 @@ class TeamRepo @Inject constructor(
                     emit(UiState.Success(response))
                 } else {
                     emit(UiState.Failed(response.message ?: "Failed to get questions"))
+                }
+            } catch (e: UnknownHostException) {
+                emit(UiState.Failed("No Internet Connection!"))
+            } catch (e: HttpException) {
+                emit(UiState.Failed("Server error. Please try again later."))
+            } catch (e: Exception) {
+                emit(UiState.Failed(e.message ?: "Something went wrong."))
+            }
+        }
+    }
+
+    suspend fun submitPoints(
+        accessToken: String,
+        submitPointsBody: SubmitPointsBody
+    ): Flow<UiState<CustomResponse<Unit>>> {
+        return flow {
+            try {
+                emit(UiState.Loading)
+
+                val response = teamApi.submitPoints(accessToken, submitPointsBody)
+
+                if (response.success) {
+                    emit(UiState.Success(response))
+                } else {
+                    emit(UiState.Failed(response.message ?: "Failed to submit points"))
                 }
             } catch (e: Exception) {
                 emit(UiState.Failed(e.message.toString()))
