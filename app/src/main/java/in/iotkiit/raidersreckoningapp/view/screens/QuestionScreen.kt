@@ -1,87 +1,124 @@
 package `in`.iotkiit.raidersreckoningapp.view.screens
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import `in`.iotkiit.raidersreckoningapp.data.model.Question
+import `in`.iotkiit.raidersreckoningapp.data.model.QuestionData
 import `in`.iotkiit.raidersreckoningapp.ui.theme.GreenCOD
 import `in`.iotkiit.raidersreckoningapp.ui.theme.modernWarfare
+import `in`.iotkiit.raidersreckoningapp.view.components.core.CustomOutlinedTextField
+import `in`.iotkiit.raidersreckoningapp.view.components.core.useGlobalTimer
 import `in`.iotkiit.raidersreckoningapp.view.components.myTeam.Fields
-import `in`.iotkiit.raidersreckoningapp.vm.TeamViewModel
+import `in`.iotkiit.raidersreckoningapp.view.components.questions.CircularTimer
+import kotlinx.coroutines.delay
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun QuestionScreen(
+    question: Question,
+    questionData: QuestionData,
     navController: NavController,
-    viewModel: TeamViewModel = hiltViewModel()
+    onNext: (Int, String) -> Unit,
 ) {
-    val timer = remember { mutableStateOf(10) }
-    val question = "Describe the best strategy for long-range combat in COD?"
-    var userAnswer by remember { mutableStateOf(TextFieldValue()) }
+    var userAnswer by remember(question.id) { mutableStateOf(TextFieldValue()) }
+    var timer by remember(question.id) { mutableIntStateOf(question.timeAlloted) }
+    var hasSubmitted by remember(question.id) { mutableStateOf(false) }
+
+    val (minutes, seconds, _) = useGlobalTimer(
+        zoneStartTime = questionData.zoneStartTime,
+        zoneDuration = questionData.zoneDuration
+    )
+
+    LaunchedEffect(question.id) {
+        // Reset states for new question
+        timer = question.duration
+        hasSubmitted = false
+
+        while (timer > 0 && !hasSubmitted) {
+            delay(1000L)
+            timer--
+        }
+
+        // Auto-submit when timer reaches 0
+        if (!hasSubmitted && timer == 0) {
+            hasSubmitted = true
+            onNext(0, userAnswer.text)
+        }
+    }
 
     Scaffold(
-        modifier = Modifier.fillMaxSize().background(Color.Black),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black),
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Top,
-            modifier = Modifier.padding(it)
+            verticalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier
+                .padding(it)
+                .fillMaxSize()
+                .padding(16.dp)
         ) {
-
             Text(
-                text = "Time: ${timer.value} s",
-                fontFamily = modernWarfare,
-                fontSize = 32.sp,
-                color = GreenCOD,
-                modifier = Modifier.padding(16.dp)
+                text = String.format("%02d:%02d", minutes, seconds),
+                color = Color.White,
+                fontSize = 24.sp,
+                fontFamily = modernWarfare
             )
+            CircularTimer(currentTime = timer, totalTime = question.duration)
+            Fields(field = question.question)
 
-            Spacer(modifier = Modifier.height(32.dp))
-
-
-            Fields(
-                field = question,
-            )
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            TextField(
+            CustomOutlinedTextField(
                 value = userAnswer,
-                onValueChange = { userAnswer = it },
-                textStyle = LocalTextStyle.current.copy(fontSize = 18.sp, color = Color.White),
-                modifier = Modifier
-                    .fillMaxWidth(0.8f)
-                    .background(Color.DarkGray, MaterialTheme.shapes.medium),
-                colors = TextFieldDefaults.textFieldColors(
-                    containerColor = Color.DarkGray,
-                    focusedIndicatorColor = GreenCOD,
-                    unfocusedIndicatorColor = Color.Gray
-                ),
-                placeholder = { Text("Type your answer here...", color = Color.Gray) }
+                onValueChange = {
+                    if (!hasSubmitted) {
+                        userAnswer = it
+                    }
+                },
+                placeholder = "Enter Answer",
+                enabled = !hasSubmitted,
+                textStyle = MaterialTheme.typography.bodyMedium
             )
-            Spacer(modifier = Modifier.height(32.dp))
 
             Button(
-                onClick = { /* Handle answer submission */ },
-                modifier = Modifier.align(Alignment.CenterHorizontally).padding(16.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = GreenCOD)
+                onClick = {
+                    if (!hasSubmitted) {
+                        hasSubmitted = true
+                        onNext(timer, userAnswer.text)
+                    }
+                },
+                enabled = !hasSubmitted,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = GreenCOD,
+                    disabledContainerColor = GreenCOD.copy(alpha = 0.5f)
+                ),
+                modifier = Modifier.fillMaxWidth(0.5f)
             ) {
-                Text(
-                    text = "Next",
-                    fontFamily = modernWarfare,
-                    fontSize = 24.sp,
-                    color = Color.Black
-                )
+                Text("Next", fontFamily = modernWarfare, fontSize = 24.sp, color = Color.Black)
             }
         }
     }
 }
+

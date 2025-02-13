@@ -1,106 +1,186 @@
 package `in`.iotkiit.raidersreckoningapp.view.screens
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.google.firebase.auth.FirebaseAuth
+import `in`.iotkiit.raidersreckoningapp.state.UiState
 import `in`.iotkiit.raidersreckoningapp.ui.theme.GreenCOD
+import `in`.iotkiit.raidersreckoningapp.view.components.anims.FailureAnimationDialog
+import `in`.iotkiit.raidersreckoningapp.view.components.core.PrimaryButton
+import `in`.iotkiit.raidersreckoningapp.view.components.core.TeamCard
 import `in`.iotkiit.raidersreckoningapp.view.components.core.topbar.TopBar
-import `in`.iotkiit.raidersreckoningapp.view.components.myTeam.Fields
+import `in`.iotkiit.raidersreckoningapp.view.components.myTeam.ExpandableQRCard
 import `in`.iotkiit.raidersreckoningapp.view.navigation.BottomNavBar
 import `in`.iotkiit.raidersreckoningapp.view.navigation.BottomNavOptions.Companion.bottomNavOptions
-import `in`.iotkiit.raidersreckoningapp.vm.DashBoardViewModel
+import `in`.iotkiit.raidersreckoningapp.view.navigation.RaidersReckoningScreens
+import `in`.iotkiit.raidersreckoningapp.vm.LeaderboardViewModel
+import `in`.iotkiit.raidersreckoningapp.vm.TeamViewModel
+
 
 @Composable
 fun MyTeamScreen(
     navController: NavController,
-    dashBoardViewModel: DashBoardViewModel = hiltViewModel()
+    teamViewModel: TeamViewModel = hiltViewModel(),
+    leaderboardViewModel: LeaderboardViewModel = hiltViewModel()
 ) {
+    val teamState = teamViewModel.getTeamState.collectAsState().value
 
-    val dashBoardState = dashBoardViewModel.getDashBoardState.collectAsState().value
-
-    Scaffold(
-        containerColor = Color.Black,
-        modifier = Modifier.fillMaxSize(),
-        topBar = {
-            TopBar(
-                modifier = Modifier.fillMaxWidth(),
-                teamName = "TaskForce141",
-                points = 10
-            )
-        },
-        bottomBar = {
-            BottomNavBar(navController = navController, bottomMenu = bottomNavOptions)
+    when (teamState) {
+        is UiState.Idle -> {
+            teamViewModel.getTeam()
         }
-    ) {
-        Column(
-            modifier = Modifier.fillMaxSize().padding(it).background(Color.Black),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
+
+        is UiState.Loading -> {
             Column(
-                modifier = Modifier,
-                verticalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black),
+                verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Fields(
-                    field = "Taskforce141",
-                    containerColor = GreenCOD,
-                    contentColor = Color.Black,
-                )
-                Fields("Kunal")
-                Fields("Binayak")
-                Fields("Sarthak")
+                LinearProgressIndicator(color = GreenCOD)
             }
         }
+
+        is UiState.Success -> {
+            val data = teamState.data.data
+            val teamName = data?.name ?: "NoTeam"
+            val points = data?.points ?: 0
+            val totalPoints = data?.points ?: 0
+
+            Scaffold(
+                containerColor = Color.Black,
+                bottomBar = {
+                    BottomNavBar(navController = navController, bottomMenu = bottomNavOptions)
+                },
+                topBar = {
+                    TopBar(
+                        teamName = teamName,
+                        points = points
+                    )
+                }
+            ) { paddingValues ->
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
+                        .padding(paddingValues),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Top
+                ) {
+                    ExpandableQRCard(teamId = teamState.data.data!!.id)
+
+                    TeamCard(
+                        teamName = teamState.data.data.name,
+                        leaderName = teamState.data.data.leaderInfo.name,
+                        teamMembers = teamState.data.data.participantsList.map { it.name }
+                    )
+
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    val latestRound = teamState.data.data.statsList.lastOrNull()
+
+
+                    OutlinedCard(
+                        modifier = Modifier
+                            .fillMaxWidth(0.85f)
+                            .padding(8.dp),
+                        colors = CardDefaults.outlinedCardColors(
+                            containerColor = Color.Black,
+                            contentColor = GreenCOD
+                        ),
+                        border = BorderStroke(3.dp, GreenCOD)
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = "Round: ${latestRound?.round ?: "0"}",
+                                style = MaterialTheme.typography.headlineMedium,
+                                color = GreenCOD
+                            )
+
+                            Spacer(modifier = Modifier.height(8.dp))
+
+                            Text(
+                                text = "Total Points: $totalPoints",
+                                fontWeight = FontWeight.ExtraBold,
+                                fontSize = 18.sp,
+                                style = MaterialTheme.typography.headlineMedium,
+                                color = Color.White
+                            )
+
+                            Spacer(modifier = Modifier.height(8.dp))
+
+                            Text(
+                                text = "Winner: ${latestRound?.winner ?: "N/A"}",
+                                style = MaterialTheme.typography.headlineMedium,
+                                color = Color.White
+                            )
+                        }
+                    }
+
+                    PrimaryButton(
+                        onClick = {
+                            FirebaseAuth.getInstance().signOut()
+                            navController.navigate(RaidersReckoningScreens.LoginScreen.route) {
+                                popUpTo(RaidersReckoningScreens.MyTeamScreen.route) {
+                                    inclusive = true
+                                }
+                            }
+                        },
+                        text = "Log Out",
+                        contentColor = GreenCOD,
+                        containerColor = GreenCOD.copy(0.1f)
+                    )
+                }
+            }
         }
 
-//        when (getDashBoardState) {
-//            is UiState.Idle -> {
-//                dashBoardViewModel.getDashBoardData("")
-//            }
-//
-//            is UiState.Loading -> {
-//                Column(
-//                    modifier = Modifier
-//                        .fillMaxSize(),
-//                    verticalArrangement = Arrangement.Center,
-//                    horizontalAlignment = Alignment.CenterHorizontally
-//                ) {
-//                    LinearProgressIndicator(color = GreenCOD)
-//                }
-//            }
-//
-//            is UiState.Success -> {
-//                Surface(
-//                    modifier = Modifier
-//                        .fillMaxSize()
-//                        .safeContentPadding()
-//                ) {
-//                    Fields("Kunal")
-//                }
-//            }
-//
-//            is UiState.Failed -> {
-//                Column(
-//                    modifier = Modifier
-//                        .fillMaxSize(),
-//                    verticalArrangement = Arrangement.Center,
-//                    horizontalAlignment = Alignment.CenterHorizontally
-//                ) {
-//                    Text(text = "FAILED!")
-//                }
-//            }
-//        }
+        is UiState.Failed -> {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black)
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                FailureAnimationDialog(
+                    message = teamState.message,
+                    onTryAgainClick = { teamViewModel.getTeam() }
+                )
+            }
+        }
+    }
 }
+

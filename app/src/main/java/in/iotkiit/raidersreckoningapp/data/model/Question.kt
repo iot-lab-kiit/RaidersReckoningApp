@@ -10,15 +10,15 @@ data class Question(
     @SerializedName("multiplier")
     val multiplier: Int,
     @SerializedName("timeAlloted")
-    val timeAlloted: Number,
+    val timeAlloted: Int,
     @SerializedName("mcqAnswers")
     val mcqAnswers: List<String>,
     @SerializedName("correctAnswer")
-    val correctAnswer: Number,
+    val correctAnswer: Int,
     @SerializedName("round")
-    val round: Number,
+    val round: Int,
     @SerializedName("duration")
-    val duration: Number,
+    val duration: Int,
     @SerializedName("oneWord")
     val oneWord: Boolean,
     @SerializedName("createdAt")
