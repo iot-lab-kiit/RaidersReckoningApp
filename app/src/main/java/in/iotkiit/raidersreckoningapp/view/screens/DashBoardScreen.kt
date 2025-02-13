@@ -185,7 +185,7 @@ fun DashBoardScreen(
                         } else {
                             Text(
                                 modifier = Modifier.fillMaxWidth(),
-                                text = "You are not a challenger",
+                                text = "You are a capturer!",
                                 textAlign = TextAlign.Center,
                                 maxLines = 2,
                                 color = Color.Red,
@@ -203,11 +203,7 @@ fun DashBoardScreen(
                         Spacer(Modifier.height(79.dp))
                         FloatingActionButton(
                             onClick = {
-                                navController.navigate(RaidersReckoningScreens.GetQuestionsQR.route) {
-                                    popUpTo(RaidersReckoningScreens.DashBoardScreen.route) {
-                                        inclusive = false
-                                    }
-                                }
+                                navController.navigate(RaidersReckoningScreens.GetQuestionsQR.route)
                             },
                             containerColor = GreenCOD,
                             contentColor = Color.Black,

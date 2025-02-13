@@ -7,13 +7,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -28,6 +29,7 @@ import `in`.iotkiit.raidersreckoningapp.data.model.SubmitPointsBody
 import `in`.iotkiit.raidersreckoningapp.state.UiState
 import `in`.iotkiit.raidersreckoningapp.ui.theme.GreenCOD
 import `in`.iotkiit.raidersreckoningapp.view.components.anims.FailureAnimationDialog
+import `in`.iotkiit.raidersreckoningapp.view.components.anims.SubmitPointsAnimation
 import `in`.iotkiit.raidersreckoningapp.view.components.core.useGlobalTimer
 import `in`.iotkiit.raidersreckoningapp.view.navigation.RaidersReckoningScreens
 import `in`.iotkiit.raidersreckoningapp.vm.TeamViewModel
@@ -43,23 +45,45 @@ fun QuestionScreenControl(
     var currentIndex by remember { mutableIntStateOf(0) }
     val submitPointsState = viewModel.submitPointsState.collectAsState().value
     val context = LocalContext.current
+    var showEndAnimation by remember { mutableStateOf(false) }
+    var submissionFailed by remember { mutableStateOf(false) }
 
     LaunchedEffect(submitPointsState) {
         when (submitPointsState) {
             is UiState.Success -> {
-                Toast.makeText(context, "Points submitted successfully!", Toast.LENGTH_SHORT).show()
+                submissionFailed = false
+                showEndAnimation = true
             }
 
             is UiState.Failed -> {
+                submissionFailed = true
+                showEndAnimation = false
                 Toast.makeText(
                     context,
-                    "Failed to submit points: ${submitPointsState.message}",
+                    submitPointsState.message,
                     Toast.LENGTH_SHORT
                 ).show()
+                navController.navigate(RaidersReckoningScreens.DashBoardScreen.route) {
+                    popUpTo(RaidersReckoningScreens.QuestionScreen.route) { inclusive = true }
+                }
             }
 
-            else -> {}
+            else -> {
+                submissionFailed = false
+                showEndAnimation = false
+            }
         }
+    }
+
+    // Show end animation only when quiz is complete AND submission was successful
+    if (showEndAnimation && !submissionFailed) {
+        SubmitPointsAnimation(
+            onAnimationComplete = {
+                navController.navigate(RaidersReckoningScreens.DashBoardScreen.route) {
+                    popUpTo(RaidersReckoningScreens.QuestionScreen.route) { inclusive = true }
+                }
+            }
+        )
     }
 
     when (questionsState) {
@@ -68,8 +92,14 @@ fun QuestionScreenControl(
         }
 
         is UiState.Loading -> {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator(color = GreenCOD)
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                LinearProgressIndicator(color = GreenCOD)
             }
         }
 
@@ -107,28 +137,24 @@ fun QuestionScreenControl(
                 zoneDuration = questionData.zoneDuration
             )
 
-            // If time is up, submit current answer and navigate to results
+            // Modified time up handling to show animation
             LaunchedEffect(isTimeUp) {
                 if (isTimeUp) {
                     // Submit answers for all remaining questions
                     for (i in currentIndex until questionData.questions.size) {
                         val remainingQuestion = questionData.questions[i]
                         viewModel.submitAnswer(remainingQuestion, 0, "")
-                        // Add a small delay to ensure sequential processing
                         delay(100)
                     }
 
-                    // Submit final points using ViewModel function
                     viewModel.submitPoints(
                         SubmitPointsBody(tempPoints = viewModel.getTotalPoints())
                     )
-
-                    navController.navigate(RaidersReckoningScreens.ResultsScreen.route) {
-                        popUpTo(RaidersReckoningScreens.QuestionScreen.route) { inclusive = true }
-                    }
+                    showEndAnimation = true
                     return@LaunchedEffect
                 }
             }
+
             val currentQuestion = questionData.questions[currentIndex]
             val isOneWord = questionData.questions.first().oneWord
 
@@ -143,10 +169,9 @@ fun QuestionScreenControl(
                             handleNavigation(
                                 currentIndex,
                                 questionData.questions.size - 1,
-                                navController
-                            ) {
-                                currentIndex++
-                            }
+                                onNextQuestion = { currentIndex++ },
+                                onComplete = { showEndAnimation = true }
+                            )
                         }
                     )
                 } else {
@@ -159,31 +184,27 @@ fun QuestionScreenControl(
                             handleNavigation(
                                 currentIndex,
                                 questionData.questions.size - 1,
-                                navController
-                            ) {
-                                currentIndex++
-                            }
+                                onNextQuestion = { currentIndex++ },
+                                onComplete = { showEndAnimation = true }
+                            )
                         }
                     )
                 }
             }
         }
     }
-
-
 }
 
+// Modified navigation handling
 private fun handleNavigation(
     currentIndex: Int,
     lastIndex: Int,
-    navController: NavController,
-    onNextQuestion: () -> Unit
+    onNextQuestion: () -> Unit,
+    onComplete: () -> Unit
 ) {
     if (currentIndex < lastIndex) {
         onNextQuestion()
     } else {
-        navController.navigate(RaidersReckoningScreens.ResultsScreen.route) {
-            popUpTo(RaidersReckoningScreens.QuestionScreen.route) { inclusive = true }
-        }
+        onComplete()
     }
 }

@@ -86,19 +86,6 @@ fun RaidersReckoningNavigation(
             }
         }
 
-        composable(RaidersReckoningScreens.ResultsScreen.route) {
-            ResultsScreen(
-                navController = navController,
-                onFinish = {
-                    navController.navigate(RaidersReckoningScreens.DashBoardScreen.route) {
-                        popUpTo(RaidersReckoningScreens.QuestionScreen.route) {
-                            inclusive = false
-                        }
-                    }
-                }
-            )
-        }
-
         composable(RaidersReckoningScreens.LeaderboardScreen.route) {
             LeaderboardScreen(navController = navController)
         }

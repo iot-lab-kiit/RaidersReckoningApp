@@ -24,7 +24,7 @@ fun GetQuestionsQR(
 
             val capture = CaptureManager(context as Activity, this)
             capture.initializeFromIntent(context.intent, null)
-            this.setStatusText("Scan a Product")
+            this.setStatusText("Scan the QR displayed")
 
             // Starting the  Scanner Preview and decoding
             this.resume()
