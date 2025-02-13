@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -31,10 +30,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import `in`.iotkiit.nexterdayevents.view.components.login.GoogleOneTapButton
+import `in`.iotkiit.raidersreckoningapp.view.components.login.GoogleOneTapButton
 import `in`.iotkiit.raidersreckoningapp.BuildConfig
 import `in`.iotkiit.raidersreckoningapp.R
 import `in`.iotkiit.raidersreckoningapp.state.UiState
+import `in`.iotkiit.raidersreckoningapp.view.components.login.GoogleButtonTheme
 import `in`.iotkiit.raidersreckoningapp.view.components.login.rememberFirebaseAuthLauncher
 import `in`.iotkiit.raidersreckoningapp.view.navigation.RaidersReckoningScreens
 import `in`.iotkiit.raidersreckoningapp.vm.DashBoardViewModel
@@ -83,10 +83,9 @@ fun LoginScreen(
 
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(bottom = 48.dp),
+                .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceAround
+            verticalArrangement = Arrangement.spacedBy(400.dp, Alignment.CenterVertically)
         ) {
             Image(
                 painter = painterResource(R.drawable.title),
@@ -94,7 +93,9 @@ fun LoginScreen(
                 contentScale = ContentScale.FillWidth,
                 modifier = Modifier.fillMaxWidth(0.75f)
             )
-            GoogleOneTapButton {
+            GoogleOneTapButton(
+                theme = GoogleButtonTheme.Dark
+            ) {
                 val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                     .requestIdToken(token)
                     .requestEmail()

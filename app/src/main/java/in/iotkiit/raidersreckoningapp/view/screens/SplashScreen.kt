@@ -47,6 +47,7 @@ fun SplashScreen(
 
     val getTeamState = teamViewModel.getTeamState.collectAsState().value
     val isVideoCompleted = remember { mutableStateOf(false) }
+    val isNavigating = remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         teamViewModel.getTeam()
@@ -57,61 +58,43 @@ fun SplashScreen(
             override fun onPlaybackStateChanged(state: Int) {
                 if (state == Player.STATE_ENDED) {
                     isVideoCompleted.value = true
-                    if (getTeamState !is UiState.Loading) {
-                        when (getTeamState) {
-                            is UiState.Idle -> {
-                                teamViewModel.getTeam()
-                            }
-
-                            is UiState.Success -> {
-                                if(Firebase.auth.currentUser != null)
-                                navController.navigate(RaidersReckoningScreens.DashBoardScreen.route) {
-                                    popUpTo("splash_screen") { inclusive = true }
-                                }
-                                else
-                                    navController.navigate(RaidersReckoningScreens.LoginScreen.route) {
-                                        popUpTo("splash_screen") { inclusive = true }
-                                    }
-                            }
-                            is UiState.Failed -> {
-                                navController.navigate(RaidersReckoningScreens.LoginScreen.route) {
-                                    popUpTo("splash_screen") { inclusive = true }
-                                }
-                            }
-                            else -> {} // Do nothing if still loading
-                        }
-                    }
                 }
             }
         })
     }
 
-    LaunchedEffect(getTeamState) {
-        if (isVideoCompleted.value && getTeamState !is UiState.Loading) {
+    LaunchedEffect(getTeamState, isVideoCompleted.value) {
+        if (isVideoCompleted.value && getTeamState !is UiState.Loading && !isNavigating.value) {
+            isNavigating.value = true
             when (getTeamState) {
                 is UiState.Success -> {
-                    if(Firebase.auth.currentUser != null)
+                    if (Firebase.auth.currentUser != null) {
                         navController.navigate(RaidersReckoningScreens.DashBoardScreen.route) {
                             popUpTo("splash_screen") { inclusive = true }
                         }
-                    else
+                    } else {
                         navController.navigate(RaidersReckoningScreens.LoginScreen.route) {
                             popUpTo("splash_screen") { inclusive = true }
                         }
+                    }
                 }
                 is UiState.Failed -> {
                     navController.navigate(RaidersReckoningScreens.LoginScreen.route) {
                         popUpTo("splash_screen") { inclusive = true }
                     }
                 }
-                else -> {} // Do nothing if still loading
+                else -> {
+                    isNavigating.value = false
+                }
             }
         }
     }
 
     DisposableEffect(Unit) {
         onDispose {
-            exoPlayer.release()
+            if (!isNavigating.value) {
+                exoPlayer.release()
+            }
         }
     }
 

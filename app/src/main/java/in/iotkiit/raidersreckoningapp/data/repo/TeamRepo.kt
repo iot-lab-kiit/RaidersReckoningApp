@@ -52,8 +52,12 @@ class TeamRepo @Inject constructor(
                 } else {
                     emit(UiState.Failed(response.message ?: "Failed to verify token"))
                 }
+            } catch (e: UnknownHostException) {
+                emit(UiState.Failed("No Internet Connection!"))
+            } catch (e: HttpException) {
+                emit(UiState.Failed("Server error. Please try again later."))
             } catch (e: Exception) {
-                emit(UiState.Failed(e.message.toString()))
+                emit(UiState.Failed(e.message ?: "Something went wrong."))
             }
         }
     }
@@ -70,8 +74,12 @@ class TeamRepo @Inject constructor(
                 } else {
                     emit(UiState.Failed(response.message ?: "Failed to get team"))
                 }
+            } catch (e: UnknownHostException) {
+                emit(UiState.Failed("No Internet Connection!"))
+            } catch (e: HttpException) {
+                emit(UiState.Failed("Server error. Please try again later."))
             } catch (e: Exception) {
-                emit(UiState.Failed(e.message.toString()))
+                emit(UiState.Failed(e.message ?: "Something went wrong."))
             }
         }
     }
@@ -92,8 +100,12 @@ class TeamRepo @Inject constructor(
                 } else {
                     emit(UiState.Failed(response.message ?: "Failed to create team"))
                 }
+            } catch (e: UnknownHostException) {
+                emit(UiState.Failed("No Internet Connection!"))
+            } catch (e: HttpException) {
+                emit(UiState.Failed("Server error. Please try again later."))
             } catch (e: Exception) {
-                emit(UiState.Failed(e.message.toString()))
+                emit(UiState.Failed(e.message ?: "Something went wrong."))
             }
         }
     }
@@ -114,8 +126,12 @@ class TeamRepo @Inject constructor(
                 } else {
                     emit(UiState.Failed(response.message ?: "Failed to join team"))
                 }
+            } catch (e: UnknownHostException) {
+                emit(UiState.Failed("No Internet Connection!"))
+            } catch (e: HttpException) {
+                emit(UiState.Failed("Server error. Please try again later."))
             } catch (e: Exception) {
-                emit(UiState.Failed(e.message.toString()))
+                emit(UiState.Failed(e.message ?: "Something went wrong."))
             }
         }
     }
@@ -160,8 +176,12 @@ class TeamRepo @Inject constructor(
                 } else {
                     emit(UiState.Failed(response.message ?: "Failed to submit points"))
                 }
+            } catch (e: UnknownHostException) {
+                emit(UiState.Failed("No Internet Connection!"))
+            } catch (e: HttpException) {
+                emit(UiState.Failed("Server error. Please try again later."))
             } catch (e: Exception) {
-                emit(UiState.Failed(e.message.toString()))
+                emit(UiState.Failed(e.message ?: "Something went wrong."))
             }
         }
     }
