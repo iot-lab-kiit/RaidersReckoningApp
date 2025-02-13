@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import `in`.iotkiit.raidersreckoningapp.data.model.CustomResponse
-import `in`.iotkiit.raidersreckoningapp.data.model.LeaderboardData
+import `in`.iotkiit.raidersreckoningapp.data.model.GetLeaderboardResponse
 import `in`.iotkiit.raidersreckoningapp.data.repo.DashBoardRepo
 import `in`.iotkiit.raidersreckoningapp.data.repo.LeaderboardRepo
 import `in`.iotkiit.raidersreckoningapp.data.repo.TeamRepo
@@ -22,11 +22,11 @@ class LeaderboardViewModel @Inject constructor(
     private val teamRepo: TeamRepo
 ) : ViewModel() {
 
-    private val _getLeaderboardDataState: MutableStateFlow<UiState<CustomResponse<LeaderboardData>>> =
+    private val _getLeaderboardDataState: MutableStateFlow<UiState<CustomResponse<GetLeaderboardResponse>>> =
         MutableStateFlow(UiState.Idle)
     val getLeaderboardData = _getLeaderboardDataState.asStateFlow()
 
-    fun getLeaderboardData(accessToken: String) {
+    fun getLeaderboardData() {
         _getLeaderboardDataState.value = UiState.Loading
         viewModelScope.launch {
             try {

@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -23,6 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import `in`.iotkiit.raidersreckoningapp.state.UiState
 import `in`.iotkiit.raidersreckoningapp.ui.theme.GreenCOD
 import `in`.iotkiit.raidersreckoningapp.view.components.core.topbar.TopBar
 import `in`.iotkiit.raidersreckoningapp.view.components.leaderboard.CurrentLeaders
@@ -38,6 +40,135 @@ fun LeaderboardScreen(
 ) {
 
     val leaderboardDataState = leaderboardViewModel.getLeaderboardData.collectAsState().value
+
+    when(leaderboardDataState) {
+        is UiState.Idle -> {
+            leaderboardViewModel.getLeaderboardData()
+        }
+        is UiState.Loading -> {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                LinearProgressIndicator(color = GreenCOD)
+            }
+        }
+        is UiState.Success -> {
+            Scaffold(
+                containerColor = Color.Black,
+                topBar = {
+                    TopBar(
+                        modifier = Modifier.fillMaxWidth(),
+                        teamName = leaderboardDataState.data.data!!.teamName,
+                        points = leaderboardDataState.data.data.points
+                    )
+                },
+                bottomBar = {
+                    BottomNavBar(navController = navController, bottomMenu = bottomNavOptions)
+                }
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(it)
+                        .background(Color.Black),
+                    verticalArrangement = Arrangement.SpaceAround
+                ) {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalArrangement = Arrangement.spacedBy(32.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+
+                        Column {
+                            Text(
+                                text = "CURRENT LEADERS",
+                                style = MaterialTheme.typography.titleSmall,
+                                color = Color.White,
+                                modifier = Modifier.padding(16.dp)
+
+                            )
+                            CurrentLeaders(
+                                players = listOf(
+                                    "imissher",
+                                    "noobmaster69",
+                                    "zrfghrrh"
+                                )
+                            )
+                        }
+
+                        Column(
+                            modifier = Modifier.safeDrawingPadding()
+                        ) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text(
+                                    text = "ROUND",
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = Color.White
+                                )
+                                Text(
+                                    text = "30:00",
+                                    style = MaterialTheme.typography.headlineSmall,
+                                    color = Color.White
+                                )
+
+                            }
+
+                            Row(
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .background(
+                                        color = GreenCOD.copy(1f),
+                                        shape = RoundedCornerShape(15.dp)
+                                    )
+                                    .border(
+                                        width = 1.04.dp,
+                                        color = GreenCOD,
+                                        shape = RoundedCornerShape(12.dp)
+                                    )
+                                    .padding(16.dp)
+                            ) {
+                                Text(
+                                    text = "rank",
+                                    style = MaterialTheme.typography.labelMedium,
+                                    color = Color.Black
+                                )
+                                Text(
+                                    text = "Team",
+                                    style = MaterialTheme.typography.labelMedium,
+                                    color = Color.Black
+                                )
+                                Text(
+                                    text = "score",
+                                    style = MaterialTheme.typography.labelMedium,
+                                    color = Color.Black
+                                )
+
+                            }
+                            Spacer(Modifier.height(1.dp))
+                            LeaderboardFields("TasForce141", "1", "69")
+                            Spacer(Modifier.height(1.dp))
+                            LeaderboardFields("GuerillaForce", "2", "42")
+                            Spacer(Modifier.height(1.dp))
+                            LeaderboardFields("Shakalaka", "3", "1")
+                        }
+                    }
+                }
+            }
+        }
+        else -> {
+
+        }
+    }
 
     Scaffold(
         containerColor = Color.Black,
@@ -145,41 +276,5 @@ fun LeaderboardScreen(
                 }
             }
         }
-
-//        when (leaderboardDataState) {
-//            is UiState.Idle -> {
-//                leaderboardViewModel.getLeaderboardData("")
-//            }
-//
-//            is UiState.Loading -> {
-//                Column(
-//                    modifier = Modifier
-//                        .fillMaxSize(),
-//                    verticalArrangement = Arrangement.Center,
-//                    horizontalAlignment = Alignment.CenterHorizontally
-//                ) {
-//                    LinearProgressIndicator(color = GreenCOD)
-//                }
-//            }
-//
-//            is UiState.Success -> {
-//                Surface(
-//                    modifier = Modifier.fillMaxSize().safeContentPadding()
-//                ) {
-//                    Fields("Kunal Saha", 0.1f)
-//                }
-//            }
-//
-//            is UiState.Failed -> {
-//                Column(
-//                    modifier = Modifier
-//                        .fillMaxSize(),
-//                    verticalArrangement = Arrangement.Center,
-//                    horizontalAlignment = Alignment.CenterHorizontally
-//                ) {
-//                    Text(text = "FAILED!")
-//                }
-//            }
-//        }
     }
 }
