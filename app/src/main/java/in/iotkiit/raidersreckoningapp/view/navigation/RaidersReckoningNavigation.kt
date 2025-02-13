@@ -71,16 +71,16 @@ fun RaidersReckoningNavigation(
         }
 
         val questionScreenRoute = RaidersReckoningScreens.QuestionScreen.route
-        composable("$questionScreenRoute/{prodID}",
+        composable("$questionScreenRoute/{zoneId}",
             arguments = listOf(
-                navArgument(name = "prodID") {
+                navArgument(name = "zoneId") {
                     type = NavType.StringType
                 }
             )
         ) {backStackEntry ->
-            backStackEntry.arguments?.getString("prodID").let {
+            backStackEntry.arguments?.getString("zoneId").let {
                 if(it != null) {
-                    Log.d("ProdID", it)
+                    Log.d("zoneId", it)
                     QuestionScreenControl(navController = navController, zoneId = it)
                 }
             }
