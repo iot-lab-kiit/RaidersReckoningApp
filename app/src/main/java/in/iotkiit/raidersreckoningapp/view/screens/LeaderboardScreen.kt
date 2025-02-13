@@ -5,13 +5,13 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -41,10 +41,11 @@ fun LeaderboardScreen(
 
     val leaderboardDataState = leaderboardViewModel.getLeaderboardData.collectAsState().value
 
-    when(leaderboardDataState) {
+    when (leaderboardDataState) {
         is UiState.Idle -> {
             leaderboardViewModel.getLeaderboardData()
         }
+
         is UiState.Loading -> {
             Column(
                 modifier = Modifier
@@ -56,6 +57,7 @@ fun LeaderboardScreen(
                 LinearProgressIndicator(color = GreenCOD)
             }
         }
+
         is UiState.Success -> {
             Scaffold(
                 containerColor = Color.Black,
@@ -92,11 +94,8 @@ fun LeaderboardScreen(
 
                             )
                             CurrentLeaders(
-                                players = listOf(
-                                    "imissher",
-                                    "noobmaster69",
-                                    "zrfghrrh"
-                                )
+                                players = leaderboardDataState.data.data?.leaderboard?.take(3)
+                                    ?.map { teams -> teams.team.name } ?: emptyList()
                             )
                         }
 
@@ -125,6 +124,7 @@ fun LeaderboardScreen(
                             Row(
                                 horizontalArrangement = Arrangement.SpaceBetween,
                                 modifier = Modifier
+                                    .padding(horizontal = 8.dp)
                                     .fillMaxWidth()
                                     .background(
                                         color = GreenCOD.copy(1f),
@@ -135,7 +135,8 @@ fun LeaderboardScreen(
                                         color = GreenCOD,
                                         shape = RoundedCornerShape(12.dp)
                                     )
-                                    .padding(16.dp)
+                                    .padding(14.dp),
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Text(
                                     text = "rank",
@@ -154,127 +155,27 @@ fun LeaderboardScreen(
                                 )
 
                             }
-                            Spacer(Modifier.height(1.dp))
-                            LeaderboardFields("TasForce141", "1", "69")
-                            Spacer(Modifier.height(1.dp))
-                            LeaderboardFields("GuerillaForce", "2", "42")
-                            Spacer(Modifier.height(1.dp))
-                            LeaderboardFields("Shakalaka", "3", "1")
+                            Column(
+                                modifier = Modifier
+                                    .padding(vertical = 8.dp)
+                                    .verticalScroll(state = rememberScrollState()),
+                            ) {
+                                leaderboardDataState.data.data?.leaderboard?.forEachIndexed { index, team ->
+                                    LeaderboardFields(
+                                        team.team.name,
+                                        (index + 1).toString(),
+                                        team.team.points.toString()
+                                    )
+                                }
+                            }
                         }
                     }
                 }
             }
         }
+
         else -> {
 
-        }
-    }
-
-    Scaffold(
-        containerColor = Color.Black,
-        topBar = {
-            TopBar(
-                modifier = Modifier.fillMaxWidth(),
-                teamName = "TaskForce141",
-                points = 10
-            )
-        },
-        bottomBar = {
-            BottomNavBar(navController = navController, bottomMenu = bottomNavOptions)
-        }
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(it)
-                .background(Color.Black),
-            verticalArrangement = Arrangement.SpaceAround
-        ) {
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(32.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-
-                Column {
-                    Text(
-                        text = "CURRENT LEADERS",
-                        style = MaterialTheme.typography.titleSmall,
-                        color = Color.White,
-                        modifier = Modifier.padding(16.dp)
-
-                    )
-                    CurrentLeaders(
-                        players = listOf(
-                            "imissher",
-                            "noobmaster69",
-                            "zrfghrrh"
-                        )
-                    )
-                }
-
-                Column(
-                    modifier = Modifier.safeDrawingPadding()
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(
-                            text = "ROUND",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = Color.White
-                        )
-                        Text(
-                            text = "30:00",
-                            style = MaterialTheme.typography.headlineSmall,
-                            color = Color.White
-                        )
-
-                    }
-
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(
-                                color = GreenCOD.copy(1f),
-                                shape = RoundedCornerShape(15.dp)
-                            )
-                            .border(
-                                width = 1.04.dp,
-                                color = GreenCOD,
-                                shape = RoundedCornerShape(12.dp)
-                            )
-                            .padding(16.dp)
-                    ) {
-                        Text(
-                            text = "rank",
-                            style = MaterialTheme.typography.labelMedium,
-                            color = Color.Black
-                        )
-                        Text(
-                            text = "Team",
-                            style = MaterialTheme.typography.labelMedium,
-                            color = Color.Black
-                        )
-                        Text(
-                            text = "score",
-                            style = MaterialTheme.typography.labelMedium,
-                            color = Color.Black
-                        )
-
-                    }
-                    Spacer(Modifier.height(1.dp))
-                    LeaderboardFields("TasForce141", "1", "69")
-                    Spacer(Modifier.height(1.dp))
-                    LeaderboardFields("GuerillaForce", "2", "42")
-                    Spacer(Modifier.height(1.dp))
-                    LeaderboardFields("Shakalaka", "3", "1")
-                }
-            }
         }
     }
 }

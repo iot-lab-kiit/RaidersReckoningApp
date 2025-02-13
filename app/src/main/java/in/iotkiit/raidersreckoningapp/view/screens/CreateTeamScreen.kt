@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -41,6 +42,7 @@ import `in`.iotkiit.raidersreckoningapp.R
 import `in`.iotkiit.raidersreckoningapp.data.model.CreateTeamBody
 import `in`.iotkiit.raidersreckoningapp.data.repo.DashBoardRepo
 import `in`.iotkiit.raidersreckoningapp.state.UiState
+import `in`.iotkiit.raidersreckoningapp.ui.theme.GreenCOD
 import `in`.iotkiit.raidersreckoningapp.ui.theme.modernWarfare
 import `in`.iotkiit.raidersreckoningapp.view.components.core.PrimaryButton
 import `in`.iotkiit.raidersreckoningapp.view.navigation.RaidersReckoningScreens
@@ -57,7 +59,6 @@ fun CreateTeamScreen(
     val createTeamState = teamViewModel.createTeamState.collectAsState().value
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
-    val accessToken = ""
 
     LaunchedEffect(createTeamState) {
         when (createTeamState) {
@@ -143,7 +144,7 @@ fun CreateTeamScreen(
                         onClick = {
                             if (teamName.value.isNotEmpty()) {
                                 coroutineScope.launch {
-                                    teamViewModel.createTeam(CreateTeamBody(teamName.value), accessToken)
+                                    teamViewModel.createTeam(CreateTeamBody(teamName.value))
                                 }
                             } else {
                                 Toast.makeText(

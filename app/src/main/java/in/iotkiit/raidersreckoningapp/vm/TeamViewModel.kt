@@ -30,7 +30,7 @@ class TeamViewModel @Inject constructor(
         MutableStateFlow(UiState.Idle)
     val createTeamState = _createTeamState.asStateFlow()
 
-    fun createTeam(createTeamBody: CreateTeamBody, accessToken: String) {
+    fun createTeam(createTeamBody: CreateTeamBody) {
         _createTeamState.value = UiState.Loading
         viewModelScope.launch {
             try {
