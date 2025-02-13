@@ -36,8 +36,11 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.qr_generator_compose.qrGenerator
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
 import `in`.iotkiit.raidersreckoningapp.state.UiState
 import `in`.iotkiit.raidersreckoningapp.ui.theme.GreenCOD
+import `in`.iotkiit.raidersreckoningapp.view.components.core.PrimaryButton
 import `in`.iotkiit.raidersreckoningapp.view.components.core.TeamCard
 import `in`.iotkiit.raidersreckoningapp.view.components.core.topbar.TopBar
 import `in`.iotkiit.raidersreckoningapp.view.components.myTeam.ExpandableQRCard
@@ -154,6 +157,18 @@ fun MyTeamScreen(
                             )
                         }
                     }
+
+                    PrimaryButton(
+                        onClick = { FirebaseAuth.getInstance().signOut()
+                                  navController.navigate(RaidersReckoningScreens.LoginScreen.route) {
+                                      popUpTo(RaidersReckoningScreens.MyTeamScreen.route) {
+                                          inclusive = true
+                                      }
+                                  }},
+                        text = "Log Out",
+                        contentColor = GreenCOD,
+                        containerColor = GreenCOD.copy(0.1f)
+                    )
                 }
             }
         }

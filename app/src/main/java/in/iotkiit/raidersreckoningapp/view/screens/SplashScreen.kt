@@ -20,6 +20,9 @@ import androidx.media3.datasource.RawResourceDataSource
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
 import androidx.navigation.NavController
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.auth
 import `in`.iotkiit.raidersreckoningapp.R
 import `in`.iotkiit.raidersreckoningapp.state.UiState
 import `in`.iotkiit.raidersreckoningapp.view.navigation.RaidersReckoningScreens
@@ -61,9 +64,14 @@ fun SplashScreen(
                             }
 
                             is UiState.Success -> {
+                                if(Firebase.auth.currentUser != null)
                                 navController.navigate(RaidersReckoningScreens.DashBoardScreen.route) {
                                     popUpTo("splash_screen") { inclusive = true }
                                 }
+                                else
+                                    navController.navigate(RaidersReckoningScreens.LoginScreen.route) {
+                                        popUpTo("splash_screen") { inclusive = true }
+                                    }
                             }
                             is UiState.Failed -> {
                                 navController.navigate(RaidersReckoningScreens.LoginScreen.route) {
@@ -82,9 +90,14 @@ fun SplashScreen(
         if (isVideoCompleted.value && getTeamState !is UiState.Loading) {
             when (getTeamState) {
                 is UiState.Success -> {
-                    navController.navigate(RaidersReckoningScreens.DashBoardScreen.route) {
-                        popUpTo("splash_screen") { inclusive = true }
-                    }
+                    if(Firebase.auth.currentUser != null)
+                        navController.navigate(RaidersReckoningScreens.DashBoardScreen.route) {
+                            popUpTo("splash_screen") { inclusive = true }
+                        }
+                    else
+                        navController.navigate(RaidersReckoningScreens.LoginScreen.route) {
+                            popUpTo("splash_screen") { inclusive = true }
+                        }
                 }
                 is UiState.Failed -> {
                     navController.navigate(RaidersReckoningScreens.LoginScreen.route) {
