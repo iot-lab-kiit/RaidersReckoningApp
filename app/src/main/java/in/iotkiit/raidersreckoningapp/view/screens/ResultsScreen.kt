@@ -27,9 +27,7 @@ import `in`.iotkiit.raidersreckoningapp.vm.TeamViewModel
 
 @Composable
 fun ResultsScreen(
-    navController: NavController,
-    onFinish: () -> Unit,
-    viewModel: TeamViewModel = hiltViewModel()
+    navController: NavController, onFinish: () -> Unit, viewModel: TeamViewModel = hiltViewModel()
 ) {
     val totalPoints = viewModel.getTotalPoints()
 

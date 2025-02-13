@@ -1,11 +1,10 @@
-package `in`.iotkiit.nexterdayevents.view.components.login
+package `in`.iotkiit.raidersreckoningapp.view.components.login
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
@@ -25,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import `in`.iotkiit.raidersreckoningapp.R
+import `in`.iotkiit.raidersreckoningapp.ui.theme.GreenCOD
 
 @Composable
 fun GoogleOneTapButton(
@@ -50,7 +50,7 @@ fun GoogleOneTapButton(
 
         GoogleButtonTheme.Dark -> BorderStroke(
             width = 1.dp,
-            color = Color(0xFF8E918F),
+            color = GreenCOD,
         )
 
         GoogleButtonTheme.Neutral -> null

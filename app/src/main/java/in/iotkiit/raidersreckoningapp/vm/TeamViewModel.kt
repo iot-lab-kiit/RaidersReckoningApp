@@ -10,14 +10,15 @@ import `in`.iotkiit.raidersreckoningapp.data.model.GetTeamResponse
 import `in`.iotkiit.raidersreckoningapp.data.model.JoinTeamBody
 import `in`.iotkiit.raidersreckoningapp.data.model.Question
 import `in`.iotkiit.raidersreckoningapp.data.model.QuestionData
-import `in`.iotkiit.raidersreckoningapp.data.model.TeamInfo
-import `in`.iotkiit.raidersreckoningapp.data.repo.DashBoardRepo
+import `in`.iotkiit.raidersreckoningapp.data.model.SubmitPointsBody
 import `in`.iotkiit.raidersreckoningapp.data.repo.TeamRepo
 import `in`.iotkiit.raidersreckoningapp.state.PreferencesHelper
 import `in`.iotkiit.raidersreckoningapp.state.UiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
+import java.net.UnknownHostException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -30,7 +31,7 @@ class TeamViewModel @Inject constructor(
         MutableStateFlow(UiState.Idle)
     val createTeamState = _createTeamState.asStateFlow()
 
-    fun createTeam(createTeamBody: CreateTeamBody, accessToken: String) {
+    fun createTeam(createTeamBody: CreateTeamBody) {
         _createTeamState.value = UiState.Loading
         viewModelScope.launch {
             try {
@@ -103,6 +104,7 @@ class TeamViewModel @Inject constructor(
     fun resetJoinTeamState() {
         _joinTeamState.value = UiState.Idle
     }
+
     private val _getQuestionsState: MutableStateFlow<UiState<CustomResponse<QuestionData>>> =
         MutableStateFlow(UiState.Idle)
     val getQuestionsState = _getQuestionsState.asStateFlow()
@@ -122,6 +124,13 @@ class TeamViewModel @Inject constructor(
                             )
                         }
                     }
+            } catch (e: UnknownHostException) {
+                Log.d("TeamViewModel", "No Internet Connection")
+                _getQuestionsState.value =
+                    UiState.Failed("No internet connection. Check your network and try again.")
+            } catch (e: HttpException) {
+                Log.d("TeamViewModel", "getQuestions: ${e.message}")
+                _getQuestionsState.value = UiState.Failed("Server error. Try again later.")
             } catch (e: Exception) {
                 Log.d("TeamViewModel", "getQuestions: ${e.message}")
                 _getQuestionsState.value = UiState.Failed(e.message ?: "Unknown error")
@@ -141,7 +150,7 @@ class TeamViewModel @Inject constructor(
         val isCorrect = if (question.oneWord) {
             userAnswer.trim().equals(question.mcqAnswers.first().toString(), ignoreCase = true)
         } else {
-            val correctIndex = question.correctAnswer.toInt()
+            val correctIndex = question.correctAnswer
             correctIndex in question.mcqAnswers.indices &&
                     userAnswer == question.mcqAnswers[correctIndex]
         }
@@ -169,16 +178,36 @@ class TeamViewModel @Inject constructor(
             val finalTotalPoints = preferencesHelper.getTotalPoints()
             Log.d("Points", "Final Total Points: $finalTotalPoints")
 
-            viewModelScope.launch {
-                try {
-//                     teamRepo.submitFinalScore(dashBoardRepo.getIdToken(), finalTotalPoints)
-                    Log.d("TeamViewModel", "Final Score submitted successfully + $finalTotalPoints")
-                } catch (e: Exception) {
-                    Log.e("TeamViewModel", "submitFinalScore: ${e.message}")
-                }
-            }
+            submitPoints(
+                SubmitPointsBody(tempPoints = finalTotalPoints)
+            )
         }
     }
 
     fun getTotalPoints(): Int = preferencesHelper.getTotalPoints()
+
+    private val _submitPointsState: MutableStateFlow<UiState<CustomResponse<Unit>>> =
+        MutableStateFlow(UiState.Idle)
+    val submitPointsState = _submitPointsState.asStateFlow()
+
+    fun submitPoints(submitPointsBody: SubmitPointsBody) {
+        _submitPointsState.value = UiState.Loading
+        viewModelScope.launch {
+            try {
+                teamRepo.submitPoints(teamRepo.getIdToken(), submitPointsBody)
+                    .collect { response ->
+                        _submitPointsState.value = response
+                        if (response is UiState.Success) {
+                            Log.d(
+                                "TeamViewModel",
+                                "Points submitted successfully: ${response.data}"
+                            )
+                        }
+                    }
+            } catch (e: Exception) {
+                Log.d("TeamViewModel", "submitPoints: ${e.message}")
+                _submitPointsState.value = UiState.Failed(e.message ?: "Unknown error")
+            }
+        }
+    }
 }
