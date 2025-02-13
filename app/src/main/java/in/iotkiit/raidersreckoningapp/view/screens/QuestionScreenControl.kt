@@ -36,6 +36,7 @@ import kotlinx.coroutines.delay
 @Composable
 fun QuestionScreenControl(
     navController: NavController,
+    zoneId: String,
     viewModel: TeamViewModel = hiltViewModel()
 ) {
     val questionsState = viewModel.getQuestionsState.collectAsState().value
@@ -63,7 +64,7 @@ fun QuestionScreenControl(
 
     when (questionsState) {
         is UiState.Idle -> {
-            viewModel.getQuestions("5af1c7a4-2232-46d3-b9c8-e37ed1703cdf")
+            viewModel.getQuestions(zoneId)
         }
 
         is UiState.Loading -> {
@@ -84,7 +85,7 @@ fun QuestionScreenControl(
                 FailureAnimationDialog(
                     message = questionsState.message,
                     onTryAgainClick = {
-                        viewModel.getQuestions("5af1c7a4-2232-46d3-b9c8-e37ed1703cdf")
+                        viewModel.getQuestions(zoneId)
                     }
                 )
             }

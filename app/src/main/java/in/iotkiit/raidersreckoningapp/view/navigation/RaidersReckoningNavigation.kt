@@ -1,14 +1,18 @@
 package `in`.iotkiit.raidersreckoningapp.view.navigation
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import `in`.iotkiit.raidersreckoningapp.view.screens.CreateTeamScreen
 import `in`.iotkiit.raidersreckoningapp.view.screens.DashBoardScreen
+import `in`.iotkiit.raidersreckoningapp.view.screens.GetQuestionsQR
 import `in`.iotkiit.raidersreckoningapp.view.screens.JoinTeamScreen
 import `in`.iotkiit.raidersreckoningapp.view.screens.LeaderboardScreen
 import `in`.iotkiit.raidersreckoningapp.view.screens.LoginScreen
@@ -20,6 +24,7 @@ import `in`.iotkiit.raidersreckoningapp.view.screens.QuestionScreenChoice
 import `in`.iotkiit.raidersreckoningapp.view.screens.QuestionScreenControl
 import `in`.iotkiit.raidersreckoningapp.view.screens.ResultsScreen
 import `in`.iotkiit.raidersreckoningapp.view.screens.SplashScreen
+import java.time.temporal.TemporalQueries.zoneId
 
 @Composable
 fun RaidersReckoningNavigation(
@@ -61,8 +66,24 @@ fun RaidersReckoningNavigation(
             MyTeamScreen(navController = navController)
         }
 
-        composable(RaidersReckoningScreens.QuestionScreen.route) {
-            QuestionScreenControl(navController = navController)
+        composable(RaidersReckoningScreens.GetQuestionsQR.route) {
+            GetQuestionsQR(navController = navController)
+        }
+
+        val questionScreenRoute = RaidersReckoningScreens.QuestionScreen.route
+        composable("$questionScreenRoute/{prodID}",
+            arguments = listOf(
+                navArgument(name = "prodID") {
+                    type = NavType.StringType
+                }
+            )
+        ) {backStackEntry ->
+            backStackEntry.arguments?.getString("prodID").let {
+                if(it != null) {
+                    Log.d("ProdID", it)
+                    QuestionScreenControl(navController = navController, zoneId = it)
+                }
+            }
         }
 
         composable(RaidersReckoningScreens.ResultsScreen.route) {

@@ -12,4 +12,5 @@ sealed class RaidersReckoningScreens(val route: String) {
     object JoinTeamScreen: RaidersReckoningScreens("join_team_screen")
     object ProceedScreen: RaidersReckoningScreens("proceed_screen")
     object ResultsScreen: RaidersReckoningScreens("results_screen")
+    object GetQuestionsQR: RaidersReckoningScreens("get_questions_qr")
 }

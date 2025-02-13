@@ -4,10 +4,8 @@ import `in`.iotkiit.raidersreckoningapp.data.model.CreateTeamBody
 import `in`.iotkiit.raidersreckoningapp.data.model.CustomResponse
 import `in`.iotkiit.raidersreckoningapp.data.model.GetTeamResponse
 import `in`.iotkiit.raidersreckoningapp.data.model.JoinTeamBody
-import `in`.iotkiit.raidersreckoningapp.data.model.Question
 import `in`.iotkiit.raidersreckoningapp.data.model.QuestionData
 import `in`.iotkiit.raidersreckoningapp.data.model.SubmitPointsBody
-import `in`.iotkiit.raidersreckoningapp.data.model.TeamInfo
 import `in`.iotkiit.raidersreckoningapp.data.util.Constants
 import retrofit2.http.Body
 import retrofit2.http.GET

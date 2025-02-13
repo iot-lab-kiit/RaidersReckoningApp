@@ -43,6 +43,7 @@ import `in`.iotkiit.raidersreckoningapp.view.components.core.useGlobalTimer
 import `in`.iotkiit.raidersreckoningapp.view.components.dashboard.MapCard
 import `in`.iotkiit.raidersreckoningapp.view.navigation.BottomNavBar
 import `in`.iotkiit.raidersreckoningapp.view.navigation.BottomNavOptions.Companion.bottomNavOptions
+import `in`.iotkiit.raidersreckoningapp.view.navigation.RaidersReckoningScreens
 import `in`.iotkiit.raidersreckoningapp.vm.DashBoardViewModel
 import kotlinx.coroutines.delay
 
@@ -201,7 +202,13 @@ fun DashBoardScreen(
                     ) {
                         Spacer(Modifier.height(79.dp))
                         FloatingActionButton(
-                            onClick = { /*TODO*/ },
+                            onClick = {
+                                navController.navigate(RaidersReckoningScreens.GetQuestionsQR.route) {
+                                    popUpTo(RaidersReckoningScreens.DashBoardScreen.route) {
+                                        inclusive = false
+                                    }
+                                }
+                            },
                             containerColor = GreenCOD,
                             contentColor = Color.Black,
                         ) {
