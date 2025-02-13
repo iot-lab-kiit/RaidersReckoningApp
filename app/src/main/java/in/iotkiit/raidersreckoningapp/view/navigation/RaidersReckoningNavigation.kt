@@ -19,6 +19,7 @@ import `in`.iotkiit.raidersreckoningapp.view.screens.QuestionScreen
 import `in`.iotkiit.raidersreckoningapp.view.screens.QuestionScreenChoice
 import `in`.iotkiit.raidersreckoningapp.view.screens.QuestionScreenControl
 import `in`.iotkiit.raidersreckoningapp.view.screens.ResultsScreen
+import `in`.iotkiit.raidersreckoningapp.view.screens.SplashScreen
 
 @Composable
 fun RaidersReckoningNavigation(
@@ -28,15 +29,18 @@ fun RaidersReckoningNavigation(
     val isUserLoggedIn = Firebase.auth.currentUser != null
 
     val startDestination =
-        if (isUserLoggedIn)
-            RaidersReckoningScreens.DashBoardScreen.route
-        else
-            RaidersReckoningScreens.LoginScreen.route
+        RaidersReckoningScreens.SplashScreen.route
 
     NavHost(
         navController = navController,
         startDestination = startDestination
     ) {
+
+        composable(RaidersReckoningScreens.SplashScreen.route) {
+            SplashScreen(navController = navController)
+        }
+
+
         composable(RaidersReckoningScreens.DashBoardScreen.route) {
             DashBoardScreen(navController = navController)
         }
