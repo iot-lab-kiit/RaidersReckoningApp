@@ -77,7 +77,7 @@ fun DashBoardScreen(
             val teamName = data?.teamName ?: "NoTeam"
             val points = data?.points ?: 0
             val zoneName = data?.zone?.name ?: "No zone assigned"
-            val zoneVenue = data?.zone?.venue ?: "Gulag"
+            val zoneVenue = data?.zone?.venue ?: ""
             val round = data?.round ?: 0
             val startTime = data?.zone?.startTime ?: 0L
             val duration = data?.zone?.duration ?: 0L
