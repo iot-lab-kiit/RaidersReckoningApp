@@ -29,6 +29,7 @@ import `in`.iotkiit.raidersreckoningapp.data.model.SubmitPointsBody
 import `in`.iotkiit.raidersreckoningapp.state.UiState
 import `in`.iotkiit.raidersreckoningapp.ui.theme.GreenCOD
 import `in`.iotkiit.raidersreckoningapp.view.components.anims.FailureAnimationDialog
+import `in`.iotkiit.raidersreckoningapp.view.components.anims.LoadingTransition
 import `in`.iotkiit.raidersreckoningapp.view.components.anims.SubmitPointsAnimation
 import `in`.iotkiit.raidersreckoningapp.view.components.core.useGlobalTimer
 import `in`.iotkiit.raidersreckoningapp.view.navigation.RaidersReckoningScreens
@@ -99,7 +100,7 @@ fun QuestionScreenControl(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                LinearProgressIndicator(color = GreenCOD)
+                LoadingTransition()
             }
         }
 

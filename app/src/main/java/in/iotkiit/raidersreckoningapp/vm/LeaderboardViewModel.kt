@@ -18,7 +18,6 @@ import javax.inject.Inject
 @HiltViewModel
 class LeaderboardViewModel @Inject constructor(
     private val leaderboardRepo: LeaderboardRepo,
-    private val dashboardRepo: DashBoardRepo,
     private val teamRepo: TeamRepo
 ) : ViewModel() {
 
@@ -26,13 +25,26 @@ class LeaderboardViewModel @Inject constructor(
         MutableStateFlow(UiState.Idle)
     val getLeaderboardData = _getLeaderboardDataState.asStateFlow()
 
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing = _isRefreshing.asStateFlow()
+
     fun getLeaderboardData() {
         _getLeaderboardDataState.value = UiState.Loading
+        fetchLeaderboardData()
+    }
+
+    fun refreshLeaderboardData() {
+        _isRefreshing.value = true
+        fetchLeaderboardData()
+    }
+
+    private fun fetchLeaderboardData() {
         viewModelScope.launch {
             try {
                 leaderboardRepo.getLeaderboardData(teamRepo.getIdToken())
                     .collect { response ->
                         _getLeaderboardDataState.value = response
+                        _isRefreshing.value = false
                         if (response is UiState.Success) {
                             Log.d(
                                 "LeaderboardViewModel",
@@ -43,8 +55,8 @@ class LeaderboardViewModel @Inject constructor(
             } catch (e: Exception) {
                 Log.d("LeaderboardViewModel", "getLeaderboardData: ${e.message}")
                 _getLeaderboardDataState.value = UiState.Failed(e.message ?: "Unknown error")
+                _isRefreshing.value = false
             }
         }
     }
-
 }

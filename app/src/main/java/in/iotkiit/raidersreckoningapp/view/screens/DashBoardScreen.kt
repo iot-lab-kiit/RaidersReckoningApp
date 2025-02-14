@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -38,9 +37,9 @@ import `in`.iotkiit.raidersreckoningapp.state.UiState
 import `in`.iotkiit.raidersreckoningapp.ui.theme.GreenCOD
 import `in`.iotkiit.raidersreckoningapp.ui.theme.modernWarfare
 import `in`.iotkiit.raidersreckoningapp.view.components.anims.FailureAnimationDialog
+import `in`.iotkiit.raidersreckoningapp.view.components.anims.LoadingTransition
 import `in`.iotkiit.raidersreckoningapp.view.components.core.topbar.TopBar
 import `in`.iotkiit.raidersreckoningapp.view.components.core.useGlobalTimer
-import `in`.iotkiit.raidersreckoningapp.view.components.dashboard.MapCard
 import `in`.iotkiit.raidersreckoningapp.view.navigation.BottomNavBar
 import `in`.iotkiit.raidersreckoningapp.view.navigation.BottomNavOptions.Companion.bottomNavOptions
 import `in`.iotkiit.raidersreckoningapp.view.navigation.RaidersReckoningScreens
@@ -68,7 +67,7 @@ fun DashBoardScreen(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                LinearProgressIndicator(color = GreenCOD)
+                LoadingTransition()
             }
         }
 
@@ -116,10 +115,24 @@ fun DashBoardScreen(
                     verticalArrangement = Arrangement.Top
                 ) {
 
-                    MapCard(
-                        modifier = Modifier.fillMaxWidth(),
-                        mapImage = painterResource(R.drawable.map),
-                        soldierImage = painterResource(R.drawable.soldier)
+                    val image = when (zoneName) {
+                        "CRASH" -> R.drawable.crash
+                        "GULAG" -> R.drawable.gulag
+                        "HIGHRISE" -> R.drawable.highrise
+                        "HIJACKED" -> R.drawable.hijacked
+                        "NUKETOWN" -> R.drawable.nuketown
+                        "RUST" -> R.drawable.rust
+                        "SHIPMENT" -> R.drawable.shipment
+                        "TERMINAL" -> R.drawable.terminal
+                        else -> R.drawable.gulag
+                    }
+
+                    Image(
+                        painter = painterResource(image),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 16.dp, end = 16.dp)
                     )
 
                     Spacer(Modifier.height(6.dp))
@@ -127,13 +140,13 @@ fun DashBoardScreen(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(6.dp),
+                            .padding(start = 16.dp, end = 16.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
                             text = zoneName,
-                            style = MaterialTheme.typography.displayMedium,
+                            style = MaterialTheme.typography.headlineMedium,
                             color = Color.White
                         )
                         Text(
@@ -141,6 +154,7 @@ fun DashBoardScreen(
                             style = MaterialTheme.typography.labelSmall,
                             color = GreenCOD
                         )
+
                     }
                     Spacer(Modifier.height(20.dp))
                     Row(

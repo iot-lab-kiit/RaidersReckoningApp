@@ -34,6 +34,7 @@ import `in`.iotkiit.raidersreckoningapp.view.components.login.GoogleOneTapButton
 import `in`.iotkiit.raidersreckoningapp.BuildConfig
 import `in`.iotkiit.raidersreckoningapp.R
 import `in`.iotkiit.raidersreckoningapp.state.UiState
+import `in`.iotkiit.raidersreckoningapp.view.components.anims.LoadingTransition
 import `in`.iotkiit.raidersreckoningapp.view.components.login.GoogleButtonTheme
 import `in`.iotkiit.raidersreckoningapp.view.components.login.rememberFirebaseAuthLauncher
 import `in`.iotkiit.raidersreckoningapp.view.navigation.RaidersReckoningScreens
@@ -120,7 +121,7 @@ fun LoginScreen(
                     .background(Color.Black.copy(alpha = 0.5f)),
                 contentAlignment = Alignment.Center
             ) {
-                CircularProgressIndicator(color = Color.White)
+                LoadingTransition()
             }
         }
     }

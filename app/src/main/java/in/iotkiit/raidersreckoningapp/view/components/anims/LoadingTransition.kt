@@ -60,7 +60,7 @@ private fun DefaultPreview1() {
 @Composable
 fun LoadingTransition(
     modifier: Modifier = Modifier,
-    textDurationMillis: Int = 1000
+    textDurationMillis: Int = 350
 ) {
 
     // List of Texts to show the User

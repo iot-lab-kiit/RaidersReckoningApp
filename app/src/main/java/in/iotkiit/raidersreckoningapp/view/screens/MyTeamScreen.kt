@@ -1,20 +1,19 @@
 package `in`.iotkiit.raidersreckoningapp.view.screens
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,18 +21,18 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
 import `in`.iotkiit.raidersreckoningapp.state.UiState
 import `in`.iotkiit.raidersreckoningapp.ui.theme.GreenCOD
 import `in`.iotkiit.raidersreckoningapp.view.components.anims.FailureAnimationDialog
+import `in`.iotkiit.raidersreckoningapp.view.components.anims.LoadingTransition
 import `in`.iotkiit.raidersreckoningapp.view.components.core.PrimaryButton
 import `in`.iotkiit.raidersreckoningapp.view.components.core.TeamCard
 import `in`.iotkiit.raidersreckoningapp.view.components.core.topbar.TopBar
+import `in`.iotkiit.raidersreckoningapp.view.components.leaderboard.LeaderboardFields
 import `in`.iotkiit.raidersreckoningapp.view.components.myTeam.ExpandableQRCard
 import `in`.iotkiit.raidersreckoningapp.view.navigation.BottomNavBar
 import `in`.iotkiit.raidersreckoningapp.view.navigation.BottomNavOptions.Companion.bottomNavOptions
@@ -63,7 +62,7 @@ fun MyTeamScreen(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                LinearProgressIndicator(color = GreenCOD)
+                LoadingTransition()
             }
         }
 
@@ -101,51 +100,55 @@ fun MyTeamScreen(
                         teamMembers = teamState.data.data.participantsList.map { it.name }
                     )
 
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    val latestRound = teamState.data.data.statsList.lastOrNull()
-
-
-                    OutlinedCard(
-                        modifier = Modifier
-                            .fillMaxWidth(0.85f)
-                            .padding(8.dp),
-                        colors = CardDefaults.outlinedCardColors(
-                            containerColor = Color.Black,
-                            contentColor = GreenCOD
-                        ),
-                        border = BorderStroke(3.dp, GreenCOD)
-                    ) {
-                        Column(
+                    if (teamState.data.data.statsList.isEmpty()) {
+                        Text(
+                            text = "No rounds played yet",
+                            color = Color.White,
+                            modifier = Modifier.padding(16.dp),
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    } else {
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceBetween,
                             modifier = Modifier
+                                .padding(horizontal = 8.dp)
                                 .fillMaxWidth()
-                                .padding(16.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
+                                .background(
+                                    color = GreenCOD.copy(1f),
+                                    shape = RoundedCornerShape(15.dp)
+                                )
+                                .border(
+                                    width = 1.04.dp,
+                                    color = GreenCOD,
+                                    shape = RoundedCornerShape(12.dp)
+                                )
+                                .padding(14.dp),
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = "Round: ${latestRound?.round ?: "0"}",
-                                style = MaterialTheme.typography.headlineMedium,
-                                color = GreenCOD
+                                text = "ROUND",
+                                style = MaterialTheme.typography.labelMedium,
+                                color = Color.Black
                             )
-
-                            Spacer(modifier = Modifier.height(8.dp))
-
                             Text(
-                                text = "Total Points: $totalPoints",
-                                fontWeight = FontWeight.ExtraBold,
-                                fontSize = 18.sp,
-                                style = MaterialTheme.typography.headlineMedium,
-                                color = Color.White
+                                text = "POINTS",
+                                style = MaterialTheme.typography.labelMedium,
+                                color = Color.Black
                             )
-
-                            Spacer(modifier = Modifier.height(8.dp))
-
                             Text(
-                                text = "Winner: ${latestRound?.winner ?: "N/A"}",
-                                style = MaterialTheme.typography.headlineMedium,
-                                color = Color.White
+                                text = "WINNER",
+                                style = MaterialTheme.typography.labelMedium,
+                                color = Color.Black
                             )
+                        }
+
+                        teamState.data.data.statsList.forEach { stats ->
+                            LeaderboardFields(
+                                teamName = stats.points,
+                                points = stats.winner,
+                                rank = stats.round
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
                         }
                     }
 

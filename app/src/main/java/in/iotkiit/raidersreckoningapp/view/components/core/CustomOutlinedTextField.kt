@@ -2,6 +2,7 @@ package `in`.iotkiit.raidersreckoningapp.view.components.core
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -14,7 +15,6 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.foundation.shape.RoundedCornerShape
 import `in`.iotkiit.raidersreckoningapp.ui.theme.modernWarfare
 
 @Composable
@@ -26,7 +26,8 @@ fun CustomOutlinedTextField(
     modifier: Modifier = Modifier,
     textStyle: TextStyle = MaterialTheme.typography.bodyMedium,
     widthFraction: Float = 0.7f,
-    fontSize: Int = 16
+    fontSize: Int = 16,
+    singleLine: Boolean = true
 ) {
     OutlinedTextField(
         value = value,
@@ -43,6 +44,7 @@ fun CustomOutlinedTextField(
                 fontFamily = modernWarfare
             )
         },
+        singleLine = singleLine,
         textStyle = textStyle.copy(
             color = Color.White,
             textAlign = TextAlign.Center,
