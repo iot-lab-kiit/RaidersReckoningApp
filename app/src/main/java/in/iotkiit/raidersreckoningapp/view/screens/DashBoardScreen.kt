@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.FloatingActionButton
@@ -79,7 +81,7 @@ fun DashBoardScreen(
             val teamName = data?.teamName ?: "NoTeam"
             val points = data?.points ?: 0
             val zoneName = data?.zone?.name ?: "No zone assigned"
-            val zoneVenue = data?.zone?.venue ?: ""
+            val zoneVenue = data?.zone?.venue ?: "Gulag"
             val round = data?.round ?: 0
             val startTime = data?.zone?.startTime ?: 0L
             val duration = data?.zone?.duration ?: 0L
@@ -117,10 +119,12 @@ fun DashBoardScreen(
                     verticalArrangement = Arrangement.Top
                 ) {
 
-                    MapCard(
-                        modifier = Modifier.fillMaxWidth(),
-                        mapImage = painterResource(R.drawable.map),
-                        soldierImage = painterResource(R.drawable.soldier)
+                    Image(
+                        painter = painterResource(R.drawable.gulag),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 16.dp, end = 16.dp)
                     )
 
                     Spacer(Modifier.height(6.dp))
@@ -128,13 +132,13 @@ fun DashBoardScreen(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(6.dp),
+                            .padding(start = 16.dp, end = 16.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
                             text = zoneName,
-                            style = MaterialTheme.typography.displayMedium,
+                            style = MaterialTheme.typography.headlineMedium,
                             color = Color.White
                         )
                         Text(
