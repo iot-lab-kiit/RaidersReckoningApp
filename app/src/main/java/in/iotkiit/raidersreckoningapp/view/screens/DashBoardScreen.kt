@@ -10,12 +10,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -43,7 +40,6 @@ import `in`.iotkiit.raidersreckoningapp.view.components.anims.FailureAnimationDi
 import `in`.iotkiit.raidersreckoningapp.view.components.anims.LoadingTransition
 import `in`.iotkiit.raidersreckoningapp.view.components.core.topbar.TopBar
 import `in`.iotkiit.raidersreckoningapp.view.components.core.useGlobalTimer
-import `in`.iotkiit.raidersreckoningapp.view.components.dashboard.MapCard
 import `in`.iotkiit.raidersreckoningapp.view.navigation.BottomNavBar
 import `in`.iotkiit.raidersreckoningapp.view.navigation.BottomNavOptions.Companion.bottomNavOptions
 import `in`.iotkiit.raidersreckoningapp.view.navigation.RaidersReckoningScreens
@@ -119,8 +115,20 @@ fun DashBoardScreen(
                     verticalArrangement = Arrangement.Top
                 ) {
 
+                    val image = when (zoneName) {
+                        "CRASH" -> R.drawable.crash
+                        "GULAG" -> R.drawable.gulag
+                        "HIGHRISE" -> R.drawable.highrise
+                        "HIJACKED" -> R.drawable.hijacked
+                        "NUKETOWN" -> R.drawable.nuketown
+                        "RUST" -> R.drawable.rust
+                        "SHIPMENT" -> R.drawable.shipment
+                        "TERMINAL" -> R.drawable.terminal
+                        else -> R.drawable.gulag
+                    }
+
                     Image(
-                        painter = painterResource(R.drawable.gulag),
+                        painter = painterResource(image),
                         contentDescription = null,
                         modifier = Modifier
                             .fillMaxWidth()
@@ -146,6 +154,7 @@ fun DashBoardScreen(
                             style = MaterialTheme.typography.labelSmall,
                             color = GreenCOD
                         )
+
                     }
                     Spacer(Modifier.height(20.dp))
                     Row(
