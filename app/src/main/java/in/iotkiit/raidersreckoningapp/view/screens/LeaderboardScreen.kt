@@ -2,20 +2,11 @@ package `in`.iotkiit.raidersreckoningapp.view.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawingPadding
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -24,9 +15,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import `in`.iotkiit.raidersreckoningapp.state.UiState
 import `in`.iotkiit.raidersreckoningapp.ui.theme.GreenCOD
 import `in`.iotkiit.raidersreckoningapp.view.components.anims.FailureAnimationDialog
+import `in`.iotkiit.raidersreckoningapp.view.components.anims.LoadingTransition
 import `in`.iotkiit.raidersreckoningapp.view.components.core.topbar.TopBar
 import `in`.iotkiit.raidersreckoningapp.view.components.leaderboard.CurrentLeaders
 import `in`.iotkiit.raidersreckoningapp.view.components.leaderboard.LeaderboardFields
@@ -39,8 +33,8 @@ fun LeaderboardScreen(
     navController: NavController,
     leaderboardViewModel: LeaderboardViewModel = hiltViewModel()
 ) {
-
     val leaderboardDataState = leaderboardViewModel.getLeaderboardData.collectAsState().value
+    val isRefreshing = leaderboardViewModel.isRefreshing.collectAsState().value
 
     when (leaderboardDataState) {
         is UiState.Idle -> {
@@ -55,7 +49,7 @@ fun LeaderboardScreen(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                LinearProgressIndicator(color = GreenCOD)
+                LoadingTransition()
             }
         }
 
@@ -72,103 +66,88 @@ fun LeaderboardScreen(
                 bottomBar = {
                     BottomNavBar(navController = navController, bottomMenu = bottomNavOptions)
                 }
-            ) {
-                Column(
+            ) { paddingValues ->
+                SwipeRefresh(
+                    state = rememberSwipeRefreshState(isRefreshing),
+                    onRefresh = { leaderboardViewModel.refreshLeaderboardData() },
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(it)
-                        .background(Color.Black),
-                    verticalArrangement = Arrangement.SpaceAround
+                        .padding(paddingValues)
                 ) {
-                    Column(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalArrangement = Arrangement.spacedBy(32.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(Color.Black),
+                        verticalArrangement = Arrangement.SpaceAround
                     ) {
-
-                        Column {
-                            Text(
-                                text = "CURRENT LEADERS",
-                                style = MaterialTheme.typography.titleSmall,
-                                color = Color.White,
-                                modifier = Modifier.padding(16.dp)
-
-                            )
-                            CurrentLeaders(
-                                players = leaderboardDataState.data.data?.leaderboard?.take(3)
-                                    ?.map { teams -> teams.team.name } ?: emptyList()
-                            )
-                        }
-
-                        Column(
-                            modifier = Modifier.safeDrawingPadding()
-                        ) {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(16.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            ) {
-                                Text(
-                                    text = "ROUND",
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = Color.White
-                                )
-                                Text(
-                                    text = "30:00",
-                                    style = MaterialTheme.typography.headlineSmall,
-                                    color = Color.White
-                                )
-
-                            }
-
-                            Row(
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                modifier = Modifier
-                                    .padding(horizontal = 8.dp)
-                                    .fillMaxWidth()
-                                    .background(
-                                        color = GreenCOD.copy(1f),
-                                        shape = RoundedCornerShape(15.dp)
-                                    )
-                                    .border(
-                                        width = 1.04.dp,
-                                        color = GreenCOD,
-                                        shape = RoundedCornerShape(12.dp)
-                                    )
-                                    .padding(14.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text(
-                                    text = "rank",
-                                    style = MaterialTheme.typography.labelMedium,
-                                    color = Color.Black
-                                )
-                                Text(
-                                    text = "Team",
-                                    style = MaterialTheme.typography.labelMedium,
-                                    color = Color.Black
-                                )
-                                Text(
-                                    text = "score",
-                                    style = MaterialTheme.typography.labelMedium,
-                                    color = Color.Black
-                                )
-
-                            }
+                        item {
                             Column(
-                                modifier = Modifier
-                                    .padding(vertical = 8.dp)
-                                    .verticalScroll(state = rememberScrollState()),
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalArrangement = Arrangement.spacedBy(32.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                leaderboardDataState.data.data?.leaderboard?.forEachIndexed { index, team ->
-                                    LeaderboardFields(
-                                        team.team.name,
-                                        (index + 1).toString(),
-                                        team.team.points.toString()
+                                Column {
+                                    Text(
+                                        text = "CURRENT LEADERS",
+                                        style = MaterialTheme.typography.titleSmall,
+                                        color = Color.White,
+                                        modifier = Modifier.padding(16.dp)
+                                    )
+                                    CurrentLeaders(
+                                        players = leaderboardDataState.data.data?.leaderboard?.take(3)
+                                            ?.map { teams -> teams.team.name } ?: emptyList()
                                     )
                                 }
+
+                                Column(
+                                    modifier = Modifier.safeDrawingPadding()
+                                ) {
+
+                                    Row(
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                        modifier = Modifier
+                                            .padding(horizontal = 8.dp)
+                                            .fillMaxWidth()
+                                            .background(
+                                                color = GreenCOD.copy(1f),
+                                                shape = RoundedCornerShape(15.dp)
+                                            )
+                                            .border(
+                                                width = 1.04.dp,
+                                                color = GreenCOD,
+                                                shape = RoundedCornerShape(12.dp)
+                                            )
+                                            .padding(14.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Text(
+                                            text = "rank",
+                                            style = MaterialTheme.typography.labelMedium,
+                                            color = Color.Black
+                                        )
+                                        Text(
+                                            text = "Team",
+                                            style = MaterialTheme.typography.labelMedium,
+                                            color = Color.Black
+                                        )
+                                        Text(
+                                            text = "score",
+                                            style = MaterialTheme.typography.labelMedium,
+                                            color = Color.Black
+                                        )
+                                    }
+                                }
                             }
+                        }
+
+                        itemsIndexed(
+                            leaderboardDataState.data.data?.leaderboard ?: emptyList()
+                        ) { index, team ->
+                            LeaderboardFields(
+                                team.team.name,
+                                (index + 1).toString(),
+                                team.team.points.toString()
+                            )
                         }
                     }
                 }

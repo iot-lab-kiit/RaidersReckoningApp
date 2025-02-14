@@ -19,12 +19,8 @@ import `in`.iotkiit.raidersreckoningapp.view.screens.LoginScreen
 import `in`.iotkiit.raidersreckoningapp.view.screens.MyTeamScreen
 import `in`.iotkiit.raidersreckoningapp.view.screens.OnBoardingScreen
 import `in`.iotkiit.raidersreckoningapp.view.screens.ProceedScreen
-import `in`.iotkiit.raidersreckoningapp.view.screens.QuestionScreen
-import `in`.iotkiit.raidersreckoningapp.view.screens.QuestionScreenChoice
 import `in`.iotkiit.raidersreckoningapp.view.screens.QuestionScreenControl
-import `in`.iotkiit.raidersreckoningapp.view.screens.ResultsScreen
 import `in`.iotkiit.raidersreckoningapp.view.screens.SplashScreen
-import java.time.temporal.TemporalQueries.zoneId
 
 @Composable
 fun RaidersReckoningNavigation(
@@ -77,9 +73,9 @@ fun RaidersReckoningNavigation(
                     type = NavType.StringType
                 }
             )
-        ) {backStackEntry ->
+        ) { backStackEntry ->
             backStackEntry.arguments?.getString("zoneId").let {
-                if(it != null) {
+                if (it != null) {
                     Log.d("zoneId", it)
                     QuestionScreenControl(navController = navController, zoneId = it)
                 }

@@ -118,6 +118,9 @@ dependencies {
 
     //lottie
     implementation(libs.lottie.compose)
+
+    implementation ("com.google.accompanist:accompanist-swiperefresh:0.31.3-beta")
+
 }
 
 fun getToken(): String{

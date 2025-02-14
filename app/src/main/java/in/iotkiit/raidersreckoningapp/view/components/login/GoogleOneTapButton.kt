@@ -50,7 +50,7 @@ fun GoogleOneTapButton(
 
         GoogleButtonTheme.Dark -> BorderStroke(
             width = 1.dp,
-            color = GreenCOD,
+            color = Color(0xFF747775),
         )
 
         GoogleButtonTheme.Neutral -> null
