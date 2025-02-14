@@ -54,8 +54,6 @@ fun JoinTeamScreen(
         }
     }
 
-    val auth = FirebaseAuth.getInstance()
-
     val sharedPreferences = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
 
     var isPermissionGranted by remember {
