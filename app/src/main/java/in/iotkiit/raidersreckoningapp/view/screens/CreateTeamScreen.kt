@@ -97,7 +97,6 @@ fun CreateTeamScreen(
                         value = teamName.value,
                         onValueChange = { teamName.value = it },
                         placeholder = "TEAM NAME",
-                        fontSize = 24,
                         textStyle = MaterialTheme.typography.bodyMedium
                     )
                     Spacer(Modifier.height(16.dp))

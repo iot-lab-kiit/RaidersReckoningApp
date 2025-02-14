@@ -37,7 +37,6 @@ fun BottomNavBar(
     NavigationBar(
         containerColor = GreenCOD.copy(.1f),
         modifier = Modifier
-            .padding(8.dp)
             .clip(CircleShape)
     ) {
         val backStackEntry = navController.currentBackStackEntryAsState()

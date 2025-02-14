@@ -91,10 +91,10 @@ fun QuestionScreen(
             Fields(field = question.question)
 
             CustomOutlinedTextField(
-                value = userAnswer,
+                value = userAnswer.text,
                 onValueChange = {
                     if (!hasSubmitted) {
-                        userAnswer = it
+                        userAnswer = TextFieldValue(it)
                     }
                 },
                 placeholder = "Enter Answer",

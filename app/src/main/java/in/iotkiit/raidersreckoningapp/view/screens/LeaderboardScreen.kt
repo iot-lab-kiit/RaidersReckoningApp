@@ -143,8 +143,9 @@ fun LeaderboardScreen(
                         itemsIndexed(
                             leaderboardDataState.data.data?.leaderboard ?: emptyList()
                         ) { index, team ->
+                            val name = if (team.team.name.length >= 16) team.team.name.take(14) + "..." else team.team.name
                             LeaderboardFields(
-                                team.team.name,
+                                name,
                                 (index + 1).toString(),
                                 team.team.points.toString()
                             )
