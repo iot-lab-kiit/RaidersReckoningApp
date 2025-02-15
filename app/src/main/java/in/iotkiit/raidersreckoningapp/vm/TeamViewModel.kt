@@ -31,6 +31,14 @@ class TeamViewModel @Inject constructor(
         MutableStateFlow(UiState.Idle)
     val createTeamState = _createTeamState.asStateFlow()
 
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing = _isRefreshing.asStateFlow()
+
+    fun refreshTeamData() {
+        _isRefreshing.value = true
+        getTeam()
+    }
+
     fun createTeam(createTeamBody: CreateTeamBody) {
         _createTeamState.value = UiState.Loading
         viewModelScope.launch {
@@ -60,6 +68,7 @@ class TeamViewModel @Inject constructor(
                 teamRepo.getTeam(teamRepo.getIdToken())
                     .collect { response ->
                         _getTeamState.value = response
+                        _isRefreshing.value = false
                         if (response is UiState.Success) {
                             Log.d("TeamViewModel", "Team fetched successfully: ${response.data}")
                         }
@@ -67,6 +76,7 @@ class TeamViewModel @Inject constructor(
             } catch (e: Exception) {
                 Log.d("TeamViewModel", "getTeam: ${e.message}")
                 _getTeamState.value = UiState.Failed(e.message ?: "Unknown error")
+                _isRefreshing.value = false
             }
         }
     }

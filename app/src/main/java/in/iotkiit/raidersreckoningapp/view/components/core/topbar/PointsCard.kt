@@ -53,7 +53,7 @@ fun PointsCard(
             )
 
             Image(
-                painter = painterResource(R.drawable.points),
+                painter = painterResource(R.drawable.dog_tag_removebg_preview),
                 contentDescription = null,
                 modifier = Modifier.size(20.dp)
             )

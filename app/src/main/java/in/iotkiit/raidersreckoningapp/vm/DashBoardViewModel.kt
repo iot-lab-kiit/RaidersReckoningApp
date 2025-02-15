@@ -24,6 +24,14 @@ class DashBoardViewModel @Inject constructor(
         MutableStateFlow(UiState.Idle)
     val getDashBoardState = _getDashBoardState.asStateFlow()
 
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing = _isRefreshing.asStateFlow()
+
+    fun refreshDashboardData() {
+        _isRefreshing.value = true
+        getDashBoardData()
+    }
+
     fun getDashBoardData() {
         _getDashBoardState.value = UiState.Loading
         viewModelScope.launch {
@@ -31,6 +39,7 @@ class DashBoardViewModel @Inject constructor(
                 dashBoardRepo.getDashboardData(teamRepo.getIdToken())
                     .collect { response ->
                         _getDashBoardState.value = response
+                        _isRefreshing.value = false
                         if (response is UiState.Success) {
                             Log.d(
                                 "DashBoardViewModel",
@@ -41,6 +50,7 @@ class DashBoardViewModel @Inject constructor(
             } catch (e: Exception) {
                 Log.d("DashBoardViewModel", "LeaderBoardData: ${e.message}")
                 _getDashBoardState.value = UiState.Failed(e.message ?: "Unknown error")
+                _isRefreshing.value = false
             }
         }
     }

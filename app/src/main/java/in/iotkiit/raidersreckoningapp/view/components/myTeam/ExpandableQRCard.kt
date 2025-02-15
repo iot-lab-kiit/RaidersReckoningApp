@@ -32,7 +32,6 @@ fun ExpandableQRCard(teamId: String) {
     Card(
         modifier = Modifier
             .fillMaxWidth(0.69f)
-            .padding(16.dp)
             .clickable { expanded = !expanded },
         colors = CardDefaults.cardColors(
             containerColor = GreenCOD.copy(0.1f)

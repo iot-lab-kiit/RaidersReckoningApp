@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.FloatingActionButton
@@ -32,6 +33,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import `in`.iotkiit.raidersreckoningapp.R
 import `in`.iotkiit.raidersreckoningapp.state.UiState
 import `in`.iotkiit.raidersreckoningapp.ui.theme.GreenCOD
@@ -53,6 +56,8 @@ fun DashBoardScreen(
 ) {
     val dashBoardState = dashBoardViewModel.getDashBoardState.collectAsState().value
     var remainingTime by remember { mutableLongStateOf(0L) }
+
+    val isRefreshing = dashBoardViewModel.isRefreshing.collectAsState().value
 
     when (dashBoardState) {
         is UiState.Idle -> {
@@ -104,20 +109,23 @@ fun DashBoardScreen(
                     )
                 }
             ) {
-                Column(
+                SwipeRefresh(
+                state = rememberSwipeRefreshState(isRefreshing),
+                onRefresh = { dashBoardViewModel.refreshDashboardData() },
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(it)
+            ) {
+                LazyColumn(
                     modifier = Modifier
-                        .padding(it)
-                        .padding(16.dp)
                         .fillMaxSize()
-                        .background(Color.Black)
-                        .verticalScroll(rememberScrollState()),
+                        .background(Color.Black),
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Top
+                    verticalArrangement = Arrangement.SpaceEvenly
                 ) {
 
                     val image = when (zoneName) {
                         "CRASH" -> R.drawable.crash
-                        "GULAG" -> R.drawable.gulag
                         "HIGHRISE" -> R.drawable.highrise
                         "HIJACKED" -> R.drawable.hijacked
                         "NUKETOWN" -> R.drawable.nuketown
@@ -127,66 +135,64 @@ fun DashBoardScreen(
                         else -> R.drawable.gulag
                     }
 
-                    Image(
-                        painter = painterResource(image),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(start = 16.dp, end = 16.dp)
-                    )
-
-                    Spacer(Modifier.height(6.dp))
-
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(start = 16.dp, end = 16.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = zoneName,
-                            style = MaterialTheme.typography.headlineMedium,
-                            color = Color.White
+                    item {
+                        Image(
+                            painter = painterResource(image),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(start = 16.dp, end = 16.dp)
                         )
-                        Text(
-                            text = zoneVenue,
-                            style = MaterialTheme.typography.labelSmall,
-                            color = GreenCOD
-                        )
-
+                        Spacer(Modifier.height(8.dp))
                     }
-                    Spacer(Modifier.height(20.dp))
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceEvenly,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "Round $round",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = GreenCOD
-                        )
+                    item {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(start = 16.dp, end = 16.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = zoneName,
+                                style = MaterialTheme.typography.headlineMedium,
+                                color = Color.White
+                            )
+                            Text(
+                                text = zoneVenue,
+                                style = MaterialTheme.typography.labelSmall,
+                                color = GreenCOD
+                            )
 
-                        val (minutes, seconds, _) = useGlobalTimer(
-                            zoneStartTime = dashBoardState.data.data?.zone?.startTime,
-                            zoneDuration = dashBoardState.data.data?.zone?.duration ?: 0L
-                        )
-
-                        Text(
-                            text = String.format("%02d:%02d", minutes, seconds),
-                            color = Color.White,
-                            fontSize = 24.sp,
-                            fontFamily = modernWarfare
-                        )
+                        }
+                        Spacer(Modifier.height(20.dp))
                     }
-                    Spacer(Modifier.height(100.dp))
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
+                    item {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceEvenly,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "Round $round",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = GreenCOD
+                            )
 
+                            val (minutes, seconds, _) = useGlobalTimer(
+                                zoneStartTime = dashBoardState.data.data?.zone?.startTime,
+                                zoneDuration = dashBoardState.data.data?.zone?.duration ?: 0L
+                            )
+
+                            Text(
+                                text = String.format("%02d:%02d", minutes, seconds),
+                                color = Color.White,
+                                fontSize = 24.sp,
+                                fontFamily = modernWarfare
+                            )
+                        }
+                    }
+                    item {
                         if (challenger) {
                             Text(
                                 modifier = Modifier.fillMaxWidth(),
@@ -206,15 +212,8 @@ fun DashBoardScreen(
                                 style = MaterialTheme.typography.headlineMedium
                             )
                         }
-
                     }
-
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.Bottom,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Spacer(Modifier.height(79.dp))
+                    item {
                         FloatingActionButton(
                             onClick = {
                                 navController.navigate(RaidersReckoningScreens.GetQuestionsQR.route)
@@ -230,6 +229,8 @@ fun DashBoardScreen(
                         }
                     }
                 }
+            }
+
             }
         }
 

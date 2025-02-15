@@ -80,7 +80,7 @@ fun TopBar(
                         verticalAlignment = Alignment.CenterVertically
                     ){
                         Image(
-                            painter = painterResource(R.drawable.ghost_icon),
+                            painter = painterResource(R.drawable.skull_icon_removebg_preview),
                             contentDescription = null,
                             modifier = Modifier.size(24.dp)
                         )

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -24,6 +25,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.google.firebase.auth.FirebaseAuth
 import `in`.iotkiit.raidersreckoningapp.state.UiState
 import `in`.iotkiit.raidersreckoningapp.ui.theme.GreenCOD
@@ -44,10 +47,11 @@ import `in`.iotkiit.raidersreckoningapp.vm.TeamViewModel
 @Composable
 fun MyTeamScreen(
     navController: NavController,
-    teamViewModel: TeamViewModel = hiltViewModel(),
-    leaderboardViewModel: LeaderboardViewModel = hiltViewModel()
+    teamViewModel: TeamViewModel = hiltViewModel()
 ) {
     val teamState = teamViewModel.getTeamState.collectAsState().value
+
+    val isRefreshing = teamViewModel.isRefreshing.collectAsState().value
 
     when (teamState) {
         is UiState.Idle -> {
@@ -84,87 +88,101 @@ fun MyTeamScreen(
                     )
                 }
             ) { paddingValues ->
-                Column(
+                SwipeRefresh(
+                    state = rememberSwipeRefreshState(isRefreshing),
+                    onRefresh = { teamViewModel.refreshTeamData() },
                     modifier = Modifier
                         .fillMaxSize()
-                        .verticalScroll(rememberScrollState())
-                        .padding(paddingValues),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Top
+                        .padding(paddingValues)
                 ) {
-                    ExpandableQRCard(teamId = teamState.data.data!!.id)
-
-                    TeamCard(
-                        teamName = teamState.data.data.name,
-                        leaderName = teamState.data.data.leaderInfo.name,
-                        teamMembers = teamState.data.data.participantsList.map { it.name }
-                    )
-
-                    if (teamState.data.data.statsList.isEmpty()) {
-                        Text(
-                            text = "No rounds played yet",
-                            color = Color.White,
-                            modifier = Modifier.padding(16.dp),
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                    } else {
-                        Row(
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            modifier = Modifier
-                                .padding(horizontal = 8.dp)
-                                .fillMaxWidth()
-                                .background(
-                                    color = GreenCOD.copy(1f),
-                                    shape = RoundedCornerShape(15.dp)
-                                )
-                                .border(
-                                    width = 1.04.dp,
-                                    color = GreenCOD,
-                                    shape = RoundedCornerShape(12.dp)
-                                )
-                                .padding(14.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = "ROUND",
-                                style = MaterialTheme.typography.labelMedium,
-                                color = Color.Black
-                            )
-                            Text(
-                                text = "POINTS",
-                                style = MaterialTheme.typography.labelMedium,
-                                color = Color.Black
-                            )
-                            Text(
-                                text = "WINNER",
-                                style = MaterialTheme.typography.labelMedium,
-                                color = Color.Black
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Top
+                    ) {
+                        item {
+                            ExpandableQRCard(teamId = teamState.data.data!!.id)
+                        }
+                        item {
+                            TeamCard(
+                                teamName = teamState.data.data!!.name,
+                                leaderName = teamState.data.data.leaderInfo.name,
+                                teamMembers = teamState.data.data.participantsList.map { it.name }
                             )
                         }
 
-                        teamState.data.data.statsList.forEach { stats ->
-                            LeaderboardFields(
-                                teamName = stats.points,
-                                points = stats.winner,
-                                rank = stats.round
-                            )
-                            Spacer(modifier = Modifier.height(8.dp))
-                        }
-                    }
+                        item {
 
-                    PrimaryButton(
-                        onClick = {
-                            FirebaseAuth.getInstance().signOut()
-                            navController.navigate(RaidersReckoningScreens.LoginScreen.route) {
-                                popUpTo(RaidersReckoningScreens.MyTeamScreen.route) {
-                                    inclusive = true
+                            if (teamState.data.data!!.statsList.isEmpty()) {
+                                Text(
+                                    text = "No rounds played yet",
+                                    color = Color.White,
+                                    modifier = Modifier.padding(16.dp),
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                            } else {
+                                Row(
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    modifier = Modifier
+                                        .padding(horizontal = 8.dp)
+                                        .fillMaxWidth()
+                                        .background(
+                                            color = GreenCOD.copy(1f),
+                                            shape = RoundedCornerShape(15.dp)
+                                        )
+                                        .border(
+                                            width = 1.04.dp,
+                                            color = GreenCOD,
+                                            shape = RoundedCornerShape(12.dp)
+                                        )
+                                        .padding(14.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(
+                                        text = "ROUND",
+                                        style = MaterialTheme.typography.labelMedium,
+                                        color = Color.Black
+                                    )
+                                    Text(
+                                        text = "POINTS",
+                                        style = MaterialTheme.typography.labelMedium,
+                                        color = Color.Black
+                                    )
+                                    Text(
+                                        text = "WINNER",
+                                        style = MaterialTheme.typography.labelMedium,
+                                        color = Color.Black
+                                    )
+                                }
+
+                                teamState.data.data.statsList.forEach { stats ->
+                                    LeaderboardFields(
+                                        teamName = stats.points,
+                                        points = stats.winner,
+                                        rank = stats.round
+                                    )
+                                    Spacer(modifier = Modifier.height(8.dp))
                                 }
                             }
-                        },
-                        text = "Log Out",
-                        contentColor = GreenCOD,
-                        containerColor = GreenCOD.copy(0.1f)
-                    )
+                        }
+
+                        item {
+                            PrimaryButton(
+                                onClick = {
+                                    FirebaseAuth.getInstance().signOut()
+                                    navController.navigate(RaidersReckoningScreens.LoginScreen.route) {
+                                        popUpTo(RaidersReckoningScreens.MyTeamScreen.route) {
+                                            inclusive = true
+                                        }
+                                    }
+                                },
+                                text = "Log Out",
+                                contentColor = GreenCOD,
+                                containerColor = GreenCOD.copy(0.1f)
+                            )
+                        }
+                    }
                 }
             }
         }
