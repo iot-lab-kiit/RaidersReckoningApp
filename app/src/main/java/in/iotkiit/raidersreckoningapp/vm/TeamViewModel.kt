@@ -23,8 +23,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TeamViewModel @Inject constructor(
-    private val teamRepo: TeamRepo,
-    private val preferencesHelper: PreferencesHelper
+    private val teamRepo: TeamRepo, private val preferencesHelper: PreferencesHelper
 ) : ViewModel() {
 
     private val _createTeamState: MutableStateFlow<UiState<CustomResponse<Unit>>> =
@@ -43,8 +42,7 @@ class TeamViewModel @Inject constructor(
         _createTeamState.value = UiState.Loading
         viewModelScope.launch {
             try {
-                teamRepo.createTeam(teamRepo.getIdToken(), createTeamBody)
-                    .collect { response ->
+                teamRepo.createTeam(teamRepo.getIdToken(), createTeamBody).collect { response ->
                         _createTeamState.value = response
                         if (response is UiState.Success) {
                             Log.d("TeamViewModel", "Team Created successfully : ${response.data}")
@@ -65,8 +63,7 @@ class TeamViewModel @Inject constructor(
         _getTeamState.value = UiState.Loading
         viewModelScope.launch {
             try {
-                teamRepo.getTeam(teamRepo.getIdToken())
-                    .collect { response ->
+                teamRepo.getTeam(teamRepo.getIdToken()).collect { response ->
                         _getTeamState.value = response
                         _isRefreshing.value = false
                         if (response is UiState.Success) {
@@ -97,8 +94,7 @@ class TeamViewModel @Inject constructor(
         _joinTeamState.value = UiState.Loading
         viewModelScope.launch {
             try {
-                teamRepo.joinTeam(teamRepo.getIdToken(), joinTeamBody)
-                    .collect { response ->
+                teamRepo.joinTeam(teamRepo.getIdToken(), joinTeamBody).collect { response ->
                         _joinTeamState.value = response
                         if (response is UiState.Success) {
                             Log.d("TeamViewModel", "Team joined successfully: ${response.data}")
@@ -123,14 +119,12 @@ class TeamViewModel @Inject constructor(
         _getQuestionsState.value = UiState.Loading
         viewModelScope.launch {
             try {
-                teamRepo.getQuestions(teamRepo.getIdToken(), zoneId)
-                    .collect { response ->
+                teamRepo.getQuestions(teamRepo.getIdToken(), zoneId).collect { response ->
                         _getQuestionsState.value = response
                         if (response is UiState.Success) {
                             preferencesHelper.resetPoints()
                             Log.d(
-                                "TeamViewModel",
-                                "Questions fetched successfully: ${response.data}"
+                                "TeamViewModel", "Questions fetched successfully: ${response.data}"
                             )
                         }
                     }
@@ -153,21 +147,22 @@ class TeamViewModel @Inject constructor(
     }
 
     fun submitAnswer(
-        question: Question,
-        remainingTime: Int,
-        userAnswer: String
+        question: Question, remainingTime: Int, userAnswer: String
     ) {
         val isCorrect = if (question.oneWord) {
             userAnswer.trim().equals(question.mcqAnswers.first().toString(), ignoreCase = true)
         } else {
             val correctIndex = question.correctAnswer
-            correctIndex in question.mcqAnswers.indices &&
-                    userAnswer == question.mcqAnswers[correctIndex]
+            correctIndex in question.mcqAnswers.indices && userAnswer == question.mcqAnswers[correctIndex]
         }
 
         if (isCorrect) {
             // Calculate points for this question
-            val questionPoints = question.multiplier * remainingTime
+            val questionPoints = if (isCorrect) {
+                question.multiplier * remainingTime
+            } else {
+                0
+            }
 
             // Log for debugging
             Log.d("Points", "Multiplier: ${question.multiplier}")
@@ -204,13 +199,11 @@ class TeamViewModel @Inject constructor(
         _submitPointsState.value = UiState.Loading
         viewModelScope.launch {
             try {
-                teamRepo.submitPoints(teamRepo.getIdToken(), submitPointsBody)
-                    .collect { response ->
+                teamRepo.submitPoints(teamRepo.getIdToken(), submitPointsBody).collect { response ->
                         _submitPointsState.value = response
                         if (response is UiState.Success) {
                             Log.d(
-                                "TeamViewModel",
-                                "Points submitted successfully: ${response.data}"
+                                "TeamViewModel", "Points submitted successfully: ${response.data}"
                             )
                         }
                     }

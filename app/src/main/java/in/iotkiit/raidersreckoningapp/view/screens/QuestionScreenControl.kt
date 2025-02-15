@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -27,7 +26,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import `in`.iotkiit.raidersreckoningapp.data.model.SubmitPointsBody
 import `in`.iotkiit.raidersreckoningapp.state.UiState
-import `in`.iotkiit.raidersreckoningapp.ui.theme.GreenCOD
 import `in`.iotkiit.raidersreckoningapp.view.components.anims.FailureAnimationDialog
 import `in`.iotkiit.raidersreckoningapp.view.components.anims.LoadingTransition
 import `in`.iotkiit.raidersreckoningapp.view.components.anims.SubmitPointsAnimation
@@ -148,8 +146,9 @@ fun QuestionScreenControl(
                         delay(100)
                     }
 
+                    val totalPoints = viewModel.getTotalPoints()
                     viewModel.submitPoints(
-                        SubmitPointsBody(tempPoints = viewModel.getTotalPoints())
+                        SubmitPointsBody(tempPoints = totalPoints)
                     )
                     showEndAnimation = true
                     return@LaunchedEffect
