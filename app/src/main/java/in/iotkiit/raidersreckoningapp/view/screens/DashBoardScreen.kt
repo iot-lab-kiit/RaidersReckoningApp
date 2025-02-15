@@ -11,8 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -110,126 +108,143 @@ fun DashBoardScreen(
                 }
             ) {
                 SwipeRefresh(
-                state = rememberSwipeRefreshState(isRefreshing),
-                onRefresh = { dashBoardViewModel.refreshDashboardData() },
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(it)
-            ) {
-                LazyColumn(
+                    state = rememberSwipeRefreshState(isRefreshing),
+                    onRefresh = { dashBoardViewModel.refreshDashboardData() },
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(Color.Black),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.SpaceEvenly
+                        .padding(it)
                 ) {
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(Color.Black),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.SpaceEvenly
+                    ) {
 
-                    val image = when (zoneName) {
-                        "CRASH" -> R.drawable.crash
-                        "HIGHRISE" -> R.drawable.highrise
-                        "HIJACKED" -> R.drawable.hijacked
-                        "NUKETOWN" -> R.drawable.nuketown
-                        "RUST" -> R.drawable.rust
-                        "SHIPMENT" -> R.drawable.shipment
-                        "TERMINAL" -> R.drawable.terminal
-                        else -> R.drawable.gulag
-                    }
-
-                    item {
-                        Image(
-                            painter = painterResource(image),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(start = 16.dp, end = 16.dp)
-                        )
-                        Spacer(Modifier.height(8.dp))
-                    }
-                    item {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(start = 16.dp, end = 16.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = zoneName,
-                                style = MaterialTheme.typography.headlineMedium,
-                                color = Color.White
-                            )
-                            Text(
-                                text = zoneVenue,
-                                style = MaterialTheme.typography.labelSmall,
-                                color = GreenCOD
-                            )
-
+                        val image = when (zoneName) {
+                            "CRASH" -> R.drawable.crash
+                            "HIGHRISE" -> R.drawable.highrise
+                            "HIJACKED" -> R.drawable.hijacked
+                            "NUKETOWN" -> R.drawable.nuketown
+                            "RUST" -> R.drawable.rust
+                            "SHIPMENT" -> R.drawable.shipment
+                            "TERMINAL" -> R.drawable.terminal
+                            else -> R.drawable.gulag
                         }
-                        Spacer(Modifier.height(20.dp))
-                    }
-                    item {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceEvenly,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = "Round $round",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = GreenCOD
-                            )
 
-                            val (minutes, seconds, _) = useGlobalTimer(
-                                zoneStartTime = dashBoardState.data.data?.zone?.startTime,
-                                zoneDuration = dashBoardState.data.data?.zone?.duration ?: 0L
-                            )
-
-                            Text(
-                                text = String.format("%02d:%02d", minutes, seconds),
-                                color = Color.White,
-                                fontSize = 24.sp,
-                                fontFamily = modernWarfare
-                            )
-                        }
-                    }
-                    item {
-                        if (challenger) {
-                            Text(
-                                modifier = Modifier.fillMaxWidth(),
-                                text = "You are a challenger!",
-                                textAlign = TextAlign.Center,
-                                maxLines = 2,
-                                color = Color.Yellow,
-                                style = MaterialTheme.typography.headlineMedium
-                            )
-                        } else {
-                            Text(
-                                modifier = Modifier.fillMaxWidth(),
-                                text = "You are a capturer!",
-                                textAlign = TextAlign.Center,
-                                maxLines = 2,
-                                color = Color.Red,
-                                style = MaterialTheme.typography.headlineMedium
-                            )
-                        }
-                    }
-                    item {
-                        FloatingActionButton(
-                            onClick = {
-                                navController.navigate(RaidersReckoningScreens.GetQuestionsQR.route)
-                            },
-                            containerColor = GreenCOD,
-                            contentColor = Color.Black,
-                        ) {
+                        item {
                             Image(
-                                modifier = Modifier.padding(6.dp),
-                                painter = painterResource(R.drawable.scan),
-                                contentDescription = null
+                                painter = painterResource(image),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(start = 16.dp, end = 16.dp)
                             )
+                            Spacer(Modifier.height(8.dp))
+                        }
+                        item {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(start = 16.dp, end = 16.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = zoneName,
+                                    style = MaterialTheme.typography.headlineMedium,
+                                    color = Color.White
+                                )
+                                Text(
+                                    text = zoneVenue,
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = GreenCOD
+                                )
+
+                            }
+                            Spacer(Modifier.height(20.dp))
+                        }
+                        if (dashBoardState.data.data!!.paused) {
+                            item {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceEvenly,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(
+                                        text = "Currently on Break!",
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = GreenCOD
+                                    )
+                                }
+                            }
+                        } else {
+                            item {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceEvenly,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(
+                                        text = "Round $round",
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = GreenCOD
+                                    )
+
+                                    val (minutes, seconds, _) = useGlobalTimer(
+                                        zoneStartTime = dashBoardState.data.data?.zone?.startTime,
+                                        zoneDuration = dashBoardState.data.data?.zone?.duration
+                                            ?: 0L
+                                    )
+
+                                    Text(
+                                        text = String.format("%02d:%02d", minutes, seconds),
+                                        color = Color.White,
+                                        fontSize = 24.sp,
+                                        fontFamily = modernWarfare
+                                    )
+                                }
+                            }
+                        }
+                        item {
+                            if (challenger) {
+                                Text(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    text = "You are a challenger!",
+                                    textAlign = TextAlign.Center,
+                                    maxLines = 2,
+                                    color = Color.Yellow,
+                                    style = MaterialTheme.typography.headlineMedium
+                                )
+                            } else {
+                                Text(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    text = "You are a capturer!",
+                                    textAlign = TextAlign.Center,
+                                    maxLines = 2,
+                                    color = Color.Red,
+                                    style = MaterialTheme.typography.headlineMedium
+                                )
+                            }
+                        }
+                        item {
+                            FloatingActionButton(
+                                onClick = {
+                                    navController.navigate(RaidersReckoningScreens.GetQuestionsQR.route)
+                                },
+                                containerColor = GreenCOD,
+                                contentColor = Color.Black,
+                            ) {
+                                Image(
+                                    modifier = Modifier.padding(6.dp),
+                                    painter = painterResource(R.drawable.scan),
+                                    contentDescription = null
+                                )
+                            }
                         }
                     }
                 }
-            }
 
             }
         }

@@ -3,7 +3,6 @@ package `in`.iotkiit.raidersreckoningapp.view.components.core.topbar
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -27,7 +26,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import `in`.iotkiit.raidersreckoningapp.R
 import `in`.iotkiit.raidersreckoningapp.ui.theme.GreenCOD
-import `in`.iotkiit.raidersreckoningapp.ui.theme.modernWarfare
 
 
 @Preview
@@ -74,11 +72,11 @@ fun TopBar(
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Row (
+                    Row(
                         modifier = Modifier
                             .weight(1f),
                         verticalAlignment = Alignment.CenterVertically
-                    ){
+                    ) {
                         Image(
                             painter = painterResource(R.drawable.skull_icon_removebg_preview),
                             contentDescription = null,

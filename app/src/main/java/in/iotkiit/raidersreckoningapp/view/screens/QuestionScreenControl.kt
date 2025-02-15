@@ -79,7 +79,10 @@ fun QuestionScreenControl(
         SubmitPointsAnimation(
             onAnimationComplete = {
                 navController.navigate(RaidersReckoningScreens.DashBoardScreen.route) {
-                    popUpTo(RaidersReckoningScreens.QuestionScreen.route) { inclusive = true }
+                    popUpTo(RaidersReckoningScreens.DashBoardScreen.route) {
+                        inclusive = true
+                        saveState = true
+                    }
                 }
             }
         )

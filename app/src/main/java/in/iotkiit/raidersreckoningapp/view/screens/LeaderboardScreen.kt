@@ -78,7 +78,7 @@ fun LeaderboardScreen(
                         modifier = Modifier
                             .fillMaxSize()
                             .background(Color.Black),
-                        verticalArrangement = Arrangement.SpaceAround
+                        verticalArrangement = Arrangement.Top
                     ) {
                         item {
                             Column(

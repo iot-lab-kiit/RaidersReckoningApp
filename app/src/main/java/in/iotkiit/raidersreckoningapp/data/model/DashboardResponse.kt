@@ -12,5 +12,7 @@ data class DashboardResponse(
     @SerializedName("round")
     val round: Int,
     @SerializedName("isChallenger")
-    val isChallenger: Boolean
+    val isChallenger: Boolean,
+    @SerializedName("paused")
+    val paused: Boolean,
 )

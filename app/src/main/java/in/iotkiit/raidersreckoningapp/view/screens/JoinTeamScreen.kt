@@ -17,7 +17,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.google.firebase.auth.FirebaseAuth
 import com.journeyapps.barcodescanner.CaptureManager
 import com.journeyapps.barcodescanner.CompoundBarcodeView
 import `in`.iotkiit.raidersreckoningapp.data.model.JoinTeamBody
@@ -27,8 +26,7 @@ import `in`.iotkiit.raidersreckoningapp.vm.TeamViewModel
 
 @Composable
 fun JoinTeamScreen(
-    navController: NavController,
-    teamViewModel: TeamViewModel = hiltViewModel()
+    navController: NavController, teamViewModel: TeamViewModel = hiltViewModel()
 ) {
     val joinTeamState = teamViewModel.joinTeamState.collectAsState().value
 
@@ -39,7 +37,7 @@ fun JoinTeamScreen(
             is UiState.Success -> {
                 Toast.makeText(context, "Team joined", Toast.LENGTH_SHORT).show()
                 navController.navigate(RaidersReckoningScreens.DashBoardScreen.route) {
-                    popUpTo(RaidersReckoningScreens.JoinTeamScreen.route) {
+                    popUpTo(RaidersReckoningScreens.DashBoardScreen.route) {
                         saveState = true
                         inclusive = true
                     }
@@ -60,17 +58,16 @@ fun JoinTeamScreen(
         mutableStateOf(sharedPreferences.getBoolean("isPermissionGranted", false))
     }
 
-    val cameraPermissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission(),
-        onResult = { granted ->
-            if (granted) {
-                isPermissionGranted = true
-                sharedPreferences.edit().putBoolean("isPermissionGranted", true).apply()
-            } else {
-                Toast.makeText(context, "Camera permission denied.", Toast.LENGTH_SHORT).show()
-            }
-        }
-    )
+    val cameraPermissionLauncher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission(),
+            onResult = { granted ->
+                if (granted) {
+                    isPermissionGranted = true
+                    sharedPreferences.edit().putBoolean("isPermissionGranted", true).apply()
+                } else {
+                    Toast.makeText(context, "Camera permission denied.", Toast.LENGTH_SHORT).show()
+                }
+            })
 
     LaunchedEffect(isPermissionGranted) {
         if (!isPermissionGranted) {
@@ -91,14 +88,12 @@ fun JoinTeamScreen(
                 capture.decode()
 
                 this.decodeSingle { result ->
-                    if (result.text != null)
-                        teamViewModel.joinTeam(
-                            JoinTeamBody(
-                                result.text
-                            )
+                    if (result.text != null) teamViewModel.joinTeam(
+                        JoinTeamBody(
+                            result.text
                         )
-                    else
-                        Toast.makeText(context, "No Result", Toast.LENGTH_SHORT).show()
+                    )
+                    else Toast.makeText(context, "No Result", Toast.LENGTH_SHORT).show()
                 }
             }
         }

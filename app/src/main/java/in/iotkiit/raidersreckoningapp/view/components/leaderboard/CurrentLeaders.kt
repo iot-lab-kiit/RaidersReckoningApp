@@ -56,7 +56,7 @@ fun CurrentLeaders(
                         .padding(horizontal = 16.dp),
                     contentAlignment = Alignment.BottomCenter
                 ) {
-                    val playerName = players.getOrElse(position) { "Player $position" }
+                    val playerName = players.getOrElse(position) { "Player ${position+1} " }
                     val shortName =
                         if (playerName.length > 16) playerName.take(12) + "..." else playerName
                     Text(

@@ -11,9 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -40,9 +38,7 @@ import `in`.iotkiit.raidersreckoningapp.view.components.myTeam.ExpandableQRCard
 import `in`.iotkiit.raidersreckoningapp.view.navigation.BottomNavBar
 import `in`.iotkiit.raidersreckoningapp.view.navigation.BottomNavOptions.Companion.bottomNavOptions
 import `in`.iotkiit.raidersreckoningapp.view.navigation.RaidersReckoningScreens
-import `in`.iotkiit.raidersreckoningapp.vm.LeaderboardViewModel
 import `in`.iotkiit.raidersreckoningapp.vm.TeamViewModel
-
 
 @Composable
 fun MyTeamScreen(
@@ -74,7 +70,6 @@ fun MyTeamScreen(
             val data = teamState.data.data
             val teamName = data?.name ?: "NoTeam"
             val points = data?.points ?: 0
-            val totalPoints = data?.points ?: 0
 
             Scaffold(
                 containerColor = Color.Black,
@@ -156,14 +151,16 @@ fun MyTeamScreen(
                                     )
                                 }
 
-                                teamState.data.data.statsList.forEach { stats ->
-                                    LeaderboardFields(
-                                        teamName = stats.points,
-                                        points = stats.winner,
-                                        rank = stats.round
-                                    )
-                                    Spacer(modifier = Modifier.height(8.dp))
-                                }
+                                teamState.data.data.statsList
+                                    .sortedBy { it.round }
+                                    .forEach { stats ->
+                                        LeaderboardFields(
+                                            teamName = stats.points,
+                                            points = stats.winner,
+                                            rank = stats.round
+                                        )
+                                        Spacer(modifier = Modifier.height(8.dp))
+                                    }
                             }
                         }
 
@@ -180,6 +177,14 @@ fun MyTeamScreen(
                                 text = "Log Out",
                                 contentColor = GreenCOD,
                                 containerColor = GreenCOD.copy(0.1f)
+                            )
+                            Spacer(modifier = Modifier.height(16.dp))
+                        }
+                        item {
+                            Text(
+                                "Coded with ❤️ & ☕ by IoT Lab",
+                                color = Color.White,
+                                style = MaterialTheme.typography.bodyMedium
                             )
                         }
                     }

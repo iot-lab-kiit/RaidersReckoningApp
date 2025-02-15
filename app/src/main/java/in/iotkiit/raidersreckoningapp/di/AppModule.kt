@@ -27,10 +27,13 @@ object AppModule {
     fun provideOkHttpClient(): OkHttpClient {
 
         // Logging Interceptor
-        val httpLoggingInterceptor = HttpLoggingInterceptor()
-            .apply {
-                level = HttpLoggingInterceptor.Level.BODY
+        val httpLoggingInterceptor = HttpLoggingInterceptor().apply {
+            level = if (BuildConfig.DEBUG) {
+                HttpLoggingInterceptor.Level.BODY
+            } else {
+                HttpLoggingInterceptor.Level.NONE
             }
+        }
 
         // HTTP Client with bearer token
         return OkHttpClient

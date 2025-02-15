@@ -17,7 +17,6 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
 import com.journeyapps.barcodescanner.CaptureManager
 import com.journeyapps.barcodescanner.CompoundBarcodeView
-import `in`.iotkiit.raidersreckoningapp.data.model.JoinTeamBody
 import `in`.iotkiit.raidersreckoningapp.view.navigation.RaidersReckoningScreens
 
 @Composable
@@ -64,7 +63,11 @@ fun GetQuestionsQR(
 
                 this.decodeSingle { result ->
                     if (result.text != null)
-                        navController.navigate(RaidersReckoningScreens.QuestionScreen.route + "/${result.text}")
+                        navController.navigate(RaidersReckoningScreens.QuestionScreen.route + "/${result.text}") {
+                            popUpTo(RaidersReckoningScreens.DashBoardScreen.route) {
+                                inclusive = false
+                            }
+                        }
                     else {
                         navController.navigate(RaidersReckoningScreens.DashBoardScreen.route)
                         Toast.makeText(context, "Invalid QR Code", Toast.LENGTH_SHORT).show()
