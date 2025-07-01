@@ -35,13 +35,7 @@ Raiders' Reckoning is a gamified event app built by the IOT Lab for **KIITFest 8
 
 ---
 
-## 🛠️ Tech Stack
 
-- **Frontend**: Android (Jetpack Compose / XML)
-- **Backend**: Firebase / Node.js (optional - specify if used)
-- **QR Integration**: ZXing / ML Kit
-- **Database**: Firebase Firestore / Realtime DB
-- **Leaderboard & Game Logic**: Custom backend logic with real-time sync
 
 ---
 
