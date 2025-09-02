@@ -5,6 +5,9 @@
 Raiders' Reckoning is a gamified event app built by the IOT Lab for **KIITFest 8.0**, designed to host and manage an immersive real-world challenge where teams competed in a tech-meets-treasure-hunt style game!
 
 ---
+## Banner
+
+![Raiders' Reckoning Banner](https://github.com/iot-lab-kiit/RaidersReckoningApp/raw/master/Adobe%20Express%20-%20file.png?raw=true)
 
 ## 🎯 Event Overview
 
