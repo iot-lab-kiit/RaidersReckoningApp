@@ -44,7 +44,7 @@ Raiders' Reckoning is a gamified event app built by the IOT Lab for **KIITFest 8
 
 ## 🚀 Impact
 
-- Engaged **100+ students** across multiple departments.
+- Engaged **500+ students** across multiple departments.
 - Ran smoothly throughout the multi-level challenge.
 - Created an unforgettable gamified experience using real-world tech.
 - Demonstrated the power of app-based event management at scale.
